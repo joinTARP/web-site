@@ -132,6 +132,7 @@ function createCompanionDialogue(section: HTMLElement) {
   const stop = () => {
     window.clearTimeout(timer);
     bubble.removeAttribute('data-typing');
+    text.removeAttribute('data-typing');
   };
   const reset = () => {
     stop();
@@ -146,7 +147,7 @@ function createCompanionDialogue(section: HTMLElement) {
       stop();
       return;
     }
-    timer = window.setTimeout(type, /[，。！？]/.test(character) ? 220 : 75);
+    timer = window.setTimeout(type, /[，。！？]/.test(character) ? 180 : 65);
   };
   reset();
   return {
@@ -154,6 +155,7 @@ function createCompanionDialogue(section: HTMLElement) {
       if (started) return;
       started = true;
       bubble.setAttribute('data-typing', '');
+      text.setAttribute('data-typing', '');
       type();
     },
     reset,
@@ -179,87 +181,137 @@ function initCompanionAssembly() {
       gsap.utils
         .toArray<HTMLElement>('[data-companion-assembly]')
         .forEach((section) => {
-          const fragments = section.querySelectorAll<HTMLElement>(
-            '[data-companion-fragment]',
-          );
-          // 完整元素随滚动散开、再聚合；主画面向右落定，下方示意缩短位移。
-          // 不固定舞台，不切换内容，小屏也保留较轻的散开重组。
           const visual = section.querySelector<HTMLElement>(
             '[data-companion-visual]',
           );
-          const copy = section.querySelector<HTMLElement>('.companion-copy');
-          const direction =
-            section.dataset.assemblyDirection === 'right' ? -1 : 1;
-          const travel = () =>
-            direction * (desktop && copy ? section.clientWidth * 0.38 : 32);
+          const copy = section.querySelector<HTMLElement>(
+            '[data-companion-copy]',
+          );
+          const aura = section.querySelector<HTMLElement>(
+            '[data-companion-aura]',
+          );
+          const backdrop = section.querySelector<HTMLElement>(
+            '[data-companion-backdrop]',
+          );
+          const portrait = section.querySelector<HTMLElement>(
+            '[data-companion-portrait]',
+          );
+          const quote = section.querySelector<HTMLElement>(
+            '[data-companion-quote]',
+          );
+
           const dialogue = createCompanionDialogue(section);
           if (dialogue) dialogueDisposers.push(() => dialogue.dispose());
+
+          // 分层景深登场：拱门底座先展开，苏棠立绘踏出舞台，随后浮现聊天气泡。
           const timeline = gsap.timeline({
             scrollTrigger: {
               trigger: visual || section,
-              start: 'top bottom',
-              end: desktop ? 'top 20%' : 'top 35%',
-              scrub: 0.6,
+              start: 'top 88%',
+              end: desktop ? 'top 24%' : 'top 36%',
+              scrub: 0.65,
               invalidateOnRefresh: true,
-              onRefresh: (trigger) => {
-                if (trigger.progress >= 0.99) dialogue?.play();
-              },
-              onScrubComplete: (trigger) => {
-                if (trigger.progress >= 0.99) dialogue?.play();
-              },
             },
           });
-          timeline
-            .fromTo(
-              fragments,
-              {
-                x: travel,
-                y: 0,
-                rotation: 0,
-              },
-              {
-                x: (_index, element: HTMLElement) =>
-                  travel() * 0.58 +
-                  (Number(element.dataset.fragmentX) || 0) *
-                    (desktop ? 1 : 0.35),
-                y: (_index, element: HTMLElement) =>
-                  (Number(element.dataset.fragmentY) || 0) *
-                  (desktop ? 1 : 0.5),
-                rotation: (_index, element: HTMLElement) =>
-                  Number(element.dataset.fragmentRotate) || 0,
-                duration: 0.38,
-                ease: 'power1.inOut',
-              },
-            )
-            .to(fragments, {
-              x: 0,
-              y: 0,
-              rotation: 0,
-              duration: 0.62,
-              ease: 'power2.inOut',
-              stagger: 0.035,
-            });
-          if (desktop && copy) {
+
+          if (copy) {
+            const copyItems = copy.querySelectorAll<HTMLElement>('h2, p, a');
             timeline.fromTo(
-              copy,
+              copyItems.length ? copyItems : copy,
               {
                 opacity: 0,
-                y: 14,
+                y: 24,
               },
               {
                 opacity: 1,
                 y: 0,
-                duration: 0.3,
-                ease: 'power1.out',
+                duration: 0.44,
+                stagger: 0.07,
+                ease: 'power2.out',
               },
-              0.72,
+              0,
             );
           }
-          // 完整时间轴建好后再同步，兼容锚点进入和浏览器恢复滚动位置。
+
+          if (aura) {
+            timeline.fromTo(
+              aura,
+              { opacity: 0, scale: 0.72 },
+              { opacity: 1, scale: 1, duration: 0.68, ease: 'sine.out' },
+              0,
+            );
+          }
+
+          if (backdrop) {
+            timeline.fromTo(
+              backdrop,
+              {
+                opacity: 0,
+                y: desktop ? 44 : 28,
+                scale: 0.92,
+                transformOrigin: '50% 85%',
+              },
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.62,
+                ease: 'power2.out',
+              },
+              0.04,
+            );
+          }
+
+          if (portrait) {
+            timeline.fromTo(
+              portrait,
+              {
+                opacity: 0,
+                x: desktop ? 24 : 10,
+                y: desktop ? 56 : 36,
+                scale: 0.93,
+                transformOrigin: '50% 90%',
+              },
+              {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                scale: 1,
+                duration: 0.72,
+                ease: 'power2.out',
+              },
+              0.1,
+            );
+          }
+
+          if (quote) {
+            timeline.fromTo(
+              quote,
+              {
+                opacity: 0,
+                x: desktop ? 16 : 0,
+                y: 24,
+                scale: 0.92,
+                transformOrigin: '24% 0%',
+              },
+              {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                scale: 1,
+                duration: 0.48,
+                ease: 'back.out(1.4)',
+              },
+              0.42,
+            );
+          }
+
+          // 台词气泡入场后即开始打字，兼容锚点跳转与刷新恢复位置。
           const updateDialogue = () => {
-            if (timeline.progress() >= 0.99) dialogue?.play();
+            const progress = timeline.progress();
+            if (progress >= 0.62) dialogue?.play();
             else if (
-              timeline.progress() <= 0.08 &&
+              progress <= 0.08 &&
               (timeline.scrollTrigger?.progress || 0) <= 0.08
             )
               dialogue?.reset();

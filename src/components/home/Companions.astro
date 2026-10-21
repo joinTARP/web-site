@@ -10,85 +10,98 @@ const companionDialogue = '小心！那边好像有陷阱！';
 
 <section
   id="companions"
-  class="companions-section overflow-clip py-[clamp(72px,_8vw,_112px)]"
+  class="companions-section relative isolate overflow-clip py-[clamp(72px,8vw,112px)]"
   aria-labelledby="companions-title"
 >
   <div class="shell">
     <div
-      class="companion-lead grid grid-cols-[minmax(0,_0.9fr)_minmax(0,_1.1fr)] items-center gap-16 max-lg:gap-8 max-md:grid-cols-[minmax(0,_1fr)] max-md:gap-8"
+      class="companion-lead grid items-center gap-12 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-16"
       data-companion-assembly
-      data-assembly-direction="right"
     >
-      <div class="companion-copy max-w-110 [&_h2]:mb-6 [&_h2]:text-[clamp(30px,_3vw,_40px)] [&_h2]:font-semibold [&_h2]:leading-[1.45] [&_h2]:tracking-[-0.025em] [&_h2_span]:text-accent [&_>_p]:text-muted [&_>_p]:text-[16px] [&_>_p]:leading-[2] [&_>_p]:text-pretty [&_>_p_+_p]:mt-4 max-md:max-w-130 max-md:[&_h2]:mb-5">
-        <h2 id="companions-title">
+      <div class="companion-copy max-w-130 lg:max-w-110" data-companion-copy>
+        <h2
+          id="companions-title"
+          class="font-display text-[1.875rem] leading-[1.35] font-semibold tracking-tight sm:text-[2rem] lg:text-[clamp(2.25rem,3vw,2.5rem)]"
+        >
           无社交压力，
           <br />
-          <span>AI 做你的队友</span>
+          <span class="text-accent">AI 做你的队友。</span>
         </h2>
-        <p>
+        <p class="mt-5 text-base leading-8 text-pretty text-muted">
           选好角色，让 AI
           加入你的队伍。它会按角色的性格和经历参与讨论，提出自己的行动。你照常玩自己的角色。
         </p>
-        <p>
+        <p class="mt-4 text-base leading-8 text-pretty text-muted">
           不用约时间，也不用担心冷场。想听队友的看法，直接{' '}
-          <span class="companion-mention whitespace-nowrap">@ 它</span>。
+          <span class="companion-mention inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-1.5 py-0.5 font-mono text-[0.9em] leading-none font-medium whitespace-nowrap text-accent">
+            @ 它
+          </span>
+          。
         </p>
         <a
-          class="companion-link inline-flex items-center gap-3 mt-6 text-[14px] font-medium [transition:color_200ms] hover:text-accent"
+          class="companion-link group/companion mt-6 inline-flex items-center gap-3 text-sm font-medium transition-colors hover:text-accent"
           href="/docs/play/companions/"
         >
-          看看队友怎么玩 <span aria-hidden="true">↗</span>
+          看看队友怎么玩
+          <span
+            class="transition-transform duration-300 group-hover/companion:translate-x-1"
+            aria-hidden="true"
+          >
+            ↗
+          </span>
         </a>
       </div>
+
       <figure
-        class="companion-character relative w-full max-w-150 min-h-115 isolate max-lg:min-h-100 max-md:max-w-125 max-md:min-h-[clamp(350px,_95vw,_460px)] max-md:pb-16 mx-auto"
+        class="companion-character relative mx-auto w-full max-w-140 min-h-[clamp(380px,90vw,500px)] isolate select-none sm:min-h-122 lg:min-h-130"
         data-companion-visual
       >
+        <!-- 舞台环境光晕 -->
         <div
-          class="companion-character-backdrop absolute -z-1 top-[9%] right-[12%] bottom-[12%] left-[8%] rounded-full border border-accent/20"
+          class="companion-character-aura pointer-events-none absolute -z-2 top-[4%] right-[8%] bottom-[8%] left-[8%] rounded-full"
           aria-hidden="true"
-          data-companion-fragment
-          data-fragment-x="-20"
-          data-fragment-y="16"
-          data-fragment-rotate="-3"
+          data-companion-aura
         ></div>
-        <Image
-          class="companion-character-portrait relative block w-[82%] max-w-115 aspect-2/3 ml-[2%] object-contain"
-          src={sutang}
-          format="webp"
-          quality={80}
-          widths={[320, 460, 640, 920]}
-          sizes="(max-width: 768px) 82vw, 460px"
-          alt="宝藏猎人苏棠的完整角色肖像"
-          width={920}
-          loading="lazy"
-          decoding="async"
-          data-companion-fragment
-          data-fragment-x="32"
-          data-fragment-y="-24"
-          data-fragment-rotate="3"
-        />
-        <figcaption
-          class="companion-character-label absolute top-[15%] right-[2%] pl-5 border-l border-l-line [&_strong]:block [&_strong]:[font-family:'Songti_SC',_'STSong',_'Noto_Serif_SC',_serif] [&_strong]:text-[32px] [&_strong]:font-medium [&_strong]:tracking-[0.12em] [&_strong]:leading-[1.5] [&_>_span]:block [&_>_span]:mt-2 [&_>_span]:text-muted [&_>_span]:text-[14px] max-lg:top-[6%] max-lg:right-0 max-lg:pl-3 max-lg:[&_strong]:text-[28px] max-md:top-[12%]"
-          data-companion-fragment
-          data-fragment-x="74"
-          data-fragment-y="-36"
-          data-fragment-rotate="-3"
+
+        <!-- 角色拱门背板与坐标网格 -->
+        <div
+          class="companion-character-backdrop light:shadow-panel pointer-events-none absolute -z-1 top-[9%] right-[14%] bottom-[4%] left-[14%] overflow-hidden rounded-t-[999px] rounded-b-3xl border border-line bg-surface/75 shadow-[0_24px_60px_-32px_var(--color-shadow)] max-sm:right-[10%] max-sm:left-[10%]"
+          aria-hidden="true"
+          data-companion-backdrop
         >
-          <strong>苏棠</strong>
-          <span>宝藏猎人</span>
-        </figcaption>
+          <div class="companion-stage-grid light:opacity-25 absolute inset-0 [background-size:18px_18px] opacity-15"></div>
+          <div class="absolute inset-2.5 rounded-t-[999px] rounded-b-[18px] border border-accent/18"></div>
+          <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-canvas/85 via-canvas/30 to-transparent light:from-surface/90 light:via-surface/30"></div>
+        </div>
+
+        <!-- 角色立绘主体 -->
+        <div
+          class="companion-portrait-wrap relative mx-auto w-[78%] max-w-108 pt-2 sm:w-[76%]"
+          data-companion-portrait
+        >
+          <Image
+            class="companion-character-portrait relative block aspect-2/3 w-full object-contain [filter:drop-shadow(0_22px_32px_rgba(0,0,0,0.34))] light:[filter:drop-shadow(0_18px_28px_rgba(32,40,48,0.14))]"
+            src={sutang}
+            format="webp"
+            quality={80}
+            widths={[320, 460, 640, 920]}
+            sizes="(max-width: 768px) 78vw, 432px"
+            alt="宝藏猎人苏棠的完整角色肖像"
+            width={920}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+
+        <!-- 聊天气泡 -->
         <blockquote
-          class="companion-character-quote light:shadow-panel absolute right-0 bottom-0 w-85 max-w-[calc(100%_-_24px)] border border-[color-mix(in_srgb,_var(--color-accent)_35%,_var(--color-line))] rounded-[16px_16px_16px_4px] bg-surface shadow-[0_12px_32px_-20px_var(--color-shadow)] before:content-[''] before:absolute before:-top-1.5 before:left-7 before:border-t before:border-t-[color-mix(in_srgb,_var(--color-accent)_35%,_var(--color-line))] before:border-l before:border-l-[color-mix(in_srgb,_var(--color-accent)_35%,_var(--color-line))] before:bg-surface before:[transform:rotate(45deg)] [&_p]:min-h-[3.8em] [&_p]:text-[17px] [&_p]:leading-[1.9] [&[data-typing]_[data-companion-dialogue]::after]:content-[''] [&[data-typing]_[data-companion-dialogue]::after]:inline-block [&[data-typing]_[data-companion-dialogue]::after]:w-[1px] [&[data-typing]_[data-companion-dialogue]::after]:h-[1em] [&[data-typing]_[data-companion-dialogue]::after]:ml-[3px] [&[data-typing]_[data-companion-dialogue]::after]:[vertical-align:-0.1em] [&[data-typing]_[data-companion-dialogue]::after]:bg-accent max-lg:w-75 max-lg:[&_p]:text-[15px] py-4.5 px-6 before:size-2.5 max-lg:py-4 max-lg:px-5"
-          data-companion-fragment
-          data-fragment-x="-48"
-          data-fragment-y="42"
-          data-fragment-rotate="2"
+          class="companion-character-quote light:shadow-panel absolute right-2 bottom-2 z-3 w-max max-w-[calc(100%-24px)] rounded-[18px_18px_18px_4px] border border-[color-mix(in_srgb,var(--color-accent)_38%,var(--color-line))] bg-surface/95 px-6 py-4 shadow-[0_18px_42px_-20px_var(--color-shadow)] backdrop-blur-md before:absolute before:-top-1.5 before:left-7 before:size-2.5 before:[transform:rotate(45deg)] before:border-t before:border-l before:border-t-[color-mix(in_srgb,var(--color-accent)_38%,var(--color-line))] before:border-l-[color-mix(in_srgb,var(--color-accent)_38%,var(--color-line))] before:bg-surface before:content-[''] max-sm:right-1/2 max-sm:translate-x-1/2 max-sm:px-5 max-sm:py-3.5"
+          data-companion-quote
         >
-          <p>
+          <p class="min-w-[12em] min-h-[1.75em] text-[17px] leading-[1.75] text-foreground max-sm:text-[15px]">
             <span class="sr-only">{companionDialogue.replace('\n', '')}</span>
             <span
-              class="whitespace-pre-line"
+              class="whitespace-pre-line [&[data-typing]::after]:ml-[3px] [&[data-typing]::after]:inline-block [&[data-typing]::after]:h-[1em] [&[data-typing]::after]:w-[1.5px] [&[data-typing]::after]:bg-accent [&[data-typing]::after]:content-[''] [&[data-typing]::after]:[vertical-align:-0.12em]"
               aria-hidden="true"
               data-companion-dialogue
               data-dialogue-text={companionDialogue}
@@ -101,7 +114,7 @@ const companionDialogue = '小心！那边好像有陷阱！';
     </div>
 
     <div
-      class="companion-details grid grid-cols-2 grid-rows-[auto_auto] gap-y-7 mt-16 pt-10 border-t border-t-line max-md:grid-cols-[minmax(0,_1fr)] max-md:gap-10 max-md:mt-10 max-md:pt-8"
+      class="companion-details grid grid-cols-2 grid-rows-[auto_auto] gap-y-7 mt-16 pt-10 border-t border-t-line max-md:grid-cols-[minmax(0,1fr)] max-md:gap-10 max-md:mt-12 max-md:pt-8"
       data-companion-details
     >
       <article
@@ -207,14 +220,22 @@ const companionDialogue = '小心！那边好像有陷阱！';
 </section>
 
 <style>
-  .companion-character-backdrop {
+  .companion-character-aura {
     background: radial-gradient(
-      ellipse,
-      color-mix(in srgb, var(--color-ambient) 9%, transparent),
-      transparent 70%
+      ellipse at 52% 44%,
+      color-mix(in srgb, var(--color-accent) 18%, transparent),
+      color-mix(in srgb, var(--color-ambient) 6%, transparent) 45%,
+      transparent 72%
     );
   }
-  .companion-character-quote[data-typing] [data-companion-dialogue]::after {
+  .companion-stage-grid {
+    background-image: radial-gradient(
+      var(--color-subtle) 0.75px,
+      transparent 0.75px
+    );
+    mask-image: radial-gradient(ellipse at 50% 36%, #000 18%, transparent 72%);
+  }
+  [data-companion-dialogue][data-typing]::after {
     animation: blink 0.8s steps(1) infinite;
   }
   .companion-memory-boundary {
