@@ -1,18 +1,30 @@
-<figure class="w-full sm:max-lg:mx-auto sm:max-lg:max-w-180">
-  <img
-    src="/screenshots/adventure-desktop-dark.png"
-    width="2784"
-    height="1824"
+---
+import { Image } from 'astro:assets';
+import darkScreenshot from '../../assets/screenshots/adventure-desktop-dark.png';
+import lightScreenshot from '../../assets/screenshots/adventure-desktop-light.png';
+---
+
+<figure class="mx-auto w-full origin-top" data-hero-screenshot>
+  <Image
+    src={darkScreenshot}
+    format="webp"
+    quality={90}
+    widths={[640, 960, 1440, 1920, 2784]}
+    sizes="(min-width: 1288px) 1240px, calc(100vw - 48px)"
+    width={1600}
     alt="TARP 实机界面：左侧冒险小队，中间古墓场景与主持对话，右侧角色属性和行装。"
     class="block h-auto w-full light:hidden"
     loading="eager"
     decoding="async"
     fetchpriority="high"
   />
-  <img
-    src="/screenshots/adventure-desktop-light.png"
-    width="2784"
-    height="1824"
+  <Image
+    src={lightScreenshot}
+    format="webp"
+    quality={90}
+    widths={[640, 960, 1440, 1920, 2784]}
+    sizes="(min-width: 1288px) 1240px, calc(100vw - 48px)"
+    width={1600}
     alt="TARP 实机界面：左侧冒险小队，中间古墓场景与主持对话，右侧角色属性和行装。"
     class="hidden h-auto w-full light:block"
     loading="eager"

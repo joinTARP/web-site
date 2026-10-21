@@ -1,4 +1,7 @@
 ---
+import { getImage } from 'astro:assets';
+import zcode from '../../assets/brand/zcode.png';
+const zcodeIcon = await getImage({ src: zcode, width: 88, format: 'webp' });
 type Agent = {
   name: string;
   icon: string;
@@ -107,7 +110,11 @@ const agents: Agent[] = [
           {agent.colored && (
             <img
               class="size-full object-contain grayscale transition-[filter] duration-350 ease-[ease] group-interactive/agent:grayscale-0 motion-reduce:transition-none"
-              src={'/brand/agents/' + agent.icon}
+              src={
+                agent.name === 'ZCode'
+                  ? zcodeIcon.src
+                  : '/brand/agents/' + agent.icon
+              }
               width="44"
               height="44"
               loading="lazy"

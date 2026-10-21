@@ -1,4 +1,8 @@
 ---
+import { Image } from 'astro:assets';
+import blade from '../../assets/demo/night-blade.png';
+import torch from '../../assets/demo/torch.webp';
+import stalker from '../../assets/demo/mist-stalker.png';
 import { Code } from 'astro:components';
 import AgentGallery from './AgentGallery.astro';
 const darkFormula = `$definition.base_damage +
@@ -143,10 +147,13 @@ name: 火把
             data-entity
           >
             <div class="weapon-art mt-[5px] mb-[-5px] text-accent max-lg:w-[125px] max-md:w-37.5 max-md:h-[155px] [&_img]:object-contain mx-auto size-[155px] [&_svg]:size-full [&_img]:size-full">
-              <img
-                src="/demo/night-blade.png"
-                width="1254"
-                height="1254"
+              <Image
+                src={blade}
+                format="webp"
+                quality={80}
+                widths={[240, 480]}
+                sizes="240px"
+                width={480}
                 alt="夜行刃，暗钢剑身带冷蓝刃光的单手剑"
                 loading="lazy"
                 decoding="async"
@@ -222,10 +229,13 @@ name: 火把
             data-entity
           >
             <div class="torch-art h-[155px] mt-3 mb-[15px] [&_img]:block [&_img]:object-contain mx-auto [&_img]:size-full">
-              <img
-                src="/demo/torch.webp"
-                width="512"
-                height="512"
+              <Image
+                src={torch}
+                format="webp"
+                quality={80}
+                widths={[200, 400]}
+                sizes="200px"
+                width={400}
                 alt="燃烧的火把"
                 loading="lazy"
                 decoding="async"
@@ -340,10 +350,13 @@ name: 火把
             data-dark="true"
           >
             <div class="relative flex h-44 items-center justify-center overflow-hidden">
-              <img
-                src="/demo/night-blade.png"
-                width="1254"
-                height="1254"
+              <Image
+                src={blade}
+                format="webp"
+                quality={80}
+                widths={[240, 480]}
+                sizes="240px"
+                width={480}
                 alt="夜行刃"
                 class="size-full object-contain transition-[filter] duration-500 group-data-[dark=false]:grayscale motion-reduce:transition-none"
                 loading="lazy"
@@ -441,10 +454,13 @@ name: 火把
             data-encountered="false"
           >
             <div class="creature-art -mx-5 -mt-5 overflow-hidden rounded-t-[3px] bg-[#111317] text-accent max-lg:-mx-[15px] max-lg:-mt-[15px] max-md:-mx-5 max-md:-mt-5 [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:aspect-square [&_img]:object-cover [&_img]:[filter:brightness(0.38)_saturate(0.2)_blur(1.5px)] [&_img]:[transition:filter_550ms] motion-reduce:[&_img]:[transition:none]">
-              <img
-                src="/demo/mist-stalker.png"
-                width="1254"
-                height="1254"
+              <Image
+                src={stalker}
+                format="webp"
+                quality={80}
+                widths={[320, 480, 720]}
+                sizes="(max-width: 768px) 75vw, 320px"
+                width={720}
                 alt="雾中潜伏者，灰黑色长肢怪物伏在石墓中"
                 loading="lazy"
                 decoding="async"

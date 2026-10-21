@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import sutang from '../../assets/demo/sutang.webp';
+import avatar from '../../assets/demo/sutang-avatar.webp';
 import HostAvatar from '../demo/HostAvatar';
 import CompanionDemo from '../demo/CompanionDemo';
 
@@ -49,12 +52,15 @@ const companionDialogue = '小心！那边好像有陷阱！';
           data-fragment-y="16"
           data-fragment-rotate="-3"
         ></div>
-        <img
+        <Image
           class="companion-character-portrait relative block w-[82%] max-w-115 aspect-2/3 ml-[2%] object-contain"
-          src="/demo/sutang.webp"
+          src={sutang}
+          format="webp"
+          quality={80}
+          widths={[320, 460, 640, 920]}
+          sizes="(max-width: 768px) 82vw, 460px"
           alt="宝藏猎人苏棠的完整角色肖像"
-          width="1024"
-          height="1536"
+          width={920}
           loading="lazy"
           decoding="async"
           data-companion-fragment
@@ -164,11 +170,14 @@ const companionDialogue = '小心！那边好像有陷阱！';
           </div>
           <article class="companion-player-memory flex flex-col [&_header]:flex [&_header]:items-center [&_header]:gap-3.5 [&_header_img]:shrink-0 [&_header_img]:rounded-full [&_header_img]:bg-[color-mix(in_srgb,_var(--color-accent)_8%,_var(--color-canvas))] [&_header_img]:object-cover [&_h4]:text-[19px] [&_h4]:font-medium [&_h4]:leading-[1.5] [&_header_p]:mt-1 [&_header_p]:text-subtle [&_header_p]:text-[12px] [&_header_p]:leading-[1.8] [&_blockquote]:mt-auto [&_blockquote]:pt-4.5 [&_blockquote]:border-t [&_blockquote]:border-t-line [&_blockquote]:text-[16px] [&_blockquote]:leading-[1.8] [&_blockquote]:text-accent py-6 px-7 [&_header_img]:size-12 max-md:p-5">
             <header>
-              <img
-                src="/demo/sutang-avatar.webp"
+              <Image
+                src={avatar}
+                format="webp"
+                quality={80}
+                widths={[48, 96]}
+                sizes="48px"
                 alt=""
-                width="48"
-                height="48"
+                width={48}
                 loading="lazy"
               />
               <div>

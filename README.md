@@ -17,4 +17,6 @@ bun run dev
 
 文档位于 `src/content/docs/`，开发日志位于 `src/content/blog/`。环境变量见 [.env.example](.env.example)。
 
-首页明暗主题真机图位于 `public/screenshots/adventure-desktop-light.png` 和 `public/screenshots/adventure-desktop-dark.png`，来源为项目作者提供的 2026-10-21 桌面端截图，随官网主题切换。
+首页明暗主题真机图位于 `src/assets/screenshots/adventure-desktop-light.png` 和 `src/assets/screenshots/adventure-desktop-dark.png`，来源为项目作者提供的 2026-10-21 桌面端截图，随官网主题切换。
+
+内容图片统一放在 `src/assets/`，通过 `astro:assets` 在构建时生成 WebP 与响应式尺寸；SVG 和网站图标保留在 `public/`。

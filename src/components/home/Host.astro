@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import club from '../../assets/demo/wooden-club.webp';
+import stalker from '../../assets/demo/mist-stalker.png';
 const features = [
   {
     title: '基于 pi 构建',
@@ -105,8 +108,21 @@ const features = [
               class="network-document light:shadow-panel absolute left-[3%] top-[13%] w-[35%] border border-line rounded-[5px] bg-surface shadow-[0_15px_40px_-27px_var(--color-shadow)] max-sm:top-[15%] max-sm:w-[38%]"
               data-host-node
             >
-              <div class="document-tab font-mono font-normal text-[10px] leading-[normal] text-muted border-b border-b-line flex gap-[9px] [&_>_span]:text-accent max-sm:text-[8px] py-2.5 px-[13px] max-sm:p-2">
-                <span aria-hidden="true">≡</span> 伤害.规则.md
+              <div class="document-tab font-mono font-normal text-[10px] leading-[normal] text-muted border-b border-b-line flex items-center gap-[9px] max-sm:text-[8px] py-2.5 px-[13px] max-sm:p-2">
+                <svg
+                  class="size-3.5 shrink-0 text-accent"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+                  <path d="M14 2v6h6" />
+                </svg>
+                <span class="min-w-0 wrap-anywhere">规则/伤害.md</span>
               </div>
               <div class="document-body font-mono font-normal text-[10px] leading-[1.9] [&_p]:mt-1.5 [&_p]:text-[11px] [&_p]:text-muted max-sm:text-[8px] max-sm:[&_p]:text-[9px] p-[13px] max-sm:p-2">
                 <span class="code-muted text-accent">## 伤害结算</span>
@@ -131,10 +147,13 @@ const features = [
               class="network-weapon light:shadow-panel absolute right-0 top-[8%] w-[34%] flex items-center gap-[3px] border border-line rounded-[6px] bg-surface shadow-[0_15px_40px_-27px_var(--color-shadow)] [&_img]:w-[40%] [&_img]:h-auto [&_img]:object-contain [&_img]:[filter:drop-shadow(0_10px_8px_#0003)] [&_img]:shrink-0 [&_>_div]:min-w-0 [&_span]:text-[9px] [&_span]:text-subtle [&_strong]:block [&_strong]:text-[16px] [&_strong]:font-medium [&_strong]:mt-[7px] [&_code]:block [&_code]:mt-[9px] [&_code]:font-mono [&_code]:font-normal [&_code]:text-[8px] [&_code]:leading-[normal] [&_code]:whitespace-normal [&_code]:text-accent [&_code]:wrap-anywhere max-sm:top-[17%] max-sm:w-[37%] max-sm:[&_strong]:text-[13px] max-sm:[&_code]:text-[7px] max-sm:[&_span]:text-[8px] p-[13px] max-sm:p-[9px]"
               data-host-node
             >
-              <img
-                src="/demo/wooden-club.webp"
-                width="512"
-                height="512"
+              <Image
+                src={club}
+                format="webp"
+                quality={80}
+                widths={[80, 160]}
+                sizes="80px"
+                width={160}
                 loading="lazy"
                 alt="木棍"
               />
@@ -197,15 +216,33 @@ const features = [
               class="network-monster light:shadow-panel absolute right-0 bottom-[1%] w-[40%] grid grid-cols-[29%_1fr] gap-[11px] items-center bg-surface border border-line rounded-[6px] shadow-[0_15px_40px_-27px_var(--color-shadow)] [&_>_img]:w-full [&_>_img]:aspect-square [&_>_img]:object-cover [&_>_img]:rounded-[3px] max-sm:w-[44%] max-sm:gap-[7px] p-[13px] max-sm:p-[9px]"
               data-host-node
             >
-              <img
-                src="/demo/mist-stalker.png"
-                width="1254"
-                height="1254"
+              <Image
+                src={stalker}
+                format="webp"
+                quality={80}
+                widths={[80, 160]}
+                sizes="80px"
+                width={160}
                 alt="守卫怪物示意"
                 loading="lazy"
               />
-              <div class="monster-record min-w-0 [&_>_span]:text-subtle [&_>_span]:font-mono [&_>_span]:font-normal [&_>_span]:text-[8px] [&_>_span]:leading-[normal] [&_>_span]:whitespace-nowrap [&_>_div]:grid [&_>_div]:gap-[5px] [&_>_div]:mt-2.5 [&_>_div]:font-mono [&_>_div]:font-normal [&_>_div]:text-[11px] [&_>_div]:leading-[normal] max-sm:[&_>_span]:text-[7px] max-sm:[&_>_div]:text-[9px] max-sm:[&_>_div]:mt-[5px]">
-                <span>守卫.怪物.toml</span>
+              <div class="monster-record min-w-0 [&_>_span]:text-subtle [&_>_span]:font-mono [&_>_span]:font-normal [&_>_span]:text-[8px] [&_>_span]:leading-[normal] [&_>_div]:grid [&_>_div]:gap-[5px] [&_>_div]:mt-2.5 [&_>_div]:font-mono [&_>_div]:font-normal [&_>_div]:text-[11px] [&_>_div]:leading-[normal] max-sm:[&_>_span]:text-[7px] max-sm:[&_>_div]:text-[9px] max-sm:[&_>_div]:mt-[5px]">
+                <span class="flex items-center gap-1.5">
+                  <svg
+                    class="size-3.5 shrink-0 text-accent"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+                    <path d="M14 2v6h6" />
+                  </svg>
+                  <span class="min-w-0 wrap-anywhere">怪物/守卫.toml</span>
+                </span>
                 <div>
                   <code class="hp-old text-danger">− hp = 9</code>
                   <code class="hp-new text-success">+ hp = 5</code>
