@@ -1,5 +1,6 @@
 ---
 import DocsLayout from '../../layouts/DocsLayout.astro';
+import { site } from '../../data/site';
 import { docHref, getDocsTree } from '../../lib/docs';
 
 const tree = await getDocsTree();
@@ -38,7 +39,7 @@ const headings = tree.map((section) => ({
       开始。
     </p>
     <p class="mt-5 border-l-2 border-accent bg-canvas px-4 py-3 text-[13px] leading-6 text-muted">
-      文档对应 v0.1，安装与下载见「认识 TARP」。
+      文档对应 {site.version}，安装与下载见「认识 TARP」。
     </p>
   </header>
 

@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import Pending from '../../components/Pending.astro';
+import ReleaseList from '../../components/ReleaseList.astro';
 import DocOutline from '../../components/docs/DocOutline.astro';
 import DocProse from '../../components/docs/DocProse.astro';
 import { docsSections } from '../../data/site';
@@ -94,6 +95,8 @@ const outline = headings.filter(
         </DocProse>
       )}
     </div>
+
+    {entry.id === 'reference/changelog' && <ReleaseList />}
 
     <nav
       class="mt-12 grid gap-6 border-t border-line pt-6 sm:grid-cols-2"
