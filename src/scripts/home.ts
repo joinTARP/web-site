@@ -204,15 +204,7 @@ function initCompanionAssembly() {
           if (dialogue) dialogueDisposers.push(() => dialogue.dispose());
 
           // 分层景深登场：拱门底座先展开，苏棠立绘踏出舞台，随后浮现聊天气泡。
-          const timeline = gsap.timeline({
-            scrollTrigger: {
-              trigger: visual || section,
-              start: 'top 88%',
-              end: desktop ? 'top 24%' : 'top 36%',
-              scrub: 0.65,
-              invalidateOnRefresh: true,
-            },
-          });
+          const timeline = gsap.timeline({ paused: true });
 
           if (copy) {
             const copyItems = copy.querySelectorAll<HTMLElement>('h2, p, a');
@@ -317,7 +309,31 @@ function initCompanionAssembly() {
               dialogue?.reset();
           };
           timeline.eventCallback('onUpdate', updateDialogue);
-          timeline.scrollTrigger?.refresh();
+          // 先组装完整动画，再绑定滚动，避免恢复到区域下方时初始样式覆盖终态。
+          const trigger = ScrollTrigger.create({
+            animation: timeline,
+            trigger: visual || section,
+            start: 'top 88%',
+            end: desktop ? 'top 24%' : 'top 36%',
+            scrub: 0.65,
+            onRefresh(self) {
+              self.getTween()?.progress(1);
+              timeline.progress(self.progress);
+              updateDialogue();
+            },
+          });
+          // pageshow 后一帧读取浏览器恢复的位置，包括前进、后退恢复。
+          let frame = 0;
+          const syncRestoredPosition = () => {
+            cancelAnimationFrame(frame);
+            frame = requestAnimationFrame(() => trigger.refresh());
+          };
+          window.addEventListener('pageshow', syncRestoredPosition);
+          if (document.readyState === 'complete') syncRestoredPosition();
+          dialogueDisposers.push(() => {
+            cancelAnimationFrame(frame);
+            window.removeEventListener('pageshow', syncRestoredPosition);
+          });
           updateDialogue();
         });
       return () => dialogueDisposers.forEach((dispose) => dispose());
@@ -326,111 +342,31 @@ function initCompanionAssembly() {
 }
 
 function initCompanionDetails() {
-  gsap.matchMedia().add(
-    {
-      desktop: '(min-width: 768px)',
-      mobile: '(max-width: 767px)',
-      motion: '(prefers-reduced-motion: no-preference)',
-    },
-    (context) => {
-      if (!context.conditions?.motion) return;
-      const desktop = context.conditions.desktop;
-      const cleanup: Array<() => void> = [];
-      gsap.utils
-        .toArray<HTMLElement>('[data-companion-detail]')
-        .forEach((detail, index) => {
-          const heading = detail.querySelector('.companion-detail-heading');
-          const title = heading?.querySelector('h3');
-          const description = heading?.querySelector('p');
-          const preview = detail.querySelector<HTMLElement>(
-            '.companion-settings-preview, .companion-memory-preview',
-          );
-          if (!title || !description || !preview) return;
-
-          // 每列进入视口后独立展开一次。
-          // 只用 transform 与 opacity，保持两列高度和表单布局稳定。
-          const timeline = gsap.timeline({
-            defaults: { ease: 'power2.out' },
-            scrollTrigger: {
-              trigger: detail,
-              start: 'top 90%',
-              once: true,
-            },
-          });
-          timeline
-            .fromTo(
-              title,
-              { opacity: 0, y: 28 },
-              { opacity: 1, y: 0, duration: 0.4 },
-              0,
-            )
-            .fromTo(
-              description,
-              { opacity: 0, y: 20 },
-              { opacity: 1, y: 0, duration: 0.4 },
-              0.12,
-            )
-            .fromTo(
-              preview,
-              {
-                opacity: 0,
-                x: desktop ? (index === 0 ? -44 : 44) : 0,
-                y: 48,
-                scale: 0.975,
-                transformOrigin: 'center top',
-              },
-              { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.7 },
-              0.18,
-            );
-
-          const boundary = detail.querySelector('.companion-memory-boundary');
-          const player = detail.querySelector('.companion-player-memory');
-          if (boundary && player) {
-            const lines = boundary.querySelectorAll('span');
-            timeline
-              .fromTo(
-                lines,
-                {
-                  scaleX: 0,
-                  transformOrigin: (_i: number) =>
-                    _i === 0 ? 'right center' : 'left center',
-                },
-                { scaleX: 1, duration: 0.5 },
-                0.42,
-              )
-              .fromTo(
-                boundary.querySelectorAll('svg, p'),
-                { opacity: 0 },
-                { opacity: 1, duration: 0.3 },
-                0.5,
-              )
-              .fromTo(
-                player.querySelectorAll('header, li'),
-                { opacity: 0, y: 16 },
-                { opacity: 1, y: 0, duration: 0.35, stagger: 0.13 },
-                0.58,
-              )
-              .fromTo(
-                player.querySelector('blockquote'),
-                { opacity: 0, y: 12 },
-                { opacity: 1, y: 0, duration: 0.35 },
-                1.12,
-              );
-          }
-
-          // 键盘进入表单时直接展示全文，避免焦点落在尚未显现的控件上。
-          const showForFocus = () => {
-            timeline.scrollTrigger?.disable(false);
-            timeline.progress(1).pause();
-          };
-          detail.addEventListener('focusin', showForFocus);
-          cleanup.push(() =>
-            detail.removeEventListener('focusin', showForFocus),
-          );
-        });
-      return () => cleanup.forEach((dispose) => dispose());
-    },
-  );
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    const cleanup: Array<() => void> = [];
+    gsap.utils
+      .toArray<HTMLElement>('[data-companion-detail]')
+      .forEach((detail) => {
+        const fade = gsap.fromTo(
+          detail,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.55,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: detail, start: 'top 90%', once: true },
+          },
+        );
+        // 键盘聚焦时立即展示，避免焦点落在尚未显现的控件上。
+        const showForFocus = () => {
+          fade.scrollTrigger?.disable(false);
+          fade.progress(1).pause();
+        };
+        detail.addEventListener('focusin', showForFocus);
+        cleanup.push(() => detail.removeEventListener('focusin', showForFocus));
+      });
+    return () => cleanup.forEach((dispose) => dispose());
+  });
 }
 
 function initFaq() {
