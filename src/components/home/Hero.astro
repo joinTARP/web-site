@@ -113,8 +113,13 @@ const features = [
     background: linear-gradient(
       105deg,
       var(--color-foreground) 0%,
-      color-mix(in srgb, var(--color-foreground) 55%, var(--color-accent)) 40%,
-      var(--color-accent) 100%
+      color-mix(
+          in srgb,
+          var(--color-foreground) 55%,
+          var(--hero-title-accent, var(--color-accent))
+        )
+        40%,
+      var(--hero-title-accent, var(--color-accent)) 100%
     );
     background-clip: text;
     -webkit-text-fill-color: transparent;

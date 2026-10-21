@@ -246,21 +246,13 @@ const features = [
     mask-image: radial-gradient(ellipse, #000 20%, transparent 70%);
   }
   .instruction-bubble {
-    --speech-background: color-mix(
-      in srgb,
-      var(--color-surface-raised) 94%,
-      var(--color-accent)
-    );
-    --speech-border: color-mix(
-      in srgb,
-      var(--color-accent) 22%,
-      var(--color-line)
-    );
+    --speech-background: var(--color-surface-raised);
+    --speech-border: var(--color-line);
   }
   .agent-halo {
     background: radial-gradient(
       ellipse,
-      color-mix(in srgb, var(--color-accent) 17%, transparent),
+      color-mix(in srgb, var(--color-ambient) 17%, transparent),
       transparent 65%
     );
   }

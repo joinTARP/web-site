@@ -11,30 +11,6 @@ export const site = {
   stage: '试验性版本',
 };
 
-// 提供实机截图后，将 src 填为 public 下的图片路径，如 /screenshots/adventure.webp。
-export const heroScreenshots: {
-  title: string;
-  alt: string;
-  position: 'back' | 'front' | 'lower';
-  src?: string;
-}[] = [
-  {
-    title: '角色与队伍',
-    alt: 'TARP 实机截图：角色与 AI 队友',
-    position: 'back',
-  },
-  {
-    title: '世界与规则',
-    alt: 'TARP 实机截图：模组中的世界与规则',
-    position: 'lower',
-  },
-  {
-    title: '冒险与对话',
-    alt: 'TARP 实机截图：与 AI 主持和队友一起跑团',
-    position: 'front',
-  },
-];
-
 export const moduleSearchHref =
   'https://github.com/search?q=topic%3Atarp-module&type=repositories';
 

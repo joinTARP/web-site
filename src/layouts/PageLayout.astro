@@ -37,7 +37,7 @@ const canonical = Astro.site
     {reading && <ClientRouter fallback="swap" />}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#18191b" />
+    <meta name="theme-color" content="#171717" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
@@ -73,7 +73,7 @@ const canonical = Astro.site
         root.classList.toggle('dark', theme === 'dark');
         document
           .querySelector('meta[name="theme-color"]')
-          ?.setAttribute('content', theme === 'dark' ? '#18191b' : '#f7f8fb');
+          ?.setAttribute('content', theme === 'dark' ? '#171717' : '#ffffff');
       })();
     </script>
     {animate && <script is:inline>

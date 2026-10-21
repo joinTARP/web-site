@@ -39,22 +39,23 @@
   --color-ring: var(--ring);
 }
 
-/* 沿用桌面端暗色主题：炭灰背景、冷白正文、灰蓝强调色。 */
+/* 中性灰底色搭配低饱和蓝色；明暗主题分别调整亮度。 */
 @theme {
   --color-shadow: #0009;
-  --color-sidebar: #151619;
-  --color-canvas: #18191b;
-  --color-surface: #202125;
-  --color-surface-raised: #23252a;
-  --color-surface-active: #2b303a;
-  --color-foreground: #e4e4e7;
-  --color-muted: #b2b5bd;
-  --color-subtle: #92959d;
-  --color-accent: #8799b6;
-  --color-link: #93c5fd;
+  --color-sidebar: #111111;
+  --color-canvas: #171717;
+  --color-surface: #1e1e1e;
+  --color-surface-raised: #222222;
+  --color-surface-active: #333333;
+  --color-foreground: #ededed;
+  --color-muted: #a0a0a0;
+  --color-subtle: #a0a0a0;
+  --color-ambient: #a0a0a0;
+  --color-accent: #8b9fba;
+  --color-link: #8b9fba;
   --color-success: #9fb4a7;
-  --color-danger: #bc8184;
-  --color-line: #303238;
+  --color-danger: #ef8c8c;
+  --color-line: #303030;
 
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
@@ -67,7 +68,6 @@
 
   --shadow-panel:
     0 18px 40px -24px var(--color-shadow), 0 2px 6px -4px var(--color-shadow);
-  --shadow-preview: 0 24px 56px -24px var(--color-shadow);
   --shadow-tile: 0 4px 14px -10px var(--color-shadow);
   --shadow-tile-hover: 0 14px 28px -16px var(--color-shadow);
   --shadow-host-core:
@@ -112,32 +112,37 @@
   :root {
     color-scheme: dark;
     --hero-aurora-opacity: 1;
-    --hero-spotlight-color: #a2b3ce;
+    --hero-spotlight-color: var(--color-ambient);
     --hero-spotlight-opacity: 0.12;
     @apply bg-canvas font-sans text-foreground antialiased;
 
-    /* 冷白底、白色纸面和墨色文字；手动选择与系统偏好使用同一套配色。 */
+    /* 白底、深灰文字与淡蓝点缀；展示区光晕独立于页面底色。 */
     @variant light {
       color-scheme: light;
-      --color-shadow: #1a2e4826;
-      --color-canvas: #f7f8fb;
-      --color-sidebar: #edf1f7;
+      --color-shadow: #20283014;
+      --color-canvas: #ffffff;
+      --color-sidebar: #f7f8fa;
       --color-surface: #ffffff;
-      --color-surface-raised: #eef2f7;
-      --color-surface-active: #e5ebf4;
-      --color-foreground: #202838;
-      --color-muted: #526177;
-      --color-subtle: #5b6980;
-      --color-accent: #4e6790;
-      --color-link: #365fa3;
+      --color-surface-raised: #f7f8fa;
+      --color-surface-active: #eef5fc;
+      --color-foreground: #202124;
+      --color-muted: #60656b;
+      --color-subtle: #767d85;
+      --color-ambient: #8a929b;
+      --color-accent: #527ca4;
+      --color-link: #527ca4;
       --color-success: #35715e;
-      --color-danger: #ad485e;
-      --color-line: #d7dfe9;
-      --hero-aurora-opacity: 0.65;
-      --hero-spotlight-color: #bfcfe9;
-      --hero-spotlight-opacity: 0.48;
-      --logo-shine-color: #6b83aa;
-      --logo-shine-opacity: 0.5;
+      --color-danger: #c42b2b;
+      --color-line: #e5e9ee;
+      --hero-aurora-opacity: 0;
+      --hero-spotlight-color: #737373;
+      --hero-spotlight-opacity: 0;
+      --logo-shine-color: #737373;
+      --logo-shine-opacity: 0.25;
+      --shadow-panel:
+        0 2px 4px -2px var(--color-shadow),
+        0 12px 28px -20px var(--color-shadow);
+      --hero-title-accent: #7094b8;
     }
   }
   html {

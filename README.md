@@ -16,3 +16,5 @@ bun run dev
 - `bun run format:check`：检查格式。
 
 文档位于 `src/content/docs/`，开发日志位于 `src/content/blog/`。环境变量见 [.env.example](.env.example)。
+
+首页明暗主题真机图位于 `public/screenshots/adventure-desktop-light.png` 和 `public/screenshots/adventure-desktop-dark.png`，来源为项目作者提供的 2026-10-21 桌面端截图，随官网主题切换。
