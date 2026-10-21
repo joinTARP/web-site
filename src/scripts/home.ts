@@ -187,11 +187,8 @@ function initCompanionAssembly() {
           const copy = section.querySelector<HTMLElement>(
             '[data-companion-copy]',
           );
-          const aura = section.querySelector<HTMLElement>(
-            '[data-companion-aura]',
-          );
-          const backdrop = section.querySelector<HTMLElement>(
-            '[data-companion-backdrop]',
+          const glow = section.querySelector<HTMLElement>(
+            '[data-companion-glow]',
           );
           const portrait = section.querySelector<HTMLElement>(
             '[data-companion-portrait]',
@@ -203,7 +200,7 @@ function initCompanionAssembly() {
           const dialogue = createCompanionDialogue(section);
           if (dialogue) dialogueDisposers.push(() => dialogue.dispose());
 
-          // 分层景深登场：拱门底座先展开，苏棠立绘踏出舞台，随后浮现聊天气泡。
+          // 分层登场：苏棠立绘携同源模糊光晕浮现，随后弹出聊天气泡并逐字输出台词。
           const timeline = gsap.timeline({ paused: true });
 
           if (copy) {
@@ -225,42 +222,13 @@ function initCompanionAssembly() {
             );
           }
 
-          if (aura) {
-            timeline.fromTo(
-              aura,
-              { opacity: 0, scale: 0.72 },
-              { opacity: 1, scale: 1, duration: 0.68, ease: 'sine.out' },
-              0,
-            );
-          }
-
-          if (backdrop) {
-            timeline.fromTo(
-              backdrop,
-              {
-                opacity: 0,
-                y: desktop ? 44 : 28,
-                scale: 0.92,
-                transformOrigin: '50% 85%',
-              },
-              {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.62,
-                ease: 'power2.out',
-              },
-              0.04,
-            );
-          }
-
           if (portrait) {
             timeline.fromTo(
               portrait,
               {
                 opacity: 0,
                 x: desktop ? 24 : 10,
-                y: desktop ? 56 : 36,
+                y: desktop ? 48 : 32,
                 scale: 0.93,
                 transformOrigin: '50% 90%',
               },
@@ -272,7 +240,16 @@ function initCompanionAssembly() {
                 duration: 0.72,
                 ease: 'power2.out',
               },
-              0.1,
+              0.06,
+            );
+          }
+
+          if (glow) {
+            timeline.fromTo(
+              glow,
+              { opacity: 0, scale: 0.78 },
+              { opacity: 1, scale: 1, duration: 0.78, ease: 'sine.out' },
+              0.12,
             );
           }
 

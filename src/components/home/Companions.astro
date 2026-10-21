@@ -33,7 +33,7 @@ const companionDialogue = '小心！那边好像有陷阱！';
         </p>
         <p class="mt-4 text-base leading-8 text-pretty text-muted">
           不用约时间，也不用担心冷场。想听队友的看法，直接{' '}
-          <span class="companion-mention inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-1.5 py-0.5 font-mono text-[0.9em] leading-none font-medium whitespace-nowrap text-accent">
+          <span class="companion-mention font-medium whitespace-nowrap text-accent">
             @ 它
           </span>
           。
@@ -56,36 +56,36 @@ const companionDialogue = '小心！那边好像有陷阱！';
         class="companion-character relative mx-auto w-full max-w-140 min-h-[clamp(380px,90vw,500px)] isolate select-none sm:min-h-122 lg:min-h-130"
         data-companion-visual
       >
-        <!-- 舞台环境光晕 -->
+        <!-- 角色立绘与同源模糊光晕 -->
         <div
-          class="companion-character-aura pointer-events-none absolute -z-2 top-[4%] right-[8%] bottom-[8%] left-[8%] rounded-full"
-          aria-hidden="true"
-          data-companion-aura
-        ></div>
-
-        <!-- 角色拱门背板与坐标网格 -->
-        <div
-          class="companion-character-backdrop light:shadow-panel pointer-events-none absolute -z-1 top-[9%] right-[14%] bottom-[4%] left-[14%] overflow-hidden rounded-t-[999px] rounded-b-3xl border border-line bg-surface/75 shadow-[0_24px_60px_-32px_var(--color-shadow)] max-sm:right-[10%] max-sm:left-[10%]"
-          aria-hidden="true"
-          data-companion-backdrop
-        >
-          <div class="companion-stage-grid light:opacity-25 absolute inset-0 [background-size:18px_18px] opacity-15"></div>
-          <div class="absolute inset-2.5 rounded-t-[999px] rounded-b-[18px] border border-accent/18"></div>
-          <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-canvas/85 via-canvas/30 to-transparent light:from-surface/90 light:via-surface/30"></div>
-        </div>
-
-        <!-- 角色立绘主体 -->
-        <div
-          class="companion-portrait-wrap relative mx-auto w-[78%] max-w-108 pt-2 sm:w-[76%]"
+          class="companion-portrait-wrap relative mx-auto w-[80%] max-w-110 pt-2 sm:w-[78%]"
           data-companion-portrait
         >
+          <div
+            class="pointer-events-none absolute inset-0 -z-1"
+            aria-hidden="true"
+            data-companion-glow
+          >
+            <Image
+              class="aspect-2/3 w-full scale-115 object-contain opacity-60 blur-[56px] brightness-115 saturate-160 light:opacity-40 light:brightness-105 light:saturate-140"
+              src={sutang}
+              format="webp"
+              quality={50}
+              widths={[160, 240]}
+              sizes="240px"
+              alt=""
+              width={240}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
           <Image
-            class="companion-character-portrait relative block aspect-2/3 w-full object-contain [filter:drop-shadow(0_22px_32px_rgba(0,0,0,0.34))] light:[filter:drop-shadow(0_18px_28px_rgba(32,40,48,0.14))]"
+            class="companion-character-portrait relative block aspect-2/3 w-full object-contain [filter:drop-shadow(0_20px_32px_rgba(0,0,0,0.28))] light:[filter:drop-shadow(0_16px_26px_rgba(32,40,48,0.12))]"
             src={sutang}
             format="webp"
             quality={80}
             widths={[320, 460, 640, 920]}
-            sizes="(max-width: 768px) 78vw, 432px"
+            sizes="(max-width: 768px) 80vw, 440px"
             alt="宝藏猎人苏棠的完整角色肖像"
             width={920}
             loading="lazy"
@@ -220,21 +220,6 @@ const companionDialogue = '小心！那边好像有陷阱！';
 </section>
 
 <style>
-  .companion-character-aura {
-    background: radial-gradient(
-      ellipse at 52% 44%,
-      color-mix(in srgb, var(--color-accent) 18%, transparent),
-      color-mix(in srgb, var(--color-ambient) 6%, transparent) 45%,
-      transparent 72%
-    );
-  }
-  .companion-stage-grid {
-    background-image: radial-gradient(
-      var(--color-subtle) 0.75px,
-      transparent 0.75px
-    );
-    mask-image: radial-gradient(ellipse at 50% 36%, #000 18%, transparent 72%);
-  }
   [data-companion-dialogue][data-typing]::after {
     animation: blink 0.8s steps(1) infinite;
   }
