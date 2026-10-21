@@ -83,7 +83,7 @@ const agents: Agent[] = [
     <li data-agent-tile>
       <a
         class:list={[
-          'group/agent light:border-line/80 light:bg-surface/80 light:shadow-tile interactive:light:shadow-tile-hover relative isolate flex min-h-40 flex-col items-center justify-center gap-4.5 rounded-[14px] border border-transparent px-3 pt-6 pb-4.5 text-subtle [transition:transform_450ms_var(--ease-smooth),background-color_350ms_ease,border-color_350ms_ease,box-shadow_350ms_ease,color_350ms_ease] interactive:-translate-y-[5px] interactive:border-(--agent-accent)/20 interactive:bg-surface interactive:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent max-lg:min-h-[145px] max-lg:px-1.5 compact:min-h-[135px] compact:gap-3.5 compact:px-1 motion-reduce:transition-none motion-reduce:interactive:translate-y-0',
+          'group/agent light:border-line/80 light:bg-surface/80 light:shadow-tile interactive:light:shadow-tile-hover relative isolate flex min-h-40 flex-col items-center justify-center gap-4.5 rounded-[14px] border border-transparent px-3 pt-6 pb-4.5 text-subtle [transition:background-color_350ms_ease,border-color_350ms_ease,box-shadow_350ms_ease,color_350ms_ease] interactive:border-(--agent-accent)/20 interactive:bg-surface interactive:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent max-lg:min-h-[145px] max-lg:px-1.5 compact:min-h-[135px] compact:gap-3.5 compact:px-1 motion-reduce:transition-none',
           agent.accentClass,
         ]}
         href={agent.href}
@@ -92,12 +92,12 @@ const agents: Agent[] = [
         aria-label={agent.name + '（打开官网）'}
       >
         <span
-          class="pointer-events-none absolute top-[17px] left-[calc(50%-32px)] -z-1 size-16 scale-75 rounded-full bg-(--agent-accent)/22 opacity-0 blur-[18px] transition-[opacity,transform] duration-450 ease-[ease] group-interactive/agent:scale-100 group-interactive/agent:opacity-100 motion-reduce:transition-none"
+          class="pointer-events-none absolute top-[17px] left-[calc(50%-32px)] -z-1 size-16 rounded-full bg-(--agent-accent)/22 opacity-0 blur-[18px] transition-opacity duration-450 ease-[ease] group-interactive/agent:opacity-100 motion-reduce:transition-none"
           aria-hidden="true"
         />
         <span
           class:list={[
-            'block size-11 shrink-0 opacity-55 light:opacity-80 transition-[opacity,transform,background-color] duration-450 ease-smooth group-interactive/agent:scale-108 group-interactive/agent:opacity-100 compact:size-9 [@media(hover:none)]:opacity-85 motion-reduce:transition-none motion-reduce:group-interactive/agent:scale-100',
+            'block size-11 shrink-0 opacity-55 light:opacity-80 transition-[opacity,background-color] duration-450 ease-smooth group-interactive/agent:opacity-100 compact:size-9 [@media(hover:none)]:opacity-85 motion-reduce:transition-none',
             !agent.colored &&
               'bg-muted mask-contain mask-center mask-no-repeat group-interactive/agent:bg-(--agent-accent)',
             agent.maskClass,

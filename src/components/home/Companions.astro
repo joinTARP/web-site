@@ -2,7 +2,7 @@
 import HostAvatar from '../demo/HostAvatar';
 import CompanionDemo from '../demo/CompanionDemo';
 
-const companionDialogue = '那块地砖陷下去了。\n我举火，你看看？';
+const companionDialogue = '小心！那边好像有陷阱！';
 ---
 
 <section
@@ -135,7 +135,9 @@ const companionDialogue = '那块地砖陷下去了。\n我举火，你看看？
               </span>
               <span>主持人的幕后资料</span>
             </div>
-            <p>下陷砖安全，北侧紧邻的平砖承重触发机关。</p>
+            <p>
+              下陷的地砖是安全的。紧挨着它北侧的平整地砖才是机关，踩上去就会触发。
+            </p>
             <span class="companion-host-note block mt-1.5 text-subtle text-[12px] leading-[1.8]">
               机关位置、触发条件、检定规则
             </span>
@@ -180,11 +182,11 @@ const companionDialogue = '那块地砖陷下去了。\n我举火，你看看？
               </li>
               <li>
                 <span>线索</span>
-                <p>中段地砖下陷开裂，前方地砖平整。</p>
+                <p>通道中段有一块地砖下陷开裂。</p>
               </li>
               <li>
-                <span>判断</span>
-                <p>我举火，让同伴看看地砖。</p>
+                <span>分析</span>
+                <p>下陷的地砖存在危险。</p>
               </li>
             </ol>
             <blockquote>“{companionDialogue.replace('\n', '')}”</blockquote>
