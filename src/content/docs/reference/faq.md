@@ -17,9 +17,9 @@ status: published
 
 ## 现在从哪里下载？支持哪些系统？
 
-当前是 **v0.1**，安装包即将提供。发布后可从[官网首页](/)下载，安装完成后按[第一次冒险](/docs/getting-started/first-adventure/)开始。
+从[官网首页](/)下载最新发布版本，安装完成后按[第一次冒险](/docs/getting-started/first-adventure/)开始。
 
-桌面端配置了 macOS、Windows 和 Linux 构建目标。实际支持哪些系统、需要哪个安装包，以发布时的说明为准。
+提供 Windows x64、macOS Apple Silicon 和 Linux x64 安装包。系统依赖见[安装并打开应用](/docs/getting-started/introduction/#安装并打开应用)。
 
 ## 源码采用什么许可证，可以商用吗？
 

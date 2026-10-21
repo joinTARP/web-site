@@ -21,6 +21,27 @@ export const nav = [
 
 export const sourceHref = 'https://github.com/joinTARP/jointarp';
 
+const downloadBase =
+  'https://github.com/joinTARP/TARP/releases/latest/download';
+
+export const downloads = [
+  {
+    label: 'Windows',
+    architecture: 'x64',
+    href: `${downloadBase}/TARP-windows-x64-setup.zip`,
+  },
+  {
+    label: 'macOS',
+    architecture: 'Apple Silicon',
+    href: `${downloadBase}/TARP-macos-arm64.dmg`,
+  },
+  {
+    label: 'Linux',
+    architecture: 'x64',
+    href: `${downloadBase}/TARP-linux-x64-setup.tar.gz`,
+  },
+];
+
 export const startHref = '/docs/getting-started/introduction/';
 
 export const faqs = [
@@ -51,7 +72,8 @@ export const faqs = [
   },
   {
     question: '现在能下载吗？支持哪些系统？',
-    answer: '安装包即将提供，发布后可从首页下载，并查看支持的系统。',
+    answer:
+      '可以从首页下载 Windows x64、macOS Apple Silicon 和 Linux x64 安装包。',
   },
   {
     question: '冒险进度会保存吗？',
