@@ -9,15 +9,15 @@ const isActive = (href: string) => path.startsWith(href);
 ---
 
 <header
-  class="group/header short-screen:transition-transform short-screen:duration-220 short-screen:ease-[ease] short-screen:data-hidden:[transform:translateY(calc(-100%_-_16px))] motion-reduce:transition-none pointer-events-none fixed inset-x-0 top-0 z-50 [view-transition-name:site-header]"
+  class="group/header transition-none motion-safe:[html.motion_&]:not-data-ready:invisible short-screen:data-ready:transition-transform short-screen:duration-220 short-screen:ease-[ease] short-screen:data-hidden:[transform:translateY(calc(-100%_-_16px))] motion-reduce:transition-none pointer-events-none fixed inset-x-0 top-0 z-50 [view-transition-name:site-header]"
   data-header
 >
   <div
-    class="shell short-screen:group-data-hidden/header:pointer-events-none pointer-events-auto relative flex h-18 items-center justify-between gap-6 rounded-2xl border border-transparent transition-[width,height,translate,padding,background-color,border-color,box-shadow] duration-300 ease-expo group-data-scrolled/header:h-15 group-data-scrolled/header:w-[min(900px,calc(100%-48px))] group-data-scrolled/header:translate-y-3 group-data-scrolled/header:border-line group-data-scrolled/header:bg-canvas/90 light:group-data-scrolled/header:bg-surface/95 group-data-scrolled/header:px-4 group-data-scrolled/header:shadow-[0_8px_32px_-12px_var(--color-shadow)] group-data-scrolled/header:backdrop-blur-xl sm:group-data-scrolled/header:px-5"
+    class="shell short-screen:group-data-hidden/header:pointer-events-none pointer-events-auto relative flex h-18 items-center justify-between gap-6 rounded-2xl border border-transparent transition-none group-data-ready/header:transition-[width,height,translate,padding,background-color,border-color,box-shadow] duration-300 ease-expo group-data-scrolled/header:h-15 group-data-scrolled/header:w-[min(900px,calc(100%-48px))] group-data-scrolled/header:translate-y-3 group-data-scrolled/header:border-line group-data-scrolled/header:bg-canvas/90 light:group-data-scrolled/header:bg-surface/95 group-data-scrolled/header:px-4 group-data-scrolled/header:shadow-[0_8px_32px_-12px_var(--color-shadow)] group-data-scrolled/header:backdrop-blur-xl sm:group-data-scrolled/header:px-5"
     data-header-panel
   >
     <a href="/" class="relative z-10" aria-label="TARP 首页">
-      <Logo class="h-6 text-foreground transition-[height] duration-300 ease-expo group-data-scrolled/header:h-5.5" />
+      <Logo class="h-6 text-foreground transition-none group-data-ready/header:transition-[height] duration-300 ease-expo group-data-scrolled/header:h-5.5" />
     </a>
 
     <nav
@@ -147,6 +147,19 @@ const isActive = (href: string) => path.startsWith(href);
     previousY = window.scrollY;
   });
   update();
+  // pageshow 后一帧再读取浏览器恢复的滚动位置，首次状态同步不播放过渡。
+  function syncInitialState() {
+    requestAnimationFrame(() => {
+      previousY = window.scrollY;
+      direction = 0;
+      travel = 0;
+      update();
+      header?.getBoundingClientRect();
+      header?.setAttribute('data-ready', '');
+    });
+  }
+  if (document.readyState === 'complete') syncInitialState();
+  else window.addEventListener('pageshow', syncInitialState, { once: true });
 
   function setMenu(open: boolean) {
     if (!toggle || !menu) return;

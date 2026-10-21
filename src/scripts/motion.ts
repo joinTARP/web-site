@@ -18,19 +18,18 @@ function initReveals() {
 
 function initFaqReveals() {
   gsap.utils.toArray<HTMLElement>('[data-faq-reveal]').forEach((element) => {
-    // 小幅位移跟随视口入口进度，完成后保持可读，不逐字拆分或成批弹出。
+    // 进入视口后播放一次，回滚时保持可读。
     const reveal = gsap.fromTo(
       element,
       { opacity: 0, y: 14 },
       {
         opacity: 1,
         y: 0,
-        ease: 'none',
+        duration: 0.55,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: element,
           start: 'top 96%',
-          end: 'top 72%',
-          scrub: 0.55,
           once: true,
         },
       },

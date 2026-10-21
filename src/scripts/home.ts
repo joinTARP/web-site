@@ -13,44 +13,47 @@ function initHero() {
   });
 }
 
-function initHeroScreenshot() {
+async function initHeroScreenshot() {
   const screenshot = document.querySelector<HTMLElement>(
     '[data-hero-screenshot]',
   );
-  if (!screenshot) return;
+  const container = screenshot?.parentElement;
+  if (!screenshot || !container) return;
 
-  gsap.matchMedia().add(
-    {
-      desktop: '(min-width: 768px)',
-      motion: '(prefers-reduced-motion: no-preference)',
-    },
-    (context) => {
-      if (!context.conditions?.motion) return;
-      const desktop = context.conditions.desktop;
-      gsap.fromTo(
-        screenshot,
-        {
-          transformPerspective: 1400,
-          rotationX: desktop ? 8 : 0,
-          scale: desktop ? 0.92 : 0.97,
-          y: desktop ? 48 : 20,
-        },
-        {
-          rotationX: 0,
-          scale: 1,
-          y: 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: screenshot.parentElement,
-            start: 'top 95%',
-            end: 'top 20%',
-            scrub: 0.7,
-            invalidateOnRefresh: true,
-          },
-        },
-      );
-    },
-  );
+  // 初始倾斜由组件样式提供；图片就绪后才允许滚动触发翻正。
+  await Promise.all([
+    document.fonts.ready,
+    ...Array.from(screenshot.querySelectorAll('img'))
+      .filter((image) => getComputedStyle(image).display !== 'none')
+      .map((image) => image.decode().catch(() => undefined)),
+  ]);
+
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    const flip = gsap.to(screenshot, {
+      rotationX: 0,
+      scale: 1,
+      y: 0,
+      duration: 1.4,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: container,
+        // 大屏上截图已在首屏内，也要向下滚动后才触发。
+        start: () =>
+          Math.max(
+            96,
+            container.getBoundingClientRect().top +
+              window.scrollY -
+              window.innerHeight * 0.8,
+          ),
+        once: true,
+      },
+    });
+    // 已恢复到触发点之后时，直接呈现终态，再显示图片。
+    if (flip.scrollTrigger && window.scrollY >= flip.scrollTrigger.start) {
+      flip.progress(1);
+    }
+    gsap.set(screenshot, { visibility: 'visible' });
+  });
 }
 
 function initHeroSpotlight() {
@@ -292,16 +295,14 @@ function initCompanionDetails() {
           );
           if (!title || !description || !preview) return;
 
-          // 每列独立跟随滚动，小屏纵向排列时仍在各自进入视口后展开。
+          // 每列进入视口后独立展开一次。
           // 只用 transform 与 opacity，保持两列高度和表单布局稳定。
           const timeline = gsap.timeline({
             defaults: { ease: 'power2.out' },
             scrollTrigger: {
               trigger: detail,
               start: 'top 90%',
-              end: desktop ? 'top 18%' : 'top 25%',
-              scrub: 0.45,
-              invalidateOnRefresh: true,
+              once: true,
             },
           });
           timeline

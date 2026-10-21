@@ -42,7 +42,6 @@
 /* 中性灰底色搭配低饱和蓝色；明暗主题分别调整亮度。 */
 @theme {
   --color-shadow: #0009;
-  --color-sidebar: #111111;
   --color-canvas: #171717;
   --color-surface: #1e1e1e;
   --color-surface-raised: #222222;
@@ -120,6 +119,8 @@
   }
   :root {
     color-scheme: dark;
+    --site-header-space: 100px;
+    scroll-padding-top: var(--site-header-space);
     --hero-aurora-opacity: 1;
     --hero-spotlight-color: var(--color-ambient);
     --hero-spotlight-opacity: 0.12;
@@ -130,7 +131,6 @@
       color-scheme: light;
       --color-shadow: #20283014;
       --color-canvas: #ffffff;
-      --color-sidebar: #f7f8fa;
       --color-surface: #ffffff;
       --color-surface-raised: #f7f8fa;
       --color-surface-active: #eef5fc;
@@ -153,10 +153,6 @@
         0 12px 28px -20px var(--color-shadow);
       --hero-title-accent: #7094b8;
     }
-  }
-  html {
-    --site-header-space: 100px;
-    scroll-padding-top: var(--site-header-space);
   }
   @media (max-height: 800px) {
     html[data-header-hidden] {
