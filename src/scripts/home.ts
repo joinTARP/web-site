@@ -13,6 +13,46 @@ function initHero() {
   });
 }
 
+function initHeroScreenshot() {
+  const screenshot = document.querySelector<HTMLElement>(
+    '[data-hero-screenshot]',
+  );
+  if (!screenshot) return;
+
+  gsap.matchMedia().add(
+    {
+      desktop: '(min-width: 768px)',
+      motion: '(prefers-reduced-motion: no-preference)',
+    },
+    (context) => {
+      if (!context.conditions?.motion) return;
+      const desktop = context.conditions.desktop;
+      gsap.fromTo(
+        screenshot,
+        {
+          transformPerspective: 1400,
+          rotationX: desktop ? 8 : 0,
+          scale: desktop ? 0.92 : 0.97,
+          y: desktop ? 48 : 20,
+        },
+        {
+          rotationX: 0,
+          scale: 1,
+          y: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: screenshot.parentElement,
+            start: 'top 95%',
+            end: 'top 20%',
+            scrub: 0.7,
+            invalidateOnRefresh: true,
+          },
+        },
+      );
+    },
+  );
+}
+
 function initHeroSpotlight() {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   const light = hero?.querySelector<HTMLElement>('[data-hero-light]');
@@ -351,6 +391,7 @@ function initFaq() {
   });
 }
 
+initHeroScreenshot();
 initHeroSpotlight();
 initCompanionAssembly();
 initCompanionDetails();
