@@ -1,0 +1,197 @@
+---
+import { docHref, getDocsTree } from '../lib/docs';
+import type { MarkdownHeading } from 'astro';
+import DocOutline from '../components/docs/DocOutline.astro';
+import ReadingLayout from './ReadingLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  headings?: MarkdownHeading[];
+}
+
+const { title, description, headings = [] } = Astro.props;
+const outline = headings.filter(
+  (heading) => heading.depth === 2 || heading.depth === 3,
+);
+const tree = await getDocsTree();
+const path = Astro.url.pathname;
+const linkClass =
+  "relative block rounded-md py-1.5 pr-3 pl-8 text-[13px] leading-5 text-muted transition-colors duration-150 hover:bg-surface-active/65 hover:text-foreground aria-[current=page]:bg-accent/10 aria-[current=page]:font-medium aria-[current=page]:text-link before:absolute before:top-1/2 before:left-3.5 before:size-1 before:-translate-y-1/2 before:rounded-full before:bg-accent before:opacity-0 before:transition-opacity before:duration-150 before:content-[''] aria-[current=page]:before:opacity-100 motion-reduce:transition-none motion-reduce:before:transition-none";
+const sectionIconPaths: Record<string, string> = {
+  'getting-started':
+    'M8 6.5 13 10l-5 3.5v-7ZM10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z',
+  play: 'M5.5 3h9A2.5 2.5 0 0 1 17 5.5v9a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 3 14.5v-9A2.5 2.5 0 0 1 5.5 3ZM6.5 6.5h.01M10 10h.01M13.5 13.5h.01',
+  modules:
+    'M2.5 6.5v-2A1.5 1.5 0 0 1 4 3h4l2 3h6A1.5 1.5 0 0 1 17.5 7.5v8A1.5 1.5 0 0 1 16 17H4a1.5 1.5 0 0 1-1.5-1.5v-9Z',
+  reference: 'M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM10 9v5m0-8h.01',
+};
+---
+
+<ReadingLayout title={title} description={description}>
+  <div class="mx-auto grid w-full max-w-[1560px] grid-cols-[minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_200px]">
+    <aside
+      data-docs-sidebar
+      transition:persist="docs-sidebar"
+      class="mx-5 mt-5 min-w-0 lg:sticky lg:top-16 lg:mx-0 lg:mt-0 lg:h-[calc(100svh-4rem)] lg:self-start lg:overflow-y-auto lg:border-r lg:border-line/80 lg:bg-surface lg:px-4 lg:pt-6 lg:pb-8 xl:px-5 [scrollbar-width:thin] [scrollbar-color:var(--color-line)_transparent]"
+    >
+      <details
+        class="group rounded-lg border border-line bg-surface lg:rounded-none lg:border-0 max-lg:[html[data-theme-preference]_&:not([data-ready])>nav]:hidden"
+        data-docs-nav
+        open
+      >
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-4 py-3.5 text-[13px] font-medium text-foreground transition-colors hover:bg-canvas lg:hidden [&::-webkit-details-marker]:hidden">
+          <span class="flex items-center gap-2.5">
+            <svg
+              class="size-4 text-subtle"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 3h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM7.5 3v14M10.5 7H14m-3.5 3H14m-3.5 3H13" />
+            </svg>
+            文档目录
+          </span>
+          <svg
+            class="size-4 text-subtle transition-transform group-open:rotate-180"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <path d="m5 8 5 5 5-5" />
+          </svg>
+        </summary>
+        <nav class="space-y-4 px-3 pt-1 pb-4 lg:p-0" aria-label="文档目录">
+          <a
+            href="/docs/"
+            class="group/home flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] text-muted transition-colors duration-150 hover:bg-surface-active/65 hover:text-foreground aria-[current=page]:bg-accent/10 aria-[current=page]:font-medium aria-[current=page]:text-link motion-reduce:transition-none"
+            aria-current={path === '/docs/' ? 'page' : undefined}
+          >
+            <svg
+              class="size-4 shrink-0 text-subtle group-aria-[current=page]/home:text-accent"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M10 4.5C8 3.5 5 3.5 2.5 4.5v12c2.5-1 5.5-1 7.5 0m0-12c2-1 5-1 7.5 0v12c-2.5-1-5.5-1-7.5 0m0-12v12" />
+            </svg>
+            文档首页
+          </a>
+          {tree.map((section) => (
+            <details
+              class="group/doc-section [interpolate-size:allow-keywords] details-content:h-0 details-content:overflow-hidden details-content:transition-[height,content-visibility] details-content:transition-discrete details-content:duration-200 details-content:ease-smooth open:details-content:h-auto motion-reduce:details-content:transition-none"
+              data-docs-section
+              open
+            >
+              <summary class="flex cursor-pointer list-none items-center gap-2 rounded-md px-2 py-1.5 text-xs font-semibold text-muted transition-colors duration-150 hover:bg-canvas hover:text-foreground group-has-[a[aria-current=page]]/doc-section:text-foreground [&::-webkit-details-marker]:hidden">
+                <svg
+                  class="size-4 shrink-0 text-subtle group-has-[a[aria-current=page]]/doc-section:text-accent"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d={sectionIconPaths[section.id]} />
+                </svg>
+                <span class="min-w-0 flex-1">{section.title}</span>
+                <svg
+                  class="size-3.5 shrink-0 text-subtle/75 transition-transform duration-200 ease-smooth group-open/doc-section:rotate-90 motion-reduce:transition-none"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m8 5 5 5-5 5" />
+                </svg>
+              </summary>
+              <ul class="space-y-0.5 pt-1">
+                {section.entries.map((entry) => (
+                  <li>
+                    <a
+                      href={docHref(entry)}
+                      class={linkClass}
+                      aria-current={
+                        path === docHref(entry) ? 'page' : undefined
+                      }
+                    >
+                      {entry.data.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))}
+        </nav>
+      </details>
+    </aside>
+
+    <div class="w-full min-w-0 max-w-[860px] justify-self-center px-5 pt-8 pb-16 sm:px-8 sm:pt-10 lg:px-10 lg:pt-12 lg:pb-20">
+      <slot />
+    </div>
+
+    {outline.length > 0 && (
+      <aside class="sticky top-16 hidden max-h-[calc(100svh-4rem)] min-w-0 self-start overflow-y-auto pt-12 pr-8 pb-8 xl:block [scrollbar-width:thin] [scrollbar-color:var(--color-line)_transparent]">
+        <DocOutline headings={outline} />
+      </aside>
+    )}
+  </div>
+</ReadingLayout>
+
+<script>
+  let sidebarScroll = 0;
+  // 正文滚动交给 ClientRouter；这里只记录独立滚动的文档侧栏。
+  document.addEventListener('astro:before-swap', () => {
+    sidebarScroll =
+      document.querySelector<HTMLElement>('[data-docs-sidebar]')?.scrollTop ??
+      0;
+  });
+
+  const wide = window.matchMedia('(min-width: 1024px)');
+  const syncSize = () => {
+    const nav = document.querySelector<HTMLDetailsElement>('[data-docs-nav]');
+    if (nav) {
+      nav.open = wide.matches;
+      nav.dataset.ready = '';
+    }
+  };
+  function syncPage() {
+    // 目录节点保留，仅更新选中项；手机切换后收起目录。
+    document
+      .querySelectorAll<HTMLAnchorElement>('[data-docs-nav] a')
+      .forEach((link) => {
+        if (new URL(link.href).pathname === location.pathname)
+          link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+    document
+      .querySelectorAll<HTMLDetailsElement>('[data-docs-section]')
+      .forEach((section) => {
+        if (section.querySelector('a[aria-current="page"]'))
+          section.open = true;
+      });
+    syncSize();
+  }
+  syncPage();
+  document.addEventListener('astro:after-swap', () => {
+    syncPage();
+    const sidebar = document.querySelector<HTMLElement>('[data-docs-sidebar]');
+    if (sidebar) sidebar.scrollTop = sidebarScroll;
+  });
+  wide.addEventListener('change', syncSize);
+</script>

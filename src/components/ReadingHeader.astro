@@ -1,0 +1,50 @@
+---
+import ThemeControl from './ThemeControl.astro';
+import SourceLink from './SourceLink.astro';
+import Logo from './ui/Logo.astro';
+import { site } from '../data/site';
+
+const path = Astro.url.pathname;
+---
+
+<header
+  transition:persist="docs-header"
+  class="reading-header sticky top-0 z-50 border-b border-line bg-surface"
+>
+  <div class="mx-auto flex h-16 w-full max-w-[1560px] items-center gap-4 px-5 sm:gap-5 sm:px-8">
+    <a
+      href="/"
+      data-astro-reload
+      aria-label="TARP 首页"
+      class="shrink-0 text-foreground transition-colors hover:text-accent"
+    >
+      <Logo class="w-18" />
+    </a>
+    <span class="h-5 w-px bg-line" aria-hidden="true"></span>
+    <nav class="flex items-center gap-3" aria-label="文档导航">
+      <a
+        href="/docs/"
+        aria-current={path.startsWith('/docs/') ? 'page' : undefined}
+        class="reading-nav-link text-sm font-medium text-muted transition-colors hover:text-foreground aria-[current=page]:text-foreground"
+      >
+        文档
+      </a>
+      <span class="hidden rounded border border-line px-1.5 py-0.5 font-mono text-[10px] leading-4 text-subtle sm:block">
+        {site.version}
+      </span>
+    </nav>
+    <div class="ml-auto flex items-center gap-3 sm:gap-5">
+      <a
+        href="/"
+        data-astro-reload
+        class="hidden text-xs text-subtle transition-colors hover:text-foreground sm:block"
+      >
+        返回官网 ↗
+      </a>
+      <div class="flex shrink-0 items-center gap-1">
+        <ThemeControl />
+        <SourceLink />
+      </div>
+    </div>
+  </div>
+</header>

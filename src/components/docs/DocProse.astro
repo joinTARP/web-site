@@ -1,0 +1,18 @@
+<div
+  class:list={[
+    'doc-prose prose max-w-none text-[15px] leading-[1.85] text-foreground/90 break-words sm:text-base',
+    'prose-headings:font-display prose-headings:font-semibold prose-headings:tracking-[-0.015em] prose-headings:leading-snug prose-headings:scroll-mt-0',
+    'prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-b prose-h2:border-line prose-h2:pb-3 prose-h2:text-[21px] sm:prose-h2:text-[22px]',
+    'prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-lg prose-h4:mt-6 prose-h4:mb-3 prose-h4:text-base [&>:first-child]:mt-0',
+    'prose-p:my-5 prose-ul:my-5 prose-ul:pl-6 prose-ol:my-5 prose-ol:pl-6 prose-li:my-1.5 prose-li:pl-1 prose-li:marker:text-subtle',
+    'prose-a:font-medium prose-a:underline prose-a:decoration-link/40 prose-a:underline-offset-[3px] prose-a:transition-colors hover:prose-a:decoration-current',
+    'prose-code:font-mono [&_:not(pre)>code]:rounded [&_:not(pre)>code]:border [&_:not(pre)>code]:border-line/80 [&_:not(pre)>code]:bg-canvas [&_:not(pre)>code]:px-[0.35em] [&_:not(pre)>code]:py-[0.12em] [&_:not(pre)>code]:text-[0.85em] [&_:not(pre)>code]:font-normal [&_:not(pre)>code]:text-foreground [&_:not(pre)>code]:wrap-anywhere prose-code:before:content-none prose-code:after:content-none',
+    'prose-blockquote:my-6 prose-blockquote:border-l-2 prose-blockquote:border-accent prose-blockquote:bg-canvas prose-blockquote:px-5 prose-blockquote:py-1 prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-foreground [&_blockquote_p]:my-3 [&_blockquote_p]:before:content-none [&_blockquote_p]:after:content-none',
+    'prose-table:my-0 prose-table:w-full prose-table:border-collapse prose-table:text-[13px] prose-table:leading-7 sm:prose-table:text-sm [&_table]:wrap-normal [&_table:has(th:nth-child(3))]:min-w-[32rem]',
+    '[&_table:not([data-scroll-wrapped])]:my-6 [&_table:not([data-scroll-wrapped])]:block [&_table:not([data-scroll-wrapped])]:max-w-full [&_table:not([data-scroll-wrapped])]:overflow-x-auto [&_table:not([data-scroll-wrapped])]:rounded-md [&_table:not([data-scroll-wrapped])]:border [&_table:not([data-scroll-wrapped])]:border-line',
+    'prose-th:bg-canvas prose-th:px-4 prose-th:py-3 prose-th:text-left prose-th:align-top prose-th:font-semibold prose-td:border-t prose-td:border-line prose-td:px-4 prose-td:py-3 prose-td:align-top [&_tbody_tr:last-child]:border-b-0 [&_table_code]:whitespace-nowrap',
+    '[&_.expressive-code]:my-6',
+  ]}
+>
+  <slot />
+</div>

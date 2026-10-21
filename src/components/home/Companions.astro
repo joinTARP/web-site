@@ -1,0 +1,216 @@
+---
+import HostAvatar from '../demo/HostAvatar';
+import CompanionDemo from '../demo/CompanionDemo';
+
+const companionDialogue = '那块地砖陷下去了。\n我举火，你看看？';
+---
+
+<section
+  id="companions"
+  class="companions-section overflow-clip py-[clamp(72px,_8vw,_112px)]"
+  aria-labelledby="companions-title"
+>
+  <div class="shell">
+    <div
+      class="companion-lead grid grid-cols-[minmax(0,_0.9fr)_minmax(0,_1.1fr)] items-center gap-16 max-lg:gap-8 max-md:grid-cols-[minmax(0,_1fr)] max-md:gap-8"
+      data-companion-assembly
+      data-assembly-direction="right"
+    >
+      <div class="companion-copy max-w-110 [&_h2]:mb-6 [&_h2]:text-[clamp(30px,_3vw,_40px)] [&_h2]:font-semibold [&_h2]:leading-[1.45] [&_h2]:tracking-[-0.025em] [&_h2_span]:text-accent [&_>_p]:text-muted [&_>_p]:text-[16px] [&_>_p]:leading-[2] [&_>_p]:text-pretty [&_>_p_+_p]:mt-4 max-md:max-w-130 max-md:[&_h2]:mb-5">
+        <h2 id="companions-title">
+          无社交压力，
+          <br />
+          <span>AI 做你的队友</span>
+        </h2>
+        <p>
+          选好角色，让 AI
+          加入你的队伍。它会按角色的性格和经历参与讨论，提出自己的行动。你照常玩自己的角色。
+        </p>
+        <p>
+          不用约时间，也不用担心冷场。想听队友的看法，直接{' '}
+          <span class="companion-mention whitespace-nowrap">@ 它</span>。
+        </p>
+        <a
+          class="companion-link inline-flex items-center gap-3 mt-6 text-[14px] font-medium [transition:color_200ms] hover:text-accent"
+          href="/docs/play/companions/"
+        >
+          看看队友怎么玩 <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <figure
+        class="companion-character relative w-full max-w-150 min-h-115 isolate max-lg:min-h-100 max-md:max-w-125 max-md:min-h-[clamp(350px,_95vw,_460px)] max-md:pb-16 mx-auto"
+        data-companion-visual
+      >
+        <div
+          class="companion-character-backdrop absolute -z-1 top-[9%] right-[12%] bottom-[12%] left-[8%] rounded-full border border-accent/20"
+          aria-hidden="true"
+          data-companion-fragment
+          data-fragment-x="-20"
+          data-fragment-y="16"
+          data-fragment-rotate="-3"
+        ></div>
+        <img
+          class="companion-character-portrait relative block w-[82%] max-w-115 aspect-2/3 ml-[2%] object-contain"
+          src="/demo/sutang.webp"
+          alt="宝藏猎人苏棠的完整角色肖像"
+          width="1024"
+          height="1536"
+          loading="lazy"
+          decoding="async"
+          data-companion-fragment
+          data-fragment-x="32"
+          data-fragment-y="-24"
+          data-fragment-rotate="3"
+        />
+        <figcaption
+          class="companion-character-label absolute top-[15%] right-[2%] pl-5 border-l border-l-line [&_strong]:block [&_strong]:[font-family:'Songti_SC',_'STSong',_'Noto_Serif_SC',_serif] [&_strong]:text-[32px] [&_strong]:font-medium [&_strong]:tracking-[0.12em] [&_strong]:leading-[1.5] [&_>_span]:block [&_>_span]:mt-2 [&_>_span]:text-muted [&_>_span]:text-[14px] max-lg:top-[6%] max-lg:right-0 max-lg:pl-3 max-lg:[&_strong]:text-[28px] max-md:top-[12%]"
+          data-companion-fragment
+          data-fragment-x="74"
+          data-fragment-y="-36"
+          data-fragment-rotate="-3"
+        >
+          <strong>苏棠</strong>
+          <span>宝藏猎人</span>
+        </figcaption>
+        <blockquote
+          class="companion-character-quote light:shadow-panel absolute right-0 bottom-0 w-85 max-w-[calc(100%_-_24px)] border border-[color-mix(in_srgb,_var(--color-accent)_35%,_var(--color-line))] rounded-[16px_16px_16px_4px] bg-surface shadow-[0_12px_32px_-20px_var(--color-shadow)] before:content-[''] before:absolute before:-top-1.5 before:left-7 before:border-t before:border-t-[color-mix(in_srgb,_var(--color-accent)_35%,_var(--color-line))] before:border-l before:border-l-[color-mix(in_srgb,_var(--color-accent)_35%,_var(--color-line))] before:bg-surface before:[transform:rotate(45deg)] [&_p]:min-h-[3.8em] [&_p]:text-[17px] [&_p]:leading-[1.9] [&[data-typing]_[data-companion-dialogue]::after]:content-[''] [&[data-typing]_[data-companion-dialogue]::after]:inline-block [&[data-typing]_[data-companion-dialogue]::after]:w-[1px] [&[data-typing]_[data-companion-dialogue]::after]:h-[1em] [&[data-typing]_[data-companion-dialogue]::after]:ml-[3px] [&[data-typing]_[data-companion-dialogue]::after]:[vertical-align:-0.1em] [&[data-typing]_[data-companion-dialogue]::after]:bg-accent max-lg:w-75 max-lg:[&_p]:text-[15px] py-4.5 px-6 before:size-2.5 max-lg:py-4 max-lg:px-5"
+          data-companion-fragment
+          data-fragment-x="-48"
+          data-fragment-y="42"
+          data-fragment-rotate="2"
+        >
+          <p>
+            <span class="sr-only">{companionDialogue.replace('\n', '')}</span>
+            <span
+              class="whitespace-pre-line"
+              aria-hidden="true"
+              data-companion-dialogue
+              data-dialogue-text={companionDialogue}
+            >
+              {companionDialogue}
+            </span>
+          </p>
+        </blockquote>
+      </figure>
+    </div>
+
+    <div
+      class="companion-details grid grid-cols-2 grid-rows-[auto_auto] gap-y-7 mt-16 pt-10 border-t border-t-line max-md:grid-cols-[minmax(0,_1fr)] max-md:gap-10 max-md:mt-10 max-md:pt-8"
+      data-companion-details
+    >
+      <article
+        class="companion-detail grid grid-rows-subgrid [grid-row:span_2] min-w-0 pr-10 [&_+_.companion-detail]:pr-0 [&_+_.companion-detail]:pl-10 [&_+_.companion-detail]:border-l [&_+_.companion-detail]:border-l-line max-lg:pr-6 max-lg:[&_+_.companion-detail]:pl-6 max-md:grid-rows-[auto_auto] max-md:[grid-row:auto] max-md:gap-y-6 max-md:border-l-0 max-md:[&_+_.companion-detail]:grid-rows-[auto_auto] max-md:[&_+_.companion-detail]:[grid-row:auto] max-md:[&_+_.companion-detail]:gap-y-6 max-md:[&_+_.companion-detail]:border-l-0 max-md:[&_+_.companion-detail]:pt-8 max-md:[&_+_.companion-detail]:border-t max-md:[&_+_.companion-detail]:border-t-line max-md:px-0 max-md:[&_+_.companion-detail]:px-0"
+        data-companion-detail
+      >
+        <header class="companion-detail-heading mb-0 [&_h3]:text-[22px] [&_h3]:font-medium [&_h3]:leading-[1.6] [&_p]:mt-3 [&_p]:text-muted [&_p]:text-[14px] [&_p]:leading-[1.9] [&_p]:text-pretty max-lg:[&_h3]:text-[20px] max-md:mb-0 max-md:[&_h3]:text-[21px]">
+          <h3>队友怎么参与，你来定</h3>
+          <p>
+            话多一点，还是安静一点？调整主动性就行。
+            <br class="desktop-break max-lg:hidden" />
+            每个队友也可以单独选模型。
+          </p>
+        </header>
+        <div class="companion-settings-preview grid">
+          <CompanionDemo client:visible />
+        </div>
+      </article>
+
+      <article
+        class="companion-detail grid grid-rows-subgrid [grid-row:span_2] min-w-0 pr-10 [&_+_.companion-detail]:pr-0 [&_+_.companion-detail]:pl-10 [&_+_.companion-detail]:border-l [&_+_.companion-detail]:border-l-line max-lg:pr-6 max-lg:[&_+_.companion-detail]:pl-6 max-md:grid-rows-[auto_auto] max-md:[grid-row:auto] max-md:gap-y-6 max-md:border-l-0 max-md:[&_+_.companion-detail]:grid-rows-[auto_auto] max-md:[&_+_.companion-detail]:[grid-row:auto] max-md:[&_+_.companion-detail]:gap-y-6 max-md:[&_+_.companion-detail]:border-l-0 max-md:[&_+_.companion-detail]:pt-8 max-md:[&_+_.companion-detail]:border-t max-md:[&_+_.companion-detail]:border-t-line max-md:px-0 max-md:[&_+_.companion-detail]:px-0"
+        data-companion-detail
+      >
+        <header class="companion-detail-heading mb-0 [&_h3]:text-[22px] [&_h3]:font-medium [&_h3]:leading-[1.6] [&_p]:mt-3 [&_p]:text-muted [&_p]:text-[14px] [&_p]:leading-[1.9] [&_p]:text-pretty max-lg:[&_h3]:text-[20px] max-md:mb-0 max-md:[&_h3]:text-[21px]">
+          <h3>队友不读取主持的幕后资料</h3>
+          <p>
+            AI 像真人玩家一样扮演角色。
+            <br class="desktop-break max-lg:hidden" />
+            每位队友都有独立记忆，只知道自己经历过的事。
+          </p>
+        </header>
+        <div class="companion-memory-preview light:shadow-panel grid grid-rows-[auto_auto_1fr] min-w-0 overflow-hidden border border-line rounded-[12px] bg-surface">
+          <div class="companion-host-memory pt-6 pb-5 bg-[color-mix(_in_srgb,_var(--color-canvas)_55%,_var(--color-surface)_)] [&_>_p]:mt-3.5 [&_>_p]:text-[17px] [&_>_p]:leading-[1.8] px-7 max-md:p-5">
+            <div class="companion-memory-owner flex items-center gap-2.5 text-muted text-[13px] [&_img]:rounded-full [&_img]:object-cover [&_img]:size-7">
+              <span class="size-7 shrink-0">
+                <HostAvatar />
+              </span>
+              <span>主持人的幕后资料</span>
+            </div>
+            <p>下陷砖安全，北侧紧邻的平砖承重触发机关。</p>
+            <span class="companion-host-note block mt-1.5 text-subtle text-[12px] leading-[1.8]">
+              机关位置、触发条件、检定规则
+            </span>
+          </div>
+          <div class="companion-memory-boundary flex items-center gap-2.5 text-accent [&_>_span]:h-[1px] [&_>_span]:flex-1 [&_>_span]:bg-[color-mix(in_srgb,_var(--color-accent)_35%,_var(--color-line))] [&_svg]:shrink-0 [&_p]:text-[12px] [&_p]:tracking-[0.1em] [&_p]:leading-[2] px-7 max-md:px-5">
+            <span aria-hidden="true"></span>
+            <svg
+              aria-hidden="true"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="5" y="10" width="14" height="11" rx="2" />
+              <path d="M8 10V6a4 4 0 0 1 8 0v4" />
+              <path d="M12 14v3" />
+            </svg>
+            <p>独立记忆</p>
+            <span aria-hidden="true"></span>
+          </div>
+          <article class="companion-player-memory flex flex-col [&_header]:flex [&_header]:items-center [&_header]:gap-3.5 [&_header_img]:shrink-0 [&_header_img]:rounded-full [&_header_img]:bg-[color-mix(in_srgb,_var(--color-accent)_8%,_var(--color-canvas))] [&_header_img]:object-cover [&_h4]:text-[19px] [&_h4]:font-medium [&_h4]:leading-[1.5] [&_header_p]:mt-1 [&_header_p]:text-subtle [&_header_p]:text-[12px] [&_header_p]:leading-[1.8] [&_blockquote]:mt-auto [&_blockquote]:pt-4.5 [&_blockquote]:border-t [&_blockquote]:border-t-line [&_blockquote]:text-[16px] [&_blockquote]:leading-[1.8] [&_blockquote]:text-accent py-6 px-7 [&_header_img]:size-12 max-md:p-5">
+            <header>
+              <img
+                src="/demo/sutang-avatar.webp"
+                alt=""
+                width="48"
+                height="48"
+                loading="lazy"
+              />
+              <div>
+                <h4>苏棠的记忆</h4>
+              </div>
+            </header>
+            <ol class="companion-memory-events relative grid gap-4.5 pl-4.5 list-none before:content-[''] before:absolute before:right-auto before:left-[3px] before:w-[1px] before:bg-[color-mix(in_srgb,_var(--color-accent)_30%,_var(--color-line))] [&_li]:relative [&_li]:grid [&_li]:grid-cols-[40px_minmax(0,_1fr)] [&_li]:gap-3.5 [&_li]:text-[14px] [&_li]:leading-[1.8] [&_li::before]:content-[''] [&_li::before]:absolute [&_li::before]:top-2.5 [&_li::before]:-left-4.5 [&_li::before]:border [&_li::before]:border-accent [&_li::before]:rounded-full [&_li::before]:bg-surface [&_li:last-child::before]:bg-accent [&_li_>_span]:text-subtle my-6 before:inset-y-3 [&_li::before]:size-[7px]">
+              <li>
+                <span>场景</span>
+                <p>前方传来呼救声。</p>
+              </li>
+              <li>
+                <span>线索</span>
+                <p>中段地砖下陷开裂，前方地砖平整。</p>
+              </li>
+              <li>
+                <span>判断</span>
+                <p>我举火，让同伴看看地砖。</p>
+              </li>
+            </ol>
+            <blockquote>“{companionDialogue.replace('\n', '')}”</blockquote>
+          </article>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .companion-character-backdrop {
+    background: radial-gradient(
+      ellipse,
+      color-mix(in srgb, var(--color-accent) 9%, transparent),
+      transparent 70%
+    );
+  }
+  .companion-character-quote[data-typing] [data-companion-dialogue]::after {
+    animation: blink 0.8s steps(1) infinite;
+  }
+  .companion-memory-boundary {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-canvas) 55%, var(--color-surface)) 50%,
+      var(--color-surface) 50%
+    );
+  }
+</style>

@@ -1,0 +1,75 @@
+<div
+  class="hero-backdrop absolute -z-1 overflow-hidden pointer-events-none bg-canvas after:absolute after:content-[''] inset-0 after:inset-0"
+  aria-hidden="true"
+>
+  <div
+    class="hero-aurora absolute opacity-[calc(var(--hero-aurora-opacity,_1)_*_0.55)] inset-y-[-12%] inset-x-[-10%] max-sm:inset-y-[-10%] max-sm:inset-x-[-60%]"
+    data-hero-ambient
+  >
+    <div class="hero-aurora-bands absolute top-[-25%] bottom-[10%] [filter:blur(28px)] [transform-origin:50%_10%] inset-x-[-8%]"></div>
+    <div class="hero-aurora-halo absolute inset-0"></div>
+  </div>
+  <div
+    class="hero-spotlight absolute left-[50%] top-[35%] w-[clamp(560px,_72vw,_1040px)] aspect-[1.25] ml-[calc(clamp(560px,_72vw,_1040px)_/_-2)] [transform:translateY(-50%)] opacity-(--hero-spotlight-opacity)"
+    data-hero-light
+  ></div>
+</div>
+
+<style>
+  .hero-backdrop::after {
+    background: linear-gradient(
+      to bottom,
+      transparent 55%,
+      color-mix(in srgb, var(--color-canvas) 60%, transparent) 80%,
+      var(--color-canvas) 100%
+    );
+  }
+
+  .hero-aurora-bands {
+    background: linear-gradient(
+      108deg,
+      transparent 16%,
+      color-mix(in srgb, var(--color-accent) 10%, transparent) 25%,
+      transparent 34%,
+      color-mix(in srgb, var(--color-success) 11%, transparent) 43%,
+      color-mix(in srgb, var(--color-accent) 23%, transparent) 49%,
+      transparent 58%,
+      color-mix(in srgb, var(--color-accent) 18%, transparent) 69%,
+      transparent 79%
+    );
+    animation: hero-aurora-drift 22s ease-in-out infinite alternate;
+  }
+
+  .hero-aurora-halo {
+    background: radial-gradient(
+      ellipse 60% 50% at 50% 5%,
+      color-mix(in srgb, var(--color-accent) 12%, transparent),
+      transparent 100%
+    );
+  }
+
+  .hero-spotlight {
+    background: radial-gradient(
+      ellipse at center,
+      var(--hero-spotlight-color) 0%,
+      color-mix(in srgb, var(--hero-spotlight-color) 65%, transparent) 22%,
+      color-mix(in srgb, var(--hero-spotlight-color) 20%, transparent) 48%,
+      transparent 72%
+    );
+  }
+
+  @keyframes hero-aurora-drift {
+    from {
+      transform: translate3d(-1.5%, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(1.5%, 2%, 0) scale(1.06);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-aurora-bands {
+      animation: none;
+    }
+  }
+</style>

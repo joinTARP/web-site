@@ -1,0 +1,44 @@
+---
+import { faqs } from '../../data/site';
+---
+
+<section id="faq" class="relative py-[14vh]" aria-labelledby="faq-title">
+  <div class="shell grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
+    <div class="lg:sticky lg:top-32 lg:self-start" data-reveal data-faq-reveal>
+      <p class="text-sm tracking-[0.12em] text-muted">常见问题</p>
+      <h2
+        id="faq-title"
+        class="mt-4 font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.4] font-semibold tracking-tight"
+      >
+        开玩前，
+        <br />
+        <span class="text-accent">先看这几条</span>。
+      </h2>
+    </div>
+
+    <div class="border-t border-foreground/10 light:border-line" data-faq>
+      {faqs.map((faq) => (
+        <details
+          name="faq"
+          class="group border-b border-foreground/10 light:border-line [interpolate-size:allow-keywords] details-content:h-0 details-content:overflow-hidden details-content:opacity-0 details-content:transition-[height,opacity,content-visibility] details-content:transition-discrete details-content:duration-400 details-content:ease-smooth open:details-content:h-auto open:details-content:opacity-100 motion-reduce:details-content:transition-none"
+          data-reveal
+          data-faq-reveal
+        >
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 font-display text-base font-bold transition-colors hover:text-link md:text-lg [&::-webkit-details-marker]:hidden">
+            {faq.question}
+            <span
+              class="relative grid size-8 shrink-0 place-items-center rounded-full border border-foreground/20 light:border-line light:bg-surface transition-transform duration-300 ease-smooth group-open:rotate-45 motion-reduce:transition-none"
+              aria-hidden="true"
+            >
+              <span class="absolute h-px w-3 bg-current" />
+              <span class="absolute h-3 w-px bg-current" />
+            </span>
+          </summary>
+          <p class="max-w-2xl pb-7 text-[0.95rem] leading-8 text-muted">
+            {faq.answer}
+          </p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

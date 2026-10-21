@@ -1,0 +1,28 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'div'>;
+
+const { title = '本页内容待完善', class: className, ...rest } = Astro.props;
+---
+
+<div
+  class:list={[
+    'relative flex items-start gap-6 overflow-hidden rounded-2xl border border-dashed border-foreground/20 bg-surface p-7 md:p-9',
+    className,
+  ]}
+  {...rest}
+>
+  <span
+    class="grid size-11 shrink-0 place-items-center rounded-lg border border-line bg-surface-active font-mono text-lg text-accent"
+    aria-hidden="true"
+  >
+    …
+  </span>
+  <div class="min-w-0">
+    <p class="font-display text-xl font-bold">{title}</p>
+    <div class="mt-2 text-sm leading-7 text-muted [&_p]:m-0">
+      <slot>这部分文档还在整理。</slot>
+    </div>
+  </div>
+</div>

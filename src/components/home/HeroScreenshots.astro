@@ -1,0 +1,101 @@
+---
+import { heroScreenshots } from '../../data/site';
+
+const positions = {
+  back: 'top-[1%] left-0 [transform:rotate(-5deg)] shadow-[0_24px_64px_-28px_var(--color-shadow)]',
+  lower:
+    'right-0 bottom-[1%] [transform:rotate(5deg)] shadow-[0_24px_64px_-28px_var(--color-shadow)]',
+  front:
+    'top-1/2 left-[6%] z-1 [transform:translateY(-50%)] shadow-[0_32px_80px_-24px_var(--color-shadow)]',
+};
+---
+
+<div
+  class="screenshot-stack relative isolate aspect-[1.2] w-full sm:max-lg:mx-auto sm:max-lg:max-w-160 before:absolute before:inset-x-[-8%] before:inset-y-[10%] before:-z-1 before:content-['']"
+  role="group"
+  aria-label="TARP 游戏界面预览"
+>
+  {heroScreenshots.map((screenshot) => (
+    <figure
+      class:list={[
+        'light:shadow-preview absolute w-[88%] overflow-hidden rounded-xl border border-[color-mix(in_srgb,var(--color-accent)_25%,var(--color-line))] bg-surface max-sm:rounded-lg',
+        positions[screenshot.position],
+      ]}
+    >
+      <figcaption class="flex h-9 items-center justify-between gap-2 border-b border-line bg-surface-raised px-3.5 text-[11px] text-muted max-sm:h-7 max-sm:px-2.5 max-sm:text-[10px]">
+        <span
+          class="flex gap-[5px] [&_i]:size-1.5 [&_i]:rounded-full [&_i]:border [&_i]:border-subtle [&_i]:opacity-60"
+          aria-hidden="true"
+        >
+          <i></i>
+          <i></i>
+          <i></i>
+        </span>
+        <span>{screenshot.title}</span>
+        <span
+          class="font-mono text-[0.6rem] tracking-widest"
+          aria-hidden="true"
+        >
+          TARP
+        </span>
+      </figcaption>
+      <div class="aspect-16/10">
+        {screenshot.src ? (
+          <img
+            src={screenshot.src}
+            alt={screenshot.alt}
+            width="1600"
+            height="1000"
+            loading="eager"
+            decoding="async"
+            fetchpriority={screenshot.position === 'front' ? 'high' : 'auto'}
+            class="size-full object-contain"
+          />
+        ) : (
+          <div class="screenshot-placeholder flex h-full flex-col items-center justify-center bg-center bg-size-[28px_28px]">
+            <svg
+              class="mb-4 size-9 text-accent/60"
+              viewBox="0 0 32 32"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="4" y="5" width="24" height="22" rx="3" />
+              <circle cx="12" cy="12" r="2" />
+              <path d="m5 23 8-8 5 5 4-4 5 6" />
+            </svg>
+            <p class="text-sm font-medium text-muted sm:text-base">
+              {screenshot.title}
+            </p>
+            <p class="mt-2 text-xs text-subtle">实机截图待补充</p>
+          </div>
+        )}
+      </div>
+    </figure>
+  ))}
+</div>
+
+<style>
+  .screenshot-stack::before {
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--color-accent) 12%, transparent),
+      transparent 70%
+    );
+  }
+  .screenshot-placeholder {
+    background-image:
+      linear-gradient(
+        color-mix(in srgb, var(--color-line) 30%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-line) 30%, transparent) 1px,
+        transparent 1px
+      );
+  }
+</style>

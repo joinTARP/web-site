@@ -1,0 +1,54 @@
+/* 同步桌面端 shadcn 语义色，仅作用于 React 设置预览。 */
+.desktop-preview {
+  --background: #18191b;
+  --foreground: #e4e4e7;
+  --popover: #202125;
+  --popover-foreground: #e4e4e7;
+  --primary: #e3e5ea;
+  --primary-foreground: #18191b;
+  --secondary: #292b31;
+  --secondary-foreground: #d5d7dd;
+  --muted: #23252a;
+  --muted-foreground: #92959d;
+  --destructive: #ef8c8c;
+  --border: #303238;
+  --input: #383a42;
+  --ring: #8799b6;
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --radius-md: 0.4rem;
+}
+:root[data-theme='light'] .desktop-preview {
+  --background: #f3f4f6;
+  --foreground: #2b3038;
+  --popover: #ffffff;
+  --popover-foreground: #2b3038;
+  --primary: #506384;
+  --primary-foreground: #f8f9fb;
+  --secondary: #e4e7ec;
+  --secondary-foreground: #343a45;
+  --muted: #e9ecf0;
+  --muted-foreground: #5f6672;
+  --destructive: #c42b2b;
+  --border: #dcdfe5;
+  --input: #c9ced7;
+  --ring: #6b7d9c;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .desktop-preview {
+    --background: #f3f4f6;
+    --foreground: #2b3038;
+    --popover: #ffffff;
+    --popover-foreground: #2b3038;
+    --primary: #506384;
+    --primary-foreground: #f8f9fb;
+    --secondary: #e4e7ec;
+    --secondary-foreground: #343a45;
+    --muted: #e9ecf0;
+    --muted-foreground: #5f6672;
+    --destructive: #c42b2b;
+    --border: #dcdfe5;
+    --input: #c9ced7;
+    --ring: #6b7d9c;
+  }
+}

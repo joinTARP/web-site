@@ -1,0 +1,78 @@
+<button
+  type="button"
+  class="grid size-10 shrink-0 cursor-pointer place-items-center rounded-full text-muted transition-colors hover:bg-foreground/8 hover:text-foreground"
+  aria-label="切换主题"
+  title="切换主题"
+  data-theme-toggle
+>
+  <svg
+    class="block size-5 light:hidden"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+  </svg>
+  <svg
+    class="hidden size-5 light:block"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M20.9 13.1A9 9 0 0 1 10.9 3.1 9 9 0 1 0 20.9 13.1Z" />
+  </svg>
+</button>
+
+<script>
+  // system 只作为尚未手动选择时的内部默认值，不提供可见选项。
+  type Preference = 'system' | 'light' | 'dark';
+  const root = document.documentElement;
+  const query = window.matchMedia('(prefers-color-scheme: dark)');
+  const normalize = (value?: string | null): Preference =>
+    value === 'light' || value === 'dark' ? value : 'system';
+  let preference = normalize(root.dataset.themePreference);
+  function apply(next: Preference) {
+    preference = next;
+    const theme = next === 'system' ? (query.matches ? 'dark' : 'light') : next;
+    root.dataset.themePreference = next;
+    root.dataset.theme = theme;
+    root.classList.toggle('dark', theme === 'dark');
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme === 'dark' ? '#18191b' : '#f7f8fb');
+    const label = theme === 'dark' ? '切换到亮色' : '切换到暗色';
+    document
+      .querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')
+      .forEach((button) => {
+        button.setAttribute('aria-label', label);
+        button.title = label;
+      });
+  }
+  apply(preference);
+  document.addEventListener('astro:after-swap', () => apply(preference));
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element)) return;
+    if (!event.target.closest('[data-theme-toggle]')) return;
+    apply(root.dataset.theme === 'dark' ? 'light' : 'dark');
+    try {
+      localStorage.setItem('tarp-theme', preference);
+    } catch {
+      /* 存储不可用时，本页仍可切换。 */
+    }
+  });
+  query.addEventListener('change', () => {
+    if (preference === 'system') apply(preference);
+  });
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'tarp-theme' || event.key === null)
+      apply(normalize(event.newValue));
+  });
+</script>

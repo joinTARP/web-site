@@ -1,0 +1,29 @@
+---
+import ReadingHeader from '../components/ReadingHeader.astro';
+import PageLayout from './PageLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  type?: 'website' | 'article';
+}
+---
+
+<PageLayout {...Astro.props} reading>
+  <div class="reading-layout flex min-h-svh flex-col bg-surface">
+    <ReadingHeader />
+    <main id="main" class="min-w-0 flex-1">
+      <slot />
+    </main>
+  </div>
+</PageLayout>
+
+<style>
+  /* 阅读导航直接切换，避免根视图的淡出和位移动画。 */
+  @view-transition {
+    navigation: none;
+  }
+  :global(html[data-layout='reading']) {
+    scrollbar-gutter: stable;
+  }
+</style>

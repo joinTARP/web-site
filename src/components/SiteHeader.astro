@@ -1,0 +1,181 @@
+---
+import { nav } from '../data/site';
+import Logo from './ui/Logo.astro';
+import ThemeControl from './ThemeControl.astro';
+import SourceLink from './SourceLink.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => path.startsWith(href);
+---
+
+<header
+  class="group/header short-screen:transition-transform short-screen:duration-220 short-screen:ease-[ease] short-screen:data-hidden:[transform:translateY(calc(-100%_-_16px))] motion-reduce:transition-none pointer-events-none fixed inset-x-0 top-0 z-50 [view-transition-name:site-header]"
+  data-header
+>
+  <div
+    class="shell short-screen:group-data-hidden/header:pointer-events-none pointer-events-auto relative flex h-18 items-center justify-between gap-6 rounded-2xl border border-transparent transition-[width,height,translate,padding,background-color,border-color,box-shadow] duration-300 ease-expo group-data-scrolled/header:h-15 group-data-scrolled/header:w-[min(900px,calc(100%-48px))] group-data-scrolled/header:translate-y-3 group-data-scrolled/header:border-line group-data-scrolled/header:bg-canvas/90 light:group-data-scrolled/header:bg-surface/95 group-data-scrolled/header:px-4 group-data-scrolled/header:shadow-[0_8px_32px_-12px_var(--color-shadow)] group-data-scrolled/header:backdrop-blur-xl sm:group-data-scrolled/header:px-5"
+    data-header-panel
+  >
+    <a href="/" class="relative z-10" aria-label="TARP 首页">
+      <Logo class="h-6 text-foreground transition-[height] duration-300 ease-expo group-data-scrolled/header:h-5.5" />
+    </a>
+
+    <nav
+      class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 lg:flex"
+      aria-label="主导航"
+    >
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          target={item.external ? '_blank' : undefined}
+          rel={item.external ? 'noopener noreferrer' : undefined}
+          aria-label={
+            item.external ? `${item.label}（GitHub，新标签页）` : undefined
+          }
+          class="rounded-lg px-4 py-1.5 text-sm text-muted transition-colors hover:bg-foreground/8 hover:text-foreground aria-[current=page]:bg-foreground/8 aria-[current=page]:text-foreground"
+          aria-current={isActive(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="relative z-10 flex items-center gap-3">
+      <ThemeControl />
+      <SourceLink />
+      <button
+        class="group/toggle relative grid size-11 place-items-center rounded-full border border-foreground/20 lg:hidden"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="打开菜单"
+        data-menu-toggle
+      >
+        <span class="absolute h-px w-4 -translate-y-1 bg-foreground transition-transform duration-500 ease-expo group-aria-expanded/toggle:translate-y-0 group-aria-expanded/toggle:rotate-45"></span>
+        <span class="absolute h-px w-4 translate-y-1 bg-foreground transition-transform duration-500 ease-expo group-aria-expanded/toggle:translate-y-0 group-aria-expanded/toggle:-rotate-45"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-49 h-svh bg-canvas transition-[clip-path] duration-700 ease-expo [clip-path:inset(0_0_100%_0)] data-open:[clip-path:inset(0)] lg:hidden"
+  data-menu
+  hidden
+>
+  <nav class="shell flex flex-col gap-1 pt-28" aria-label="移动端导航">
+    {nav.map((item) => (
+      <a
+        href={item.href}
+        target={item.external ? '_blank' : undefined}
+        rel={item.external ? 'noopener noreferrer' : undefined}
+        aria-label={
+          item.external ? `${item.label}（GitHub，新标签页）` : undefined
+        }
+        class="border-b border-foreground/8 py-5 font-display text-2xl font-medium text-muted transition-colors hover:text-foreground aria-[current=page]:text-foreground"
+        aria-current={isActive(item.href) ? 'page' : undefined}
+        data-menu-link
+      >
+        {item.label}
+      </a>
+    ))}
+  </nav>
+</div>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle =
+    document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const shortScreen = window.matchMedia('(max-height: 800px)');
+  let ticking = false;
+  let menuOpen = false;
+  let previousY = window.scrollY;
+  let direction = 0;
+  let travel = 0;
+
+  function showHeader(hidden: boolean) {
+    header?.toggleAttribute('data-hidden', hidden);
+    document.documentElement.toggleAttribute('data-header-hidden', hidden);
+  }
+
+  function update() {
+    const y = Math.max(
+      0,
+      Math.min(
+        window.scrollY,
+        document.documentElement.scrollHeight - innerHeight,
+      ),
+    );
+    header?.toggleAttribute('data-scrolled', y > 24);
+    const focused = header?.querySelector(':focus-visible');
+    if (!shortScreen.matches || y < 96 || menuOpen || focused) {
+      showHeader(false);
+      travel = 0;
+      direction = 0;
+    } else {
+      const delta = y - previousY;
+      const nextDirection = Math.sign(delta);
+      if (nextDirection && nextDirection !== direction) {
+        direction = nextDirection;
+        travel = 0;
+      }
+      travel += delta;
+      // 留出方向阈值，避免触控板小幅抖动反复开合。
+      if (travel >= 24) showHeader(true);
+      if (travel <= -12) showHeader(false);
+    }
+    previousY = y;
+    ticking = false;
+  }
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    },
+    { passive: true },
+  );
+  shortScreen.addEventListener('change', update);
+  window.addEventListener('resize', update);
+  header?.addEventListener('focusin', () => {
+    showHeader(false);
+    travel = 0;
+    previousY = window.scrollY;
+  });
+  update();
+
+  function setMenu(open: boolean) {
+    if (!toggle || !menu) return;
+    menuOpen = open;
+    if (open) showHeader(false);
+    document.documentElement.toggleAttribute('data-menu-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+    if (open) {
+      menu.hidden = false;
+      requestAnimationFrame(() => menu.toggleAttribute('data-open', true));
+    } else {
+      menu.removeAttribute('data-open');
+      setTimeout(() => {
+        if (!menuOpen) menu.hidden = true;
+      }, 700);
+    }
+  }
+
+  const wide = window.matchMedia('(min-width: 1024px)');
+  wide.addEventListener('change', (event) => {
+    if (event.matches && menuOpen) setMenu(false);
+  });
+
+  toggle?.addEventListener('click', () => setMenu(!menuOpen));
+  menu?.querySelectorAll('[data-menu-link]').forEach((link) => {
+    link.addEventListener('click', () => setMenu(false));
+  });
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menuOpen) setMenu(false);
+  });
+</script>

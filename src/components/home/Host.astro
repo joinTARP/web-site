@@ -1,0 +1,492 @@
+---
+const features = [
+  {
+    title: '基于 pi 构建',
+    body: '提供会话管理、上下文自动压缩和工具调用能力，支持 AI 主持持续处理冒险中的行动。',
+  },
+  {
+    title: '用文档记录冒险',
+    body: '主持按需检索和读取模组资料，将游戏状态的变化写入本局文档，供后续行动查阅，简单有效。',
+  },
+  {
+    title: '超高规则自由度',
+    body: '用文档定义规则，也可以编写自己的规则，目标是支持绝大部分桌面角色扮演规则。',
+  },
+];
+---
+
+<section
+  id="round"
+  class="host-section relative isolate overflow-clip bg-canvas pb-[clamp(72px,_8vw,_112px)]"
+  aria-labelledby="host-title"
+>
+  <div class="host-stage relative pt-32" data-host-stage>
+    <div
+      class="network-instruction absolute top-7 left-[50%] [translate:-50%_0] z-3 flex flex-col items-center gap-2.5 w-[max-content] max-w-[calc(100%_-_48px)]"
+      data-host-instruction
+    >
+      <div
+        class="instruction-portrait grid place-items-center flex-none rounded-full border border-[color-mix(in_srgb,_var(--color-accent)_20%,_var(--color-line))] bg-surface-raised text-muted size-10.5 [&_svg]:size-7 max-sm:size-9 max-sm:[&_svg]:size-6"
+        data-host-speaker
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 32 32"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <circle cx="16" cy="10.5" r="4.5" />
+          <path d="M6.5 27v-1a9.5 9.5 0 0 1 19 0v1" stroke-linecap="round" />
+        </svg>
+      </div>
+      <blockquote
+        class="instruction-bubble relative max-w-full border border-[var(--speech-border)] rounded-[16px] bg-[var(--speech-background)] shadow-[0_10px_28px_-20px_var(--color-shadow)] [font:400_clamp(16px,_1.5vw,_19px)/1.65_var(--font-sans)] text-foreground text-center origin-center before:content-[''] before:absolute before:top-[-5px] before:left-[50%] before:[translate:-50%_0] before:border-t before:border-t-[var(--speech-border)] before:border-l before:border-l-[var(--speech-border)] before:bg-[var(--speech-background)] before:[transform:rotate(45deg)] py-4 px-6 m-0 before:size-[9px] max-sm:py-3.5 max-sm:px-4"
+        data-host-speech
+      >
+        <p>我用木棍攻击挡路的守卫。</p>
+      </blockquote>
+    </div>
+    <div class="shell">
+      <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
+        <div class="min-w-0 lg:justify-self-end" data-host-copy>
+          <h2
+            id="host-title"
+            class="font-display text-[1.875rem] leading-[1.35] font-semibold tracking-tight sm:text-[2rem] lg:text-[clamp(2.25rem,3vw,2.5rem)]"
+          >
+            让顶级智能体，
+            <br />
+            <span class="text-accent">主持你的冒险。</span>
+          </h2>
+          <p class="mt-5 max-w-[27rem] text-base leading-8 text-muted">
+            TARP 基于 pi 构建，为 AI
+            主持提供查阅资料、掷骰和更新游戏状态等工具。主持根据你的行动查阅规则，结合工具的执行结果推进故事。
+          </p>
+          <a
+            class="group/host mt-6 inline-flex items-center gap-3 text-sm font-medium transition-colors hover:text-accent"
+            href="/docs/getting-started/introduction/"
+          >
+            了解工作原理
+            <span
+              class="transition-transform duration-300 group-hover/host:translate-x-1"
+              aria-hidden="true"
+            >
+              ↗
+            </span>
+          </a>
+        </div>
+
+        <figure
+          class="host-workbench order-first min-w-0 w-full relative lg:max-w-[calc((100svh_-_208px)_*_600_/_470)] lg:justify-self-center"
+          data-host-workbench
+        >
+          <div class="host-network relative w-full aspect-[600/470] isolate max-sm:aspect-[600/530]">
+            <div
+              class="network-grid light:opacity-20 absolute -z-1 [background-size:18px_18px] opacity-[0.13] inset-0"
+              aria-hidden="true"
+            ></div>
+            <svg
+              class="network-paths light:[&>path]:stroke-accent/30 absolute overflow-visible text-accent [&_>_path]:[stroke:var(--color-line)] [&_>_path]:[stroke-width:1.2] [&_>_circle]:[fill:var(--color-accent)] [&_.network-signal]:[stroke:var(--color-accent)] [&_.network-signal]:[stroke-dasharray:12_220] [&_.network-signal]:opacity-[0.7] [&_.network-signal]:[stroke-width:1.5] max-sm:h-[89%] max-sm:top-[7%] inset-0 size-full"
+              viewBox="0 0 600 470"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path d="M163 154C163 211 300 155 300 232M448 142C448 203 300 170 300 232M300 232C300 335 131 273 131 346M300 232C300 306 456 257 456 327" />
+              <path
+                class="network-signal"
+                d="M163 154C163 211 300 155 300 232M448 142C448 203 300 170 300 232M300 232C300 335 131 273 131 346M300 232C300 306 456 257 456 327"
+              />
+              <circle cx="163" cy="154" r="3" />
+              <circle cx="448" cy="142" r="3" />
+              <circle cx="131" cy="346" r="3" />
+              <circle cx="456" cy="327" r="3" />
+            </svg>
+            <div
+              class="network-document light:shadow-panel absolute left-[3%] top-[13%] w-[35%] border border-line rounded-[5px] bg-surface shadow-[0_15px_40px_-27px_var(--color-shadow)] max-sm:top-[15%] max-sm:w-[38%]"
+              data-host-node
+            >
+              <div class="document-tab font-mono font-normal text-[10px] leading-[normal] text-muted border-b border-b-line flex gap-[9px] [&_>_span]:text-accent max-sm:text-[8px] py-2.5 px-[13px] max-sm:p-2">
+                <span aria-hidden="true">≡</span> 伤害.规则.md
+              </div>
+              <div class="document-body font-mono font-normal text-[10px] leading-[1.9] [&_p]:mt-1.5 [&_p]:text-[11px] [&_p]:text-muted max-sm:text-[8px] max-sm:[&_p]:text-[9px] p-[13px] max-sm:p-2">
+                <span class="code-muted text-accent">## 伤害结算</span>
+                <p>
+                  读取武器伤害
+                  <br />
+                  扣除目标生命值
+                </p>
+                <div
+                  class="document-strokes grid gap-1.5 mt-3 [&_i]:w-[75%] [&_i]:h-0.5 [&_i]:bg-line [&_i:last-child]:w-[48%] max-sm:hidden"
+                  aria-hidden="true"
+                >
+                  <i></i>
+                  <i></i>
+                </div>
+              </div>
+              <span class="node-operation absolute -bottom-5.5 left-3 font-mono font-normal text-[9px] leading-[normal] text-subtle [&_i]:not-italic [&_i]:text-success [&_i]:ml-1.5">
+                read <i>✓</i>
+              </span>
+            </div>
+            <div
+              class="network-weapon light:shadow-panel absolute right-0 top-[8%] w-[34%] flex items-center gap-[3px] border border-line rounded-[6px] bg-surface shadow-[0_15px_40px_-27px_var(--color-shadow)] [&_img]:w-[40%] [&_img]:h-auto [&_img]:object-contain [&_img]:[filter:drop-shadow(0_10px_8px_#0003)] [&_img]:shrink-0 [&_>_div]:min-w-0 [&_span]:text-[9px] [&_span]:text-subtle [&_strong]:block [&_strong]:text-[16px] [&_strong]:font-medium [&_strong]:mt-[7px] [&_code]:block [&_code]:mt-[9px] [&_code]:font-mono [&_code]:font-normal [&_code]:text-[8px] [&_code]:leading-[normal] [&_code]:whitespace-normal [&_code]:text-accent [&_code]:wrap-anywhere max-sm:top-[17%] max-sm:w-[37%] max-sm:[&_strong]:text-[13px] max-sm:[&_code]:text-[7px] max-sm:[&_span]:text-[8px] p-[13px] max-sm:p-[9px]"
+              data-host-node
+            >
+              <img
+                src="/demo/wooden-club.webp"
+                width="512"
+                height="512"
+                loading="lazy"
+                alt="木棍"
+              />
+              <div>
+                <span>角色 / 装备</span>
+                <strong>木棍</strong>
+                <code>damage = "1d6"</code>
+              </div>
+            </div>
+            <div
+              class="network-agent absolute top-[39%] left-[41.5%] w-[17%] text-center [&_>_span]:block [&_>_span]:mt-[15px] [&_>_span]:text-[12px] [&_>_span]:font-medium max-sm:top-[45%] max-sm:[&_>_span]:text-[10px] max-sm:[&_>_span]:mt-[11px]"
+              data-host-node
+            >
+              <div
+                class="agent-halo absolute top-[-60%] bottom-[-20%] -z-1 inset-x-[-80%]"
+                aria-hidden="true"
+              ></div>
+              <div
+                class="agent-burst absolute top-0 left-0 w-full aspect-square -z-1 border border-accent/70 rounded-full opacity-[0] pointer-events-none"
+                aria-hidden="true"
+              ></div>
+              <div class="agent-core light:bg-surface light:shadow-host-core relative w-full aspect-square grid place-items-center border border-[color-mix(in_srgb,_var(--color-accent)_45%,_var(--color-line))] rounded-[25%] bg-canvas shadow-[0_0_0_7px_var(--color-canvas),_0_0_0_8px_var(--color-line)] [&_.pi-logo]:object-contain [&_.pi-logo]:size-full">
+                <img
+                  class="pi-logo"
+                  src="/brand/pi-logo-on-dark.svg"
+                  width="800"
+                  height="800"
+                  alt="pi"
+                />
+              </div>
+              <span>AI 主持</span>
+            </div>
+            <div
+              class="network-dice light:shadow-panel absolute left-[9%] bottom-[6%] flex items-center gap-3.5 border border-line rounded-[6px] bg-surface shadow-[0_15px_40px_-27px_var(--color-shadow)] [&_code]:font-mono [&_code]:font-normal [&_code]:text-[9px] [&_code]:leading-[normal] [&_code]:text-subtle [&_>_div_>_span]:block [&_>_div_>_span]:mt-2 [&_>_div_>_span]:font-mono [&_>_div_>_span]:font-normal [&_>_div_>_span]:text-[14px] [&_>_div_>_span]:leading-[normal] max-sm:bottom-[5%] max-sm:left-[5%] max-sm:gap-[7px] max-sm:[&_code]:text-[8px] max-sm:[&_>_div_>_span]:text-[11px] p-[13px] max-sm:p-[9px]"
+              data-host-node
+            >
+              <div
+                class="dice-graphic relative w-[65px] h-17.5 text-accent [&_strong]:absolute [&_strong]:grid [&_strong]:place-items-center [&_strong]:font-mono [&_strong]:font-normal [&_strong]:text-[25px] [&_strong]:leading-[normal] [&_strong]:text-foreground max-sm:w-[43px] max-sm:h-12.5 max-sm:[&_strong]:text-[19px] [&_svg]:size-full [&_strong]:inset-0"
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 86 92" fill="none">
+                  <path
+                    d="m43 4 36 21v42L43 88 7 67V25Z"
+                    stroke="currentColor"
+                  />
+                  <path
+                    d="m43 4 22 52-22 32-23-32L43 4ZM7 25l13 31L7 67m72-42L65 56l14 11M20 56h45"
+                    stroke="currentColor"
+                    stroke-opacity=".25"
+                  />
+                </svg>
+                <strong>4</strong>
+              </div>
+              <div>
+                <code>roll_dice</code>
+                <span>1d6 → 4</span>
+              </div>
+            </div>
+            <div
+              class="network-monster light:shadow-panel absolute right-0 bottom-[1%] w-[40%] grid grid-cols-[29%_1fr] gap-[11px] items-center bg-surface border border-line rounded-[6px] shadow-[0_15px_40px_-27px_var(--color-shadow)] [&_>_img]:w-full [&_>_img]:aspect-square [&_>_img]:object-cover [&_>_img]:rounded-[3px] max-sm:w-[44%] max-sm:gap-[7px] p-[13px] max-sm:p-[9px]"
+              data-host-node
+            >
+              <img
+                src="/demo/mist-stalker.png"
+                width="1254"
+                height="1254"
+                alt="守卫怪物示意"
+                loading="lazy"
+              />
+              <div class="monster-record min-w-0 [&_>_span]:text-subtle [&_>_span]:font-mono [&_>_span]:font-normal [&_>_span]:text-[8px] [&_>_span]:leading-[normal] [&_>_span]:whitespace-nowrap [&_>_div]:grid [&_>_div]:gap-[5px] [&_>_div]:mt-2.5 [&_>_div]:font-mono [&_>_div]:font-normal [&_>_div]:text-[11px] [&_>_div]:leading-[normal] max-sm:[&_>_span]:text-[7px] max-sm:[&_>_div]:text-[9px] max-sm:[&_>_div]:mt-[5px]">
+                <span>守卫.怪物.toml</span>
+                <div>
+                  <code class="hp-old text-danger">− hp = 9</code>
+                  <code class="hp-new text-success">+ hp = 5</code>
+                </div>
+              </div>
+              <span class="record-saved [grid-column:1_/_-1] border-t border-t-line pt-[9px] text-right text-[9px] text-success max-sm:text-[8px] max-sm:pt-1.5">
+                ✓ 更新完成
+              </span>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="mt-12 grid gap-8 border-t border-line pt-8 sm:mt-16 sm:grid-cols-3 sm:gap-10 sm:pt-10">
+      {features.map((feature) => (
+        <div data-reveal>
+          <div class="flex items-baseline gap-3">
+            <h3 class="text-base font-medium sm:text-lg">{feature.title}</h3>
+          </div>
+          <p class="mt-3 max-w-[22rem] text-sm leading-7 text-muted">
+            {feature.body}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .network-grid {
+    background-image: radial-gradient(
+      var(--color-subtle) 0.7px,
+      transparent 0.7px
+    );
+    mask-image: radial-gradient(ellipse, #000 20%, transparent 70%);
+  }
+  .instruction-bubble {
+    --speech-background: color-mix(
+      in srgb,
+      var(--color-surface-raised) 94%,
+      var(--color-accent)
+    );
+    --speech-border: color-mix(
+      in srgb,
+      var(--color-accent) 22%,
+      var(--color-line)
+    );
+  }
+  .agent-halo {
+    background: radial-gradient(
+      ellipse,
+      color-mix(in srgb, var(--color-accent) 17%, transparent),
+      transparent 65%
+    );
+  }
+</style>
+<script>
+  import { gsap } from '../../scripts/animation';
+  gsap.matchMedia().add(
+    {
+      motion: '(prefers-reduced-motion: no-preference)',
+      desktop: '(min-width: 1024px)',
+    },
+    (context) => {
+      if (!context.conditions?.motion) return;
+      const desktop = Boolean(context.conditions.desktop);
+      const art = document.querySelector<HTMLElement>('[data-host-workbench]');
+      if (!art) return;
+      const section = art.closest<HTMLElement>('#round')!;
+      const stage = section.querySelector<HTMLElement>('[data-host-stage]')!;
+      const copy = section.querySelector<HTMLElement>('[data-host-copy]')!;
+      const instruction = section.querySelector<HTMLElement>(
+        '[data-host-instruction]',
+      )!;
+      const speech =
+        instruction.querySelector<HTMLElement>('[data-host-speech]')!;
+      const speaker = instruction.querySelectorAll<HTMLElement>(
+        '[data-host-speaker]',
+      );
+      const agent = art.querySelector<HTMLElement>('.network-agent')!;
+      const surroundingNodes = [
+        '.network-document',
+        '.network-weapon',
+        '.network-dice',
+        '.network-monster',
+      ].map((selector) => art.querySelector<HTMLElement>(selector)!);
+
+      // 只读取布局坐标，滚动中途刷新和窗口缩放不会把动画位移算进起点。
+      const positionInStage = (element: HTMLElement) => {
+        let x = 0;
+        let y = 0;
+        let current: HTMLElement | null = element;
+        while (current && current !== stage) {
+          x += current.offsetLeft;
+          y += current.offsetTop;
+          current = current.offsetParent as HTMLElement | null;
+        }
+        return { x, y };
+      };
+      const centeredX = () => {
+        const point = positionInStage(agent);
+        return stage.clientWidth / 2 - point.x - agent.offsetWidth / 2;
+      };
+      const instructionX = () => {
+        const point = positionInStage(speech);
+        // 整组对话使用 CSS translate 居中，目标只移动台词气泡。
+        return (
+          stage.clientWidth / 2 -
+          point.x -
+          speech.offsetWidth / 2 +
+          instruction.offsetWidth / 2
+        );
+      };
+      const instructionY = () => {
+        const target = positionInStage(agent);
+        const origin = positionInStage(speech);
+        return (
+          target.y + agent.offsetWidth / 2 - origin.y - speech.offsetHeight / 2
+        );
+      };
+      const collapsedX = (node: HTMLElement) =>
+        agent.offsetLeft +
+        agent.offsetWidth / 2 -
+        node.offsetLeft -
+        node.offsetWidth / 2;
+      const collapsedY = (node: HTMLElement) =>
+        agent.offsetTop +
+        agent.offsetWidth / 2 -
+        node.offsetTop -
+        node.offsetHeight / 2;
+
+      const flow = gsap.fromTo(
+        art.querySelector('.network-signal'),
+        { strokeDashoffset: 0 },
+        {
+          strokeDashoffset: -232,
+          duration: 2.8,
+          ease: 'none',
+          repeat: -1,
+          paused: true,
+        },
+      );
+      const visibility = new IntersectionObserver(([entry]) => {
+        if (entry?.isIntersecting && !document.hidden) flow.play();
+        else flow.pause();
+      });
+      visibility.observe(art);
+      const onVisibility = () => {
+        const rect = art.getBoundingClientRect();
+        if (
+          !document.hidden &&
+          rect.bottom > 0 &&
+          rect.top < window.innerHeight
+        )
+          flow.play();
+        else flow.pause();
+      };
+      document.addEventListener('visibilitychange', onVisibility);
+      const timeline = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          // 桌面先让整组图例进入视野，再固定舞台完成展开与左移。
+          // 手机不固定上下堆叠的整块内容，改用 pi 所在图例作为触发点。
+          trigger: desktop ? stage : art,
+          start: desktop
+            ? () =>
+                `top ${Math.max(24, (window.innerHeight - stage.offsetHeight) / 2)}px`
+            : 'center 62%',
+          end: () =>
+            `+=${Math.round(window.innerHeight * (desktop ? 1.25 : 0.8))}`,
+          pin: desktop ? stage : false,
+          pinSpacing: true,
+          anticipatePin: 1,
+          scrub: 0.85,
+          invalidateOnRefresh: true,
+        },
+      });
+      gsap.set(speech, { opacity: 1, x: 0, y: 0, scale: 1 });
+      // 各段交叠接续：卡片还在展开时整组开始左移，避免每段都停下来。
+      timeline
+        .to(
+          speech,
+          {
+            x: instructionX,
+            y: instructionY,
+            scale: 0.65,
+            duration: 0.72,
+            ease: 'power1.in',
+          },
+          0,
+        )
+        .to(speaker, { opacity: 0, y: -6, duration: 0.45 }, 0.2)
+        .to(speech, { opacity: 0, duration: 0.32 }, 0.4)
+        .fromTo(
+          agent,
+          { scale: 1.12 },
+          { scale: 1, duration: 1.2, ease: 'sine.out' },
+          0.35,
+        )
+        .fromTo(
+          art.querySelector('.agent-burst'),
+          { opacity: 0, scale: 0.85 },
+          { opacity: 0.6, scale: 1.3, duration: 0.12 },
+          0.36,
+        )
+        .to(
+          art.querySelector('.agent-burst'),
+          { opacity: 0, scale: 4.4, duration: 0.7, ease: 'sine.out' },
+          0.48,
+        )
+        .fromTo(
+          art.querySelector('.agent-halo'),
+          { opacity: 0.2, scale: 0.7 },
+          { opacity: 1, scale: 1.5, duration: 0.9, ease: 'sine.out' },
+          0.3,
+        )
+        .fromTo(
+          art.querySelector('.network-grid'),
+          { opacity: 0 },
+          { opacity: 0.13, duration: 0.9 },
+          0.4,
+        )
+        .fromTo(
+          art.querySelector('.network-paths'),
+          { opacity: 0, scale: 0.65, transformOrigin: '50% 50%' },
+          { opacity: 1, scale: 1, duration: 0.9, ease: 'sine.out' },
+          0.45,
+        );
+
+      surroundingNodes.forEach((node, index) => {
+        timeline.fromTo(
+          node,
+          {
+            opacity: 0,
+            scale: 0.28,
+            x: () => collapsedX(node),
+            y: () => collapsedY(node),
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            x: 0,
+            y: 0,
+            duration: 1.05,
+            ease: 'power2.out',
+          },
+          0.35 + index * 0.035,
+        );
+      });
+
+      timeline
+        .fromTo(
+          art.querySelectorAll('.hp-new, .record-saved'),
+          { opacity: 0 },
+          { opacity: 1, duration: 0.55 },
+          1.05,
+        )
+        .to(
+          art.querySelector('.agent-halo'),
+          { scale: 1, opacity: 0.7, duration: 0.9, ease: 'sine.inOut' },
+          1.2,
+        )
+        .fromTo(
+          art,
+          { x: centeredX },
+          { x: 0, duration: 1.5, ease: 'sine.inOut' },
+          1,
+        )
+        .fromTo(
+          copy,
+          { opacity: 0, x: 16, y: 8 },
+          { opacity: 1, x: 0, y: 0, duration: 0.7, ease: 'sine.out' },
+          2,
+        );
+      return () => {
+        visibility.disconnect();
+        document.removeEventListener('visibilitychange', onVisibility);
+      };
+    },
+  );
+</script>

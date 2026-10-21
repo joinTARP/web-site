@@ -1,0 +1,19 @@
+---
+import Faq from '../components/home/Faq.astro';
+import ForAuthors from '../components/home/ForAuthors.astro';
+import Hero from '../components/home/Hero.astro';
+import Companions from '../components/home/Companions.astro';
+import Host from '../components/home/Host.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+  <Hero />
+  <Host />
+  <Companions />
+  <ForAuthors />
+  <Faq />
+</BaseLayout>
+<script>
+  import '../scripts/home';
+</script>

@@ -1,0 +1,104 @@
+---
+import '@fontsource-variable/jetbrains-mono/wght.css';
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  animate?: boolean;
+  reading?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  type = 'website',
+  animate = false,
+  reading = false,
+} = Astro.props;
+const fullTitle = title ? `${title} · TARP` : site.title;
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site)
+  : undefined;
+---
+
+<!doctype html>
+<html
+  lang="zh-CN"
+  class:list={[reading && '[--site-header-space:88px]']}
+  data-layout={reading ? 'reading' : undefined}
+  transition:animate={reading ? 'none' : undefined}
+>
+  <head>
+    <meta charset="UTF-8" />
+    {reading && <ClientRouter fallback="swap" />}
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#18191b" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="TARP" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary" />
+    <title>{fullTitle}</title>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        let preference = 'system';
+        try {
+          const saved = localStorage.getItem('tarp-theme');
+          if (saved === 'light' || saved === 'dark') preference = saved;
+        } catch {
+          /* 没有本地存储权限时跟随系统。 */
+        }
+        const theme =
+          preference === 'system'
+            ? matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+            : preference;
+        root.dataset.themePreference = preference;
+        root.dataset.theme = theme;
+        root.classList.toggle('dark', theme === 'dark');
+        document
+          .querySelector('meta[name="theme-color"]')
+          ?.setAttribute('content', theme === 'dark' ? '#18191b' : '#f7f8fb');
+      })();
+    </script>
+    {animate && <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        root.classList.add('motion');
+        setTimeout(() => {
+          if (root.dataset.motionReady === undefined) {
+            root.classList.remove('motion');
+          }
+        }, 3000);
+      })();
+    </script>}
+  </head>
+  <body>
+    <a
+      class="fixed -top-24 left-4 z-100 rounded-lg bg-foreground px-4 py-3 text-canvas focus:top-3"
+      href="#main"
+    >
+      跳到主要内容
+    </a>
+    <slot />
+    <script>
+      import '../scripts/markdown';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'a'> {
+  href: string;
+  variant?: 'primary' | 'ghost';
+  size?: 'md' | 'sm';
+  arrow?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  arrow,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    'group/btn inline-flex items-center gap-3.5 rounded-lg font-medium whitespace-nowrap transition-colors duration-300 ease-expo',
+    size === 'md' ? 'h-13 px-5 text-[0.95rem]' : 'h-10 px-5 text-sm',
+    variant === 'primary'
+      ? 'bg-foreground text-canvas hover:bg-foreground/85'
+      : 'border border-line bg-surface/50 text-foreground hover:border-accent/60 hover:bg-surface-active',
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+  {arrow && (
+    <span
+      class:list={[
+        'text-base transition-transform duration-300 ease-expo',
+        variant === 'primary'
+          ? 'group-hover/btn:translate-x-1'
+          : 'group-hover/btn:translate-y-0.5',
+      ]}
+      aria-hidden="true"
+    >
+      {arrow}
+    </span>
+  )}
+</a>

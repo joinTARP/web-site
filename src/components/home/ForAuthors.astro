@@ -1,0 +1,793 @@
+---
+import { Code } from 'astro:components';
+import AgentGallery from './AgentGallery.astro';
+const darkFormula = `$self.base_damage +
+(load("场景/当前场景.场景")?.dark ? " + 5" : "")`;
+const traitFormula = `$self.encountered
+  ? $self.hidden_traits
+  : "？？？"`;
+const fieldDefinition = `[fields.category]
+type = "enum"
+options = ["单手剑", "长弓"]
+
+[fields.base_damage]
+type = "text"
+label = "基础伤害"
+
+[fields.weight]
+type = "number"
+label = "重量"`;
+const darkDefinition = `[fields.damage]
+type = "text"
+label = "伤害"
+compute = '''
+${darkFormula}
+'''`;
+const traitDefinition = `[fields.traits]
+type = "text"
+label = "特性"
+compute = '''
+${traitFormula}
+'''`;
+const authorSteps = [
+  { id: 'author-fields', label: '超高自由度' },
+  { id: 'author-references', label: '引用文档' },
+  { id: 'author-compute', label: '自动计算数值' },
+  { id: 'author-reveal', label: '按条件展示特性' },
+  { id: 'author-building', label: '用 AI 写模组' },
+];
+const linkExample = `---
+name: 火把
+---
+
+点火、熄灭与燃烧余量
+详见 [[规则/光照.规则]]。`;
+---
+
+<section
+  id="authors"
+  class="authors-section pt-25 pb-20 bg-canvas px-0 max-md:py-[65px]"
+  aria-labelledby="authors-title"
+>
+  <div class="shell authors-layout grid grid-cols-[minmax(250px,_0.75fr)_minmax(0,_1.65fr)] gap-[clamp(35px,_5vw,_80px)] items-start max-lg:grid-cols-[minmax(210px,_0.65fr)_minmax(0,_1.35fr)] max-lg:gap-7.5 max-md:block">
+    <div class="authors-copy sticky top-[max(140px,_28vh)] pb-[35px] [&_h2]:text-[clamp(30px,_3vw,_40px)] [&_h2]:leading-[1.4] [&_h2]:tracking-[-0.035em] [&_h2]:font-semibold [&_h2_span]:block [&_h2_span]:mt-2 [&_h2_span]:text-accent max-lg:[&_h2]:text-[29px] max-md:static max-md:[&_h2]:text-[32px] motion-reduce:static [&_.authors-intro]:mt-[25px] [&_.authors-intro]:leading-[2] [&_.authors-intro]:text-pretty [&_.authors-link]:mt-7.5 [&_.authors-link]:pb-2 [&_.authors-link]:border-b [&_.authors-link]:border-b-line max-md:[&_h2_span]:ml-0 md:top-[max(105px,_16vh)]">
+      <h2 id="authors-title">
+        自定义规则，
+        <span>创造你的玩法。</span>
+      </h2>
+      <p class="authors-intro text-[15px] leading-[1.95] text-muted max-w-72.5 mt-5.5 max-md:max-w-85">
+        自定义文档字段，引用相关资料，用表达式计算数值、控制信息展示。
+      </p>
+      <nav
+        class="authors-index [--active-step:0] relative grid mt-7.5 pl-[19px] border-l border-l-line [&_a]:flex [&_a]:items-center [&_a]:min-h-11 [&_a]:text-subtle [&_a]:text-[13px] [&_a]:[transition:color_400ms_ease,_transform_500ms_cubic-bezier(0.22,_1,_0.36,_1)] [&_a[aria-current='step']]:text-foreground [&_a[aria-current='step']]:[transform:translateX(8px)] [&_a:hover]:text-foreground max-md:grid-cols-[1fr_1fr] max-md:gap-[0_16px] max-md:pl-0 max-md:border-l-0 max-md:[&_a]:border-b max-md:[&_a]:border-b-line max-md:[&_a[aria-current='step']]:[transform:none] max-md:[&_a[aria-current='step']]:border-accent motion-reduce:[&_a]:[transition:none]"
+        aria-label="模组能力索引"
+      >
+        <span
+          class="index-indicator absolute top-[9px] left-[-1px] w-0.5 h-6.5 bg-accent [transform:translateY(calc(var(--active-step)_*_44px))] [transition:transform_550ms_cubic-bezier(0.22,_1,_0.36,_1)] max-md:hidden motion-reduce:[transition:none]"
+          aria-hidden="true"
+        ></span>
+        {authorSteps.map((step, index) => (
+          <a
+            href={`#${step.id}`}
+            data-author-index={index}
+            aria-current={index === 0 ? 'step' : undefined}
+          >
+            {step.label}
+          </a>
+        ))}
+      </nav>
+      <a
+        href="/docs/modules/compute/"
+        class="authors-link inline-flex gap-[25px] text-[12px] mt-[35px] text-muted hover:text-foreground max-md:mt-5"
+      >
+        了解计算字段 <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div class="authors-story min-w-0">
+      <article
+        class="author-scene min-h-165 pt-[65px] pb-[115px] flex flex-col justify-center [scroll-margin-top:110px] max-md:min-h-auto max-md:pt-[45px] max-md:pb-15 px-0 max-md:px-0"
+        id="author-fields"
+        data-author-scene="0"
+        aria-labelledby="field-scene-title"
+      >
+        <header class="scene-heading [&_>_span]:text-subtle [&_>_span]:text-[11px] [&_>_span]:tracking-[0.04em] [&_h3]:text-[21px] [&_h3]:leading-[1.5] [&_h3]:font-medium [&_h3]:mt-0 [&_h3]:tracking-[-0.02em] max-lg:[&_h3]:text-[18px]">
+          <h3 id="field-scene-title">DIY 物品的各种属性。</h3>
+        </header>
+        <div class="definition-flow grid grid-cols-[minmax(0,_1.05fr)_42px_minmax(0,_1fr)] items-center pt-10.5 pb-7 isolate max-lg:grid-cols-[minmax(0,_1fr)_22px_minmax(0,_1fr)] max-md:pt-7.5 max-md:gap-0 max-md:grid-cols-[minmax(0,_1fr)] px-2 max-lg:px-0 max-md:px-2">
+          <div
+            class="definition-card light:shadow-panel min-w-0 border border-line bg-surface shadow-[0_20px_45px_-32px_var(--color-shadow)] rounded-[3px] [transform:rotate(-3deg)] z-1 max-md:w-[92%] p-5 max-lg:p-[15px] max-md:p-5"
+            data-definition
+          >
+            <div class="paper-heading flex items-center gap-[9px] pb-[17px] border-b border-b-line text-[11px] text-muted max-md:gap-[5px] max-md:text-[11px]">
+              <span
+                class="file-icon text-accent text-[19px]"
+                aria-hidden="true"
+              >
+                ≡
+              </span>
+              <span class="file-name min-w-0 wrap-anywhere font-mono text-[10px] max-md:text-[11px]">
+                物品.fields.toml
+              </span>
+              <span class="file-format ml-auto text-accent font-mono font-normal text-[8px] leading-[normal] tracking-[0.06em]">
+                TOML
+              </span>
+            </div>
+            <p class="file-directory mt-[15px] font-mono font-normal text-[9px] leading-[normal] text-subtle">
+              .types /
+            </p>
+            <div class="formula-code schema-code pt-5.5 pb-5.5 [&_pre]:bg-transparent! [&_pre]:text-[11px] [&_pre]:leading-[1.9] [&_pre]:whitespace-pre-wrap [&_pre]:wrap-anywhere max-md:[&_pre]:text-[11px] pt-3 pb-0">
+              <Code code={fieldDefinition} lang="toml" theme="css-variables" />
+            </div>
+          </div>
+          <div
+            class="flow-connector flex items-center origin-left text-accent z-2 [&_>_span]:flex-1 [&_>_span]:h-[1px] [&_>_span]:bg-accent [&_>_span]:opacity-[0.5] [&_b]:text-[17px] [&_b]:font-normal [&_b]:-ml-0.5 max-md:w-8.5 max-md:h-10.5 max-md:ml-[55%] max-md:[transform:rotate(90deg)]"
+            aria-hidden="true"
+            data-connector
+          >
+            <span></span>
+            <b>→</b>
+          </div>
+          <div
+            class="entity-card light:bg-surface light:shadow-panel weapon-card min-w-0 border border-line bg-canvas shadow-[0_20px_45px_-32px_var(--color-shadow)] rounded-[3px] relative [transform:rotate(2deg)] min-h-85 [&_h4]:text-[23px] [&_h4]:font-medium [&_h4]:tracking-[0.09em] max-md:min-h-[315px] max-md:w-[85%] max-md:justify-self-end max-md:[&_h4]:text-[20px] [&_.weapon-art]:w-full [&_.weapon-art]:h-45 [&_.weapon-art]:mt-3 [&_.weapon-art]:mb-[15px] p-5 max-lg:p-[15px] max-md:p-5 [&_.weapon-art]:mx-auto"
+            data-entity
+          >
+            <div class="entity-topline flex justify-between gap-2 text-subtle text-[9px] max-md:text-[8px]">
+              <span>夜行刃.物品.toml</span>
+              <span>资料视图</span>
+            </div>
+            <div class="weapon-art mt-[5px] mb-[-5px] text-accent max-lg:w-[125px] max-md:w-37.5 max-md:h-[155px] [&_img]:object-contain mx-auto size-[155px] [&_svg]:size-full [&_img]:size-full">
+              <img
+                src="/demo/night-blade.png"
+                width="1254"
+                height="1254"
+                alt="夜行刃，暗钢剑身带冷蓝刃光的单手剑"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <h4>夜行刃</h4>
+            <p class="entity-subtitle text-subtle text-[10px] mt-1.5">
+              武器 · 单手剑
+            </p>
+            <dl class="entity-stats flex gap-[35px] mt-[19px] pt-3.5 border-t border-t-line [&_dt]:text-[9px] [&_dt]:text-muted [&_dd]:font-mono [&_dd]:font-normal [&_dd]:text-[21px] [&_dd]:leading-[normal] [&_dd]:mt-2 max-lg:gap-5 max-md:gap-4.5">
+              <div>
+                <dt>基础伤害</dt>
+                <dd>1d6</dd>
+              </div>
+              <div>
+                <dt>重量</dt>
+                <dd>2</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <p class="scene-caption text-[12px] leading-[1.9] text-subtle mt-5 max-md:mt-1.5 max-md:text-[11px]">
+          定义字段和类型，再为每件物品填写对应的值。
+        </p>
+      </article>
+
+      <article
+        class="author-scene min-h-165 pt-[65px] pb-[115px] flex flex-col justify-center [scroll-margin-top:110px] max-md:min-h-auto max-md:pt-[45px] max-md:pb-15 px-0 max-md:px-0"
+        id="author-references"
+        data-author-scene="1"
+        aria-labelledby="link-scene-title"
+      >
+        <header class="scene-heading [&_>_span]:text-subtle [&_>_span]:text-[11px] [&_>_span]:tracking-[0.04em] [&_h3]:text-[21px] [&_h3]:leading-[1.5] [&_h3]:font-medium [&_h3]:mt-0 [&_h3]:tracking-[-0.02em] max-lg:[&_h3]:text-[18px]">
+          <h3 id="link-scene-title">文档之间可以相互引用。</h3>
+        </header>
+        <div class="definition-flow grid grid-cols-[minmax(0,_1.05fr)_42px_minmax(0,_1fr)] items-center pt-10.5 pb-7 isolate max-lg:grid-cols-[minmax(0,_1fr)_22px_minmax(0,_1fr)] max-md:pt-7.5 max-md:gap-0 max-md:grid-cols-[minmax(0,_1fr)] px-2 max-lg:px-0 max-md:px-2">
+          <div
+            class="definition-card light:shadow-panel min-w-0 border border-line bg-surface shadow-[0_20px_45px_-32px_var(--color-shadow)] rounded-[3px] [transform:rotate(-3deg)] z-1 max-md:w-[92%] p-5 max-lg:p-[15px] max-md:p-5"
+            data-definition
+          >
+            <div class="paper-heading flex items-center gap-[9px] pb-[17px] border-b border-b-line text-[11px] text-muted max-md:gap-[5px] max-md:text-[11px]">
+              <span
+                class="file-icon text-accent text-[19px]"
+                aria-hidden="true"
+              >
+                ≡
+              </span>
+              <span class="file-name min-w-0 wrap-anywhere font-mono text-[10px] max-md:text-[11px]">
+                火把.物品.md
+              </span>
+              <span class="file-format ml-auto text-accent font-mono font-normal text-[8px] leading-[normal] tracking-[0.06em]">
+                MD
+              </span>
+            </div>
+            <p class="file-directory mt-[15px] font-mono font-normal text-[9px] leading-[normal] text-subtle">
+              物品 /
+            </p>
+            <div class="formula-code [&_pre]:bg-transparent! [&_pre]:text-[11px] [&_pre]:leading-[1.9] [&_pre]:whitespace-pre-wrap [&_pre]:wrap-anywhere max-md:[&_pre]:text-[11px] py-5.5">
+              <Code code={linkExample} lang="md" theme="css-variables" />
+            </div>
+            <div class="rule-note flex items-center justify-between gap-[5px] border-t border-t-line pt-4 text-[10px] text-subtle [&_b]:font-normal [&_b]:text-accent max-lg:text-[9px]">
+              文档中的引用 <b>→</b> 卡片中的链接
+            </div>
+          </div>
+          <div
+            class="flow-connector flex items-center origin-left text-accent z-2 [&_>_span]:flex-1 [&_>_span]:h-[1px] [&_>_span]:bg-accent [&_>_span]:opacity-[0.5] [&_b]:text-[17px] [&_b]:font-normal [&_b]:-ml-0.5 max-md:w-8.5 max-md:h-10.5 max-md:ml-[55%] max-md:[transform:rotate(90deg)]"
+            aria-hidden="true"
+            data-connector
+          >
+            <span></span>
+            <b>→</b>
+          </div>
+          <div
+            class="entity-card light:bg-surface light:shadow-panel reference-card min-w-0 border border-line bg-canvas shadow-[0_20px_45px_-32px_var(--color-shadow)] rounded-[3px] relative [transform:rotate(2deg)] min-h-85 [&_h4]:text-[23px] [&_h4]:font-medium [&_h4]:tracking-[0.09em] max-md:min-h-[315px] max-md:w-[85%] max-md:justify-self-end max-md:[&_h4]:text-[20px] [&_.entity-stats]:gap-4.5 [&_.entity-stats_dd]:text-[16px] [&_.reference-prose]:mt-5 [&_.reference-prose]:text-[12px] [&_.reference-prose]:leading-[1.9] p-5 max-lg:p-[15px] max-md:p-5"
+            data-entity
+          >
+            <div class="entity-topline flex justify-between gap-2 text-subtle text-[9px] max-md:text-[8px]">
+              <span>火把.物品.md</span>
+              <span>物品卡片</span>
+            </div>
+            <div class="torch-art h-[155px] mt-3 mb-[15px] [&_img]:block [&_img]:object-contain mx-auto [&_img]:size-full">
+              <img
+                src="/demo/torch.webp"
+                width="512"
+                height="512"
+                alt="燃烧的火把"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <h4>火把</h4>
+            <p class="entity-subtitle text-subtle text-[10px] mt-1.5">
+              消耗品 · 光源
+            </p>
+            <dl class="entity-stats flex gap-[35px] mt-[19px] pt-3.5 border-t border-t-line [&_dt]:text-[9px] [&_dt]:text-muted [&_dd]:font-mono [&_dd]:font-normal [&_dd]:text-[21px] [&_dd]:leading-[normal] [&_dd]:mt-2 max-lg:gap-5 max-md:gap-4.5">
+              <div>
+                <dt>照明范围</dt>
+                <dd>约 6 米</dd>
+              </div>
+              <div>
+                <dt>累计燃烧</dt>
+                <dd>60 分钟</dd>
+              </div>
+            </dl>
+            <p class="reference-prose text-[13px] leading-[2.3] mt-7">
+              点火、熄灭与燃烧余量详见{' '}
+              <span class="wiki-reference relative inline-block [&:hover_.wiki-tooltip]:visible [&:hover_.wiki-tooltip]:opacity-[1] [&:focus-within_.wiki-tooltip]:visible [&:focus-within_.wiki-tooltip]:opacity-[1]">
+                <button
+                  type="button"
+                  class="wiki-link cursor-pointer text-link border-b border-dashed border-b-accent leading-[1.7] [&_span]:text-[10px]"
+                  data-item-open
+                  aria-haspopup="dialog"
+                  aria-controls="author-item-detail"
+                  disabled
+                >
+                  光照 <span aria-hidden="true">↗</span>
+                </button>
+                <span
+                  class="wiki-tooltip absolute bottom-[calc(100%_+_10px)] -left-4.5 z-5 w-[175px] bg-surface-raised border border-line rounded-[4px] shadow-[0_8px_24px_-10px_var(--color-shadow)] invisible opacity-[0] pointer-events-none [&_strong]:block [&_strong]:text-[12px] [&_strong]:font-medium [&_>_span]:block [&_>_span]:text-[9px] [&_>_span]:text-muted [&_>_span]:mt-[5px] p-[13px]"
+                  aria-hidden="true"
+                >
+                  <strong>光照</strong>
+                  <span>照明范围、燃烧余量与黑暗中的行动。</span>
+                </span>
+              </span>
+              。
+            </p>
+            <div class="reference-path flex gap-2 text-subtle text-[9px] mt-6.5 pt-[15px] border-t border-t-line">
+              <span aria-hidden="true">↳</span>
+              <span>规则 / 光照.规则</span>
+            </div>
+            <p class="reference-hint text-[9px] text-subtle mt-4">
+              悬停预览 · 点击查看规则
+            </p>
+          </div>
+        </div>
+        <p class="scene-caption text-[12px] leading-[1.9] text-subtle mt-5 max-md:mt-1.5 max-md:text-[11px]">
+          在火把文档中写入
+          [[规则/光照.规则]]，卡片正文会显示可点击的“光照”链接。
+        </p>
+      </article>
+
+      <article
+        class="author-scene min-h-165 pt-[65px] pb-[115px] flex flex-col justify-center [scroll-margin-top:110px] max-md:min-h-auto max-md:pt-[45px] max-md:pb-15 px-0 max-md:px-0"
+        id="author-compute"
+        data-author-scene="2"
+        aria-labelledby="dark-scene-title"
+      >
+        <header class="scene-heading [&_>_span]:text-subtle [&_>_span]:text-[11px] [&_>_span]:tracking-[0.04em] [&_h3]:text-[21px] [&_h3]:leading-[1.5] [&_h3]:font-medium [&_h3]:mt-0 [&_h3]:tracking-[-0.02em] max-lg:[&_h3]:text-[18px]">
+          <h3 id="dark-scene-title">场景处于黑暗时，武器伤害 +5。</h3>
+        </header>
+        <div class="definition-flow grid grid-cols-[minmax(0,_1.05fr)_42px_minmax(0,_1fr)] items-center pt-10.5 pb-7 isolate max-lg:grid-cols-[minmax(0,_1fr)_22px_minmax(0,_1fr)] max-md:pt-7.5 max-md:gap-0 max-md:grid-cols-[minmax(0,_1fr)] px-2 max-lg:px-0 max-md:px-2">
+          <div
+            class="definition-card light:shadow-panel formula-card min-w-0 border border-line bg-surface shadow-[0_20px_45px_-32px_var(--color-shadow)] rounded-[3px] [transform:rotate(-3deg)] z-1 max-md:w-[92%] p-5 max-lg:p-[15px] max-md:p-5"
+            data-definition
+          >
+            <div class="paper-heading flex items-center gap-[9px] pb-[17px] border-b border-b-line text-[11px] text-muted max-md:gap-[5px] max-md:text-[11px]">
+              <span
+                class="file-icon text-accent text-[19px]"
+                aria-hidden="true"
+              >
+                ƒ
+              </span>
+              <span class="file-name min-w-0 wrap-anywhere font-mono text-[10px] max-md:text-[11px]">
+                物品.fields.toml
+              </span>
+              <span class="file-format ml-auto text-accent font-mono font-normal text-[8px] leading-[normal] tracking-[0.06em]">
+                TOML
+              </span>
+            </div>
+            <div class="linked-document flex items-center gap-2 text-[10px] text-subtle pt-6 [&_strong]:text-muted [&_strong]:font-normal [&_strong]:ml-auto max-md:flex-wrap max-md:text-[9px] max-md:[&_strong]:ml-0">
+              <span aria-hidden="true">↗</span>
+              <span>读取场景</span>
+              <strong>当前场景</strong>
+            </div>
+            <div class="formula-code [&_pre]:bg-transparent! [&_pre]:text-[11px] [&_pre]:leading-[1.9] [&_pre]:whitespace-pre-wrap [&_pre]:wrap-anywhere max-md:[&_pre]:text-[11px] py-5.5">
+              <Code code={darkDefinition} lang="toml" theme="css-variables" />
+            </div>
+            <div class="rule-note flex items-center justify-between gap-[5px] border-t border-t-line pt-4 text-[10px] text-subtle [&_b]:font-normal [&_b]:text-accent max-lg:text-[9px]">
+              基础伤害 <b>＋</b> 黑暗加成
+            </div>
+          </div>
+          <div
+            class="flow-connector flex items-center origin-left text-accent z-2 [&_>_span]:flex-1 [&_>_span]:h-[1px] [&_>_span]:bg-accent [&_>_span]:opacity-[0.5] [&_b]:text-[17px] [&_b]:font-normal [&_b]:-ml-0.5 max-md:w-8.5 max-md:h-10.5 max-md:ml-[55%] max-md:[transform:rotate(90deg)]"
+            aria-hidden="true"
+            data-connector
+          >
+            <span></span>
+            <b>→</b>
+          </div>
+          <div
+            class="entity-card light:bg-surface light:shadow-panel attack-card min-w-0 border border-line bg-canvas shadow-[0_20px_45px_-32px_var(--color-shadow)] rounded-[3px] relative [transform:rotate(2deg)] min-h-85 [&_h4]:text-[23px] [&_h4]:font-medium [&_h4]:tracking-[0.09em] max-md:min-h-[315px] max-md:w-[85%] max-md:justify-self-end max-md:[&_h4]:text-[20px] overflow-hidden [&_.attack-value]:text-[clamp(27px,_3vw,_36px)] [&_.attack-value]:tracking-[-0.04em] [&_.attack-value]:leading-[2] [&_.attack-value]:whitespace-nowrap [&_.attack-value_>_span]:static [&_.attack-value_>_span]:text-[length:inherit] [&_.attack-value_>_span]:tracking-[inherit] p-5 max-lg:p-[15px] max-md:p-5 [&_.attack-value_>_span]:m-0"
+            data-entity
+          >
+            <div class="entity-topline flex justify-between gap-2 text-subtle text-[9px] max-md:text-[8px]">
+              <span>夜行刃</span>
+              <span>伤害</span>
+            </div>
+            <div
+              class="attack-orbit absolute border border-line rounded-full top-[63px] left-[calc(50%_-_102px)] after:content-[''] after:absolute after:border after:border-dashed after:border-line after:rounded-full max-lg:left-[calc(50%_-_77px)] max-lg:top-19 max-md:left-[calc(50%_-_67px)] max-md:top-19.5 size-[205px] after:inset-[9px] max-lg:size-[155px] max-md:size-[135px]"
+              aria-hidden="true"
+            >
+              <span class="orbit-dot absolute rounded-full bg-accent left-4.5 top-[39px] size-1.5"></span>
+            </div>
+            <div class="attack-states grid relative text-center mt-[63px]">
+              <div
+                class="state-before [grid-area:1_/_1] opacity-[0] pointer-events-none"
+                data-before
+                aria-hidden="true"
+              >
+                <span class="environment text-[10px] text-muted">
+                  ◌ 明亮场景
+                </span>
+                <strong class="attack-value block font-mono font-medium text-[66px] leading-[1.3] tracking-[-0.07em] mt-1 [&_>_span]:absolute [&_>_span]:text-[15px] [&_>_span]:tracking-[0] [&_>_span]:text-success [&_>_span]:mt-[11px] [&_>_span]:mr-0 [&_>_span]:mb-0 [&_>_span]:ml-[5px] max-lg:text-[56px] max-md:text-[51px] max-md:[&_>_span]:text-[12px] max-md:[&_>_span]:ml-0.5">
+                  1d6
+                </strong>
+                <span class="attack-extra text-[10px] text-subtle max-md:text-[9px]">
+                  基础伤害
+                </span>
+              </div>
+              <div class="state-after [grid-area:1_/_1]" data-after>
+                <span class="environment text-[10px] text-muted">
+                  ◐ 黑暗场景
+                </span>
+                <strong class="attack-value block font-mono font-medium text-[66px] leading-[1.3] tracking-[-0.07em] mt-1 [&_>_span]:absolute [&_>_span]:text-[15px] [&_>_span]:tracking-[0] [&_>_span]:text-success [&_>_span]:mt-[11px] [&_>_span]:mr-0 [&_>_span]:mb-0 [&_>_span]:ml-[5px] max-lg:text-[56px] max-md:text-[51px] max-md:[&_>_span]:text-[12px] max-md:[&_>_span]:ml-0.5">
+                  1d6<span> + 5</span>
+                </strong>
+                <span class="attack-extra text-[10px] text-subtle max-md:text-[9px]">
+                  黑暗加成已生效
+                </span>
+              </div>
+            </div>
+            <div
+              class="attack-meter flex h-[3px] mt-[53px] gap-[3px] [&_>_span]:w-[66.666%] [&_>_span]:bg-accent [&_i]:flex-1 [&_i]:bg-success [&_i]:origin-left"
+              aria-hidden="true"
+            >
+              <span></span>
+              <i data-bonus></i>
+            </div>
+          </div>
+        </div>
+        <p class="scene-caption text-[12px] leading-[1.9] text-subtle mt-5 max-md:mt-1.5 max-md:text-[11px]">
+          场景变暗 → 读取场景字段 → 武器伤害从 1d6 变为 1d6 + 5。
+        </p>
+      </article>
+
+      <article
+        class="author-scene min-h-165 pt-[65px] pb-[115px] flex flex-col justify-center [scroll-margin-top:110px] max-md:min-h-auto max-md:pt-[45px] max-md:pb-15 px-0 max-md:px-0"
+        id="author-reveal"
+        data-author-scene="3"
+        aria-labelledby="trait-scene-title"
+      >
+        <header class="scene-heading [&_>_span]:text-subtle [&_>_span]:text-[11px] [&_>_span]:tracking-[0.04em] [&_h3]:text-[21px] [&_h3]:leading-[1.5] [&_h3]:font-medium [&_h3]:mt-0 [&_h3]:tracking-[-0.02em] max-lg:[&_h3]:text-[18px]">
+          <h3 id="trait-scene-title">点击遭遇，将未知特性揭示出来。</h3>
+        </header>
+        <div class="definition-flow grid grid-cols-[minmax(0,_1.05fr)_42px_minmax(0,_1fr)] items-center pt-10.5 pb-7 isolate max-lg:grid-cols-[minmax(0,_1fr)_22px_minmax(0,_1fr)] max-md:pt-7.5 max-md:gap-0 max-md:grid-cols-[minmax(0,_1fr)] px-2 max-lg:px-0 max-md:px-2">
+          <div
+            class="definition-card light:shadow-panel formula-card min-w-0 border border-line bg-surface shadow-[0_20px_45px_-32px_var(--color-shadow)] rounded-[3px] [transform:rotate(-3deg)] z-1 max-md:w-[92%] p-5 max-lg:p-[15px] max-md:p-5"
+            data-definition
+          >
+            <div class="paper-heading flex items-center gap-[9px] pb-[17px] border-b border-b-line text-[11px] text-muted max-md:gap-[5px] max-md:text-[11px]">
+              <span
+                class="file-icon text-accent text-[19px]"
+                aria-hidden="true"
+              >
+                ƒ
+              </span>
+              <span class="file-name min-w-0 wrap-anywhere font-mono text-[10px] max-md:text-[11px]">
+                怪物.fields.toml
+              </span>
+              <span class="file-format ml-auto text-accent font-mono font-normal text-[8px] leading-[normal] tracking-[0.06em]">
+                TOML
+              </span>
+            </div>
+            <div class="condition-label flex justify-between items-center mt-[23px] text-muted text-[11px] [&_b]:text-accent [&_b]:font-mono [&_b]:font-normal [&_b]:text-[22px] [&_b]:leading-[normal] [&_code]:font-mono [&_code]:font-normal [&_code]:text-[12px] [&_code]:leading-[normal] [&_code]:text-accent [&_code[data-marked]]:text-success">
+              <span>是否已遭遇</span>
+              <code data-encounter-value>false</code>
+            </div>
+            <div class="formula-code [&_pre]:bg-transparent! [&_pre]:text-[11px] [&_pre]:leading-[1.9] [&_pre]:whitespace-pre-wrap [&_pre]:wrap-anywhere max-md:[&_pre]:text-[11px] py-5.5">
+              <Code code={traitDefinition} lang="toml" theme="css-variables" />
+            </div>
+            <div class="rule-note flex items-center justify-between gap-[5px] border-t border-t-line pt-4 text-[10px] text-subtle [&_b]:font-normal [&_b]:text-accent max-lg:text-[9px]">
+              已遭遇 <b>?</b> 揭示特性 <b>:</b> 保持未知
+            </div>
+          </div>
+          <div
+            class="flow-connector flex items-center origin-left text-accent z-2 [&_>_span]:flex-1 [&_>_span]:h-[1px] [&_>_span]:bg-accent [&_>_span]:opacity-[0.5] [&_b]:text-[17px] [&_b]:font-normal [&_b]:-ml-0.5 max-md:w-8.5 max-md:h-10.5 max-md:ml-[55%] max-md:[transform:rotate(90deg)]"
+            aria-hidden="true"
+            data-connector
+          >
+            <span></span>
+            <b>→</b>
+          </div>
+          <div
+            class="entity-card light:bg-surface light:shadow-panel creature-card min-w-0 border border-line bg-canvas shadow-[0_20px_45px_-32px_var(--color-shadow)] rounded-[3px] relative [transform:rotate(2deg)] min-h-85 [&_h4]:text-[23px] [&_h4]:font-medium [&_h4]:tracking-[0.09em] max-md:min-h-[315px] max-md:w-[85%] max-md:justify-self-end max-md:[&_h4]:text-[20px] [&_.creature-art]:mt-4.5 [&_.creature-art]:-mr-2 [&_.creature-art]:mb-0 [&_.creature-art]:-ml-2 [&_.creature-art]:overflow-hidden [&_.creature-art]:rounded-[3px] [&_.creature-art]:bg-[#111317] [&[data-encountered='true']_.creature-art_img]:[filter:none] [&_.trait-states]:block [&_.trait-states]:min-h-[89px] [&_.trait-states]:mt-[17px] [&_.trait-states]:pt-[15px] p-5 max-lg:p-[15px] max-md:p-5"
+            data-entity
+            data-encountered="false"
+          >
+            <div class="entity-topline flex justify-between gap-2 text-subtle text-[9px] max-md:text-[8px]">
+              <span>怪物 / 雾中潜伏者</span>
+              <span>特性</span>
+            </div>
+            <div class="creature-art text-accent mt-[15px] [&_svg]:w-full [&_svg]:h-[145px] max-md:[&_svg]:h-33 [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:aspect-square [&_img]:object-cover [&_img]:[filter:brightness(0.38)_saturate(0.2)_blur(1.5px)] [&_img]:[transition:filter_550ms] motion-reduce:[&_img]:[transition:none]">
+              <img
+                src="/demo/mist-stalker.png"
+                width="1254"
+                height="1254"
+                alt="雾中潜伏者，灰黑色长肢怪物伏在石墓中"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div
+              class="trait-states grid text-center mt-5.5 border-t border-t-line pt-5"
+              id="author-monster-trait"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <span
+                class="trait-status text-[9px] text-subtle max-md:text-[8px]"
+                data-encounter-status
+              >
+                尚未遭遇 · 特性未知
+              </span>
+              <strong
+                class="unknown-trait mt-3.5 block font-mono text-[21px] font-medium tracking-[0.15em] text-subtle"
+                data-encounter-trait
+              >
+                ？？？
+              </strong>
+            </div>
+            <button
+              type="button"
+              class="encounter-button flex items-center justify-center gap-3 w-full min-h-10 mt-4.5 border border-accent rounded-[4px] bg-foreground text-canvas text-[12px] cursor-pointer [&[data-complete]]:bg-transparent [&[data-complete]]:text-foreground [&[data-complete]]:border-line hover:border-foreground disabled:cursor-default disabled:opacity-[0.5] [&[data-complete]:disabled]:opacity-[1] [&[data-complete]:disabled]:text-success py-[9px] px-3"
+              data-encounter-button
+              aria-controls="author-monster-trait"
+              disabled
+            >
+              遭遇怪物 <span aria-hidden="true">→</span>
+            </button>
+            <noscript>
+              <p class="reference-hint text-[9px] text-subtle mt-4">
+                启用 JavaScript 可体验：遭遇后，“？？？”变为“畏惧火焰”。
+              </p>
+            </noscript>
+          </div>
+        </div>
+        <p class="scene-caption text-[12px] leading-[1.9] text-subtle mt-5 max-md:mt-1.5 max-md:text-[11px]">
+          点击后先标记“已遭遇”，再揭示“畏惧火焰”。
+        </p>
+      </article>
+      <article
+        class="author-scene building-scene min-h-165 pt-[65px] pb-[115px] flex flex-col justify-center [scroll-margin-top:110px] max-md:min-h-auto max-md:pt-[45px] max-md:pb-15 [&_.scene-caption]:pt-4.5 [&_.scene-caption]:border-t [&_.scene-caption]:border-t-line px-0 max-md:px-0"
+        id="author-building"
+        data-author-scene="4"
+        aria-labelledby="building-scene-title"
+      >
+        <header class="scene-heading [&_>_span]:text-subtle [&_>_span]:text-[11px] [&_>_span]:tracking-[0.04em] [&_h3]:text-[21px] [&_h3]:leading-[1.5] [&_h3]:font-medium [&_h3]:mt-0 [&_h3]:tracking-[-0.02em] max-lg:[&_h3]:text-[18px]">
+          <h3 id="building-scene-title">
+            把设定和玩法告诉 AI，让它帮你编写模组。
+          </h3>
+          <p class="building-intro max-w-130 mt-4 text-[14px] leading-[1.9] text-muted">
+            我们准备了模组创作 Skill。把设定和玩法告诉 AI
+            智能体，让它替你实现人物、物品、场景和规则。
+          </p>
+        </header>
+        <AgentGallery />
+        <p class="scene-caption text-[12px] leading-[1.9] text-subtle mt-5 max-md:mt-1.5 max-md:text-[11px]">
+          搭配模组创作 Skill，支持大部分能读写文件的 AI 智能体。
+        </p>
+      </article>
+      <p class="authors-note text-right text-[10px] text-subtle">
+        模组资料支持 Markdown、JSON、TOML，以上为文档与配置示意。
+      </p>
+    </div>
+  </div>
+  <dialog
+    id="author-item-detail"
+    class="item-dialog fixed w-[min(380px,_calc(100vw_-_48px))] text-foreground bg-surface border border-line rounded-[8px] backdrop:bg-[#0009] [&_h3]:text-[28px] [&_h3]:mt-6 [&_.entity-stats_dd]:text-[16px] p-8 m-auto inset-0"
+    aria-labelledby="author-item-name"
+  >
+    <form method="dialog">
+      <button
+        class="item-close absolute top-3 right-4 text-[22px] text-muted cursor-pointer py-1 px-2"
+        aria-label="关闭光照规则"
+      >
+        ×
+      </button>
+    </form>
+    <p class="file-directory mt-[15px] font-mono font-normal text-[9px] leading-[normal] text-subtle">
+      规则 / 光照.规则.md
+    </p>
+    <h3 id="author-item-name">光照</h3>
+    <p class="entity-subtitle text-subtle text-[10px] mt-1.5">
+      火把与其他光源 · 规则节选
+    </p>
+    <dl class="entity-stats flex gap-[35px] mt-[19px] pt-3.5 border-t border-t-line [&_dt]:text-[9px] [&_dt]:text-muted [&_dd]:font-mono [&_dd]:font-normal [&_dd]:text-[21px] [&_dd]:leading-[normal] [&_dd]:mt-2 max-lg:gap-5 max-md:gap-4.5">
+      <div>
+        <dt>火把照明范围</dt>
+        <dd>约 6 米</dd>
+      </div>
+      <div>
+        <dt>累计燃烧</dt>
+        <dd>60 分钟</dd>
+      </div>
+    </dl>
+    <p class="item-description text-[13px] text-muted leading-[1.8] mt-6">
+      点燃或主动熄灭占一项行动。熄灭后不再消耗燃烧时间，重新点燃延续剩余时间；烧尽后不能再次使用。
+    </p>
+    <p class="item-description text-[13px] text-muted leading-[1.8] mt-6">
+      同一场景且处于照明范围内的同伴可以共用光源。离开范围或光源熄灭后，按实际光照行动。
+    </p>
+  </dialog>
+</section>
+
+<script>
+  import { gsap, ScrollTrigger } from '../../scripts/animation';
+  const section = document.querySelector<HTMLElement>('#authors');
+  if (section) {
+    const itemDialog = section.querySelector<HTMLDialogElement>(
+      '#author-item-detail',
+    )!;
+    const itemOpen =
+      section.querySelector<HTMLButtonElement>('[data-item-open]')!;
+    itemOpen.disabled = false;
+    itemOpen.addEventListener('click', () => itemDialog.showModal());
+
+    const encounterButton = section.querySelector<HTMLButtonElement>(
+      '[data-encounter-button]',
+    )!;
+    const creature = section.querySelector<HTMLElement>('[data-encountered]')!;
+    const trait = section.querySelector<HTMLElement>('[data-encounter-trait]')!;
+    const encounterStatus = section.querySelector<HTMLElement>(
+      '[data-encounter-status]',
+    )!;
+    const encounterValue = section.querySelector<HTMLElement>(
+      '[data-encounter-value]',
+    )!;
+    encounterButton.disabled = false;
+    encounterButton.addEventListener(
+      'click',
+      () => {
+        if (creature.dataset.encountered === 'true') return;
+        creature.dataset.encountered = 'true';
+        encounterValue.textContent = 'true';
+        encounterValue.dataset.marked = '';
+        encounterStatus.textContent = '已遭遇 · 正在揭示特性';
+        encounterButton.disabled = true;
+        encounterButton.dataset.complete = '';
+        encounterButton.textContent = '✓ 已遭遇';
+        const reveal = () => {
+          trait.textContent = '畏惧火焰';
+          trait.className =
+            'revealed-trait mt-3.5 block text-[21px] font-medium tracking-[0.15em] text-accent max-md:text-[17px]';
+          encounterStatus.textContent = '已遭遇 · 特性已揭示';
+        };
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          reveal();
+        } else {
+          window.setTimeout(reveal, 450);
+        }
+      },
+      { once: true },
+    );
+
+    const scenes = Array.from(
+      section.querySelectorAll<HTMLElement>('[data-author-scene]'),
+    );
+
+    const indexNav = section.querySelector<HTMLElement>('.authors-index')!;
+    const indexLinks = Array.from(
+      section.querySelectorAll<HTMLAnchorElement>('[data-author-index]'),
+    );
+    let activeIndex = -1;
+    const syncIndex = () => {
+      let next = 0;
+      scenes.forEach((scene, index) => {
+        if (scene.getBoundingClientRect().top <= window.innerHeight * 0.48)
+          next = index;
+      });
+      if (next === activeIndex) return;
+      activeIndex = next;
+      indexNav.style.setProperty('--active-step', String(next));
+      indexLinks.forEach((link, index) => {
+        if (index === next) link.setAttribute('aria-current', 'step');
+        else link.removeAttribute('aria-current');
+      });
+    };
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: syncIndex,
+      onRefresh: syncIndex,
+    });
+    syncIndex();
+    indexLinks.forEach((link, index) => {
+      link.addEventListener('click', (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+          return;
+        event.preventDefault();
+        scenes[index]?.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)')
+            .matches
+            ? 'instant'
+            : 'smooth',
+          block: 'start',
+        });
+      });
+    });
+
+    gsap.matchMedia().add(
+      {
+        desktop: '(min-width: 1024px)',
+        motion: '(prefers-reduced-motion: no-preference)',
+      },
+      (context) => {
+        if (!context.conditions?.motion) return;
+        const desktop = context.conditions.desktop;
+        scenes.forEach((scene) => {
+          const agentTiles =
+            scene.querySelectorAll<HTMLElement>('[data-agent-tile]');
+          if (agentTiles.length) {
+            gsap.fromTo(
+              agentTiles,
+              { y: 24, opacity: 0.2 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.04,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: scene,
+                  start: 'top 85%',
+                  end: 'center 65%',
+                  scrub: 0.6,
+                  invalidateOnRefresh: true,
+                },
+              },
+            );
+            return;
+          }
+          const definition =
+            scene.querySelector<HTMLElement>('[data-definition]')!;
+          const entity = scene.querySelector<HTMLElement>('[data-entity]')!;
+          const connector =
+            scene.querySelector<HTMLElement>('[data-connector]')!;
+          const timeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: scene,
+              start: 'top 85%',
+              end: 'top 12%',
+              scrub: 0.6,
+              invalidateOnRefresh: true,
+            },
+          });
+          timeline
+            .fromTo(
+              definition,
+              { x: desktop ? -70 : -20, y: 25, rotation: -6, opacity: 0.3 },
+              { x: 0, y: 0, rotation: -3, opacity: 1, duration: 0.4 },
+              0,
+            )
+            .fromTo(
+              connector,
+              { scaleX: 0, opacity: 0 },
+              { scaleX: 1, opacity: 1, duration: 0.25 },
+              0.2,
+            )
+            .fromTo(
+              entity,
+              { x: desktop ? -100 : -35, y: 35, rotation: -5, opacity: 0 },
+              { x: 0, y: 0, rotation: 2, opacity: 1, duration: 0.45 },
+              0.25,
+            );
+          const before = scene.querySelector<HTMLElement>('[data-before]');
+          const after = scene.querySelector<HTMLElement>('[data-after]');
+          if (before && after) {
+            timeline
+              .fromTo(
+                before,
+                { opacity: 1 },
+                { opacity: 0, duration: 0.25 },
+                0.72,
+              )
+              .fromTo(
+                after,
+                { opacity: 0, y: 10 },
+                { opacity: 1, y: 0, duration: 0.3 },
+                0.78,
+              );
+            const bonus = scene.querySelector<HTMLElement>('[data-bonus]');
+            if (bonus)
+              timeline.fromTo(
+                bonus,
+                { scaleX: 0 },
+                { scaleX: 1, duration: 0.3 },
+                0.78,
+              );
+          }
+        });
+      },
+    );
+  }
+</script>
+
+<style>
+  .creature-card[data-encountered='true'] .revealed-trait {
+    animation: trait-reveal 450ms ease-out;
+  }
+  @keyframes trait-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .creature-card[data-encountered='true'] .revealed-trait {
+      animation: none;
+    }
+  }
+  .condition-label code[data-marked] {
+    animation: encounter-mark 450ms ease-out;
+  }
+  @keyframes encounter-mark {
+    0% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+    40% {
+      box-shadow: 0 0 0 6px
+        color-mix(in srgb, var(--color-success) 20%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .condition-label code[data-marked] {
+      animation: none;
+    }
+  }
+</style>

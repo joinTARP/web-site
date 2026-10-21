@@ -1,0 +1,44 @@
+---
+interface Props {
+  class?: string;
+  rings?: number;
+  seed?: number;
+}
+
+const { class: className, rings = 14, seed = 1 } = Astro.props;
+const size = 1000;
+const center = size / 2;
+const steps = 120;
+
+const paths = Array.from({ length: rings }, (_, ring) => {
+  const base = 36 + ring * 31;
+  const points = Array.from({ length: steps }, (_, step) => {
+    const angle = (step / steps) * Math.PI * 2;
+    const wobble =
+      0.09 * Math.sin(3 * angle + ring * 0.42 + seed) +
+      0.05 * Math.sin(5 * angle - ring * 0.77 + seed * 2) +
+      0.03 * Math.sin(9 * angle + ring * 1.3);
+    const radius = base * (1 + wobble);
+    const x = center + Math.cos(angle) * radius * 1.12;
+    const y = center + Math.sin(angle) * radius * 0.86;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  return `M${points.join('L')}Z`;
+});
+---
+
+<svg
+  class={className}
+  viewBox={`0 0 ${size} ${size}`}
+  fill="none"
+  stroke="currentColor"
+  aria-hidden="true"
+>
+  {paths.map((d, index) => (
+    <path
+      d={d}
+      stroke-width={index % 4 === 3 ? 1.3 : 0.7}
+      vector-effect="non-scaling-stroke"
+    />
+  ))}
+</svg>

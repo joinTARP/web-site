@@ -1,0 +1,15 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  type?: 'website' | 'article';
+}
+---
+
+<BaseLayout {...Astro.props}>
+  <div class="shell max-w-5xl pt-32 pb-20 sm:pt-36 sm:pb-28">
+    <slot />
+  </div>
+</BaseLayout>

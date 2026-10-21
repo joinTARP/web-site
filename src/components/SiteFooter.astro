@@ -1,0 +1,277 @@
+---
+import { moduleSearchHref, site, startHref } from '../data/site';
+import Logo from './ui/Logo.astro';
+
+const groups = [
+  {
+    title: '产品',
+    links: [
+      { label: 'AI 主持', href: '/docs/play/ai-host/' },
+      { label: 'AI 队友', href: '/docs/play/companions/' },
+      { label: '模组创作', href: '/docs/modules/structure/' },
+      { label: '常见问题', href: '/docs/reference/faq/' },
+    ],
+  },
+  {
+    title: '资源',
+    links: [
+      { label: '快速开始', href: startHref },
+      { label: '寻找模组', href: moduleSearchHref },
+      { label: '文档', href: '/docs/' },
+      { label: '开发日志', href: '/blog/' },
+      { label: '更新记录', href: '/docs/reference/changelog/' },
+    ],
+  },
+];
+---
+
+<footer>
+  <div class="footer-cover border-t border-foreground/10 pt-20 relative z-10 bg-canvas shadow-[0_24px_32px_-32px_var(--color-shadow)]">
+    <div class="shell grid gap-14 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div>
+        <p class="font-display text-xl leading-relaxed font-bold">TARP</p>
+        <p class="mt-3 text-sm text-muted">{site.slogan}</p>
+        <p class="mt-6 max-w-sm text-sm leading-7 text-subtle">
+          当前为 {`${site.version} ${site.stage}`}
+          ，安装包即将提供。当前功能与使用方法见文档。
+        </p>
+      </div>
+      {groups.map((group) => (
+        <nav aria-label={group.title}>
+          <h2 class="text-sm text-subtle">{group.title}</h2>
+          <ul class="mt-5 space-y-3">
+            {group.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  target={
+                    link.href.startsWith('https://') ? '_blank' : undefined
+                  }
+                  rel={
+                    link.href.startsWith('https://')
+                      ? 'noopener noreferrer'
+                      : undefined
+                  }
+                  aria-label={
+                    link.href.startsWith('https://')
+                      ? `${link.label}（GitHub，新标签页）`
+                      : undefined
+                  }
+                  class="relative text-[0.92rem] text-muted transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-right after:scale-x-0 after:bg-current after:transition-transform after:duration-500 after:ease-expo hover:text-foreground hover:after:origin-left hover:after:scale-x-100"
+                >
+                  {link.label}
+                  {link.href.startsWith('https://') && (
+                    <span aria-hidden="true">↗</span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+    </div>
+
+    <div class="shell mt-20 flex flex-wrap items-center justify-between gap-4 border-t border-foreground/10 py-6 text-xs text-subtle">
+      <p>© {new Date().getFullYear()} TARP</p>
+      <p>{`${site.version} ${site.stage}`}</p>
+    </div>
+  </div>
+  <div
+    class="footer-logo-space pointer-events-none select-none pt-[clamp(24px,_4vw,_64px)] pb-6 px-[clamp(16px,_2vw,_40px)] motion-reduce:p-0"
+    aria-hidden="true"
+    data-footer-logo-space
+  >
+    <div class="footer-logo-size w-full max-w-400 aspect-[1837/527] motion-reduce:hidden mx-auto"></div>
+    <div class="footer-logo-stage pt-[clamp(24px,_4vw,_64px)] pb-6 fixed z-0 top-auto bottom-0 bg-canvas motion-reduce:static px-[clamp(16px,_2vw,_40px)] inset-x-0">
+      <div
+        class="footer-logo-art text-foreground/40 light:text-foreground/75"
+        data-footer-logo-art
+      >
+        <Logo animated variant="footer" class="mx-auto w-full max-w-400" />
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const space = document.querySelector<HTMLElement>('[data-footer-logo-space]');
+  const art = document.querySelector<HTMLElement>('[data-footer-logo-art]');
+  const logo = art?.querySelector<SVGSVGElement>('[data-logo-finale]');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (space && art && logo) {
+    const revealThreshold = 0.35;
+    let armed = true;
+    let phase: 'idle' | 'opening' | 'celebrating' | 'closing' = 'idle';
+    let frame = 0;
+    let checkFrame = 0;
+    let finale: Animation[] = [];
+    let finaleRun = 0;
+
+    function cancel() {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      finaleRun++;
+      logo?.removeAttribute('data-playing');
+      finale.forEach((animation) => animation.cancel());
+      finale = [];
+      phase = 'idle';
+    }
+
+    function slideTo(target: number, duration: number, complete: () => void) {
+      const start = window.scrollY;
+      const started = performance.now();
+      const damping = 8;
+      const end = 1 - (1 + damping) * Math.exp(-damping);
+
+      if (Math.abs(target - start) <= 2) {
+        window.scrollTo({ top: target, behavior: 'instant' });
+        complete();
+        return;
+      }
+
+      function step(now: number) {
+        const progress = Math.min(1, (now - started) / duration);
+        // 临界阻尼：快速拉开，末段柔和减速，不回弹。
+        const eased =
+          (1 - (1 + damping * progress) * Math.exp(-damping * progress)) / end;
+        window.scrollTo({
+          top: start + (target - start) * eased,
+          behavior: 'instant',
+        });
+        if (progress < 1) frame = requestAnimationFrame(step);
+        else {
+          frame = 0;
+          complete();
+        }
+      }
+      frame = requestAnimationFrame(step);
+    }
+
+    function close() {
+      if (!space || phase !== 'celebrating') return;
+      phase = 'closing';
+      const target = Math.max(
+        0,
+        window.scrollY + space.getBoundingClientRect().top - window.innerHeight,
+      );
+      slideTo(target, 480, () => {
+        phase = 'idle';
+        scheduleCheck();
+      });
+    }
+
+    function playFinale() {
+      if (!space || !logo || reducedMotion.matches || document.hidden) {
+        cancel();
+        return;
+      }
+      const rect = space.getBoundingClientRect();
+      if (rect.top < -2 || rect.bottom > window.innerHeight + 2) {
+        cancel();
+        return;
+      }
+
+      phase = 'celebrating';
+      const run = ++finaleRun;
+      logo.setAttribute('data-playing', '');
+      finale = logo.getAnimations({ subtree: true });
+      void Promise.all(finale.map((animation) => animation.finished))
+        .then(() => {
+          if (run !== finaleRun || phase !== 'celebrating') return;
+          logo.removeAttribute('data-playing');
+          finale = [];
+          close();
+        })
+        .catch(() => {
+          // 用户介入时取消，不再自动收起。
+        });
+    }
+
+    function checkReveal() {
+      checkFrame = 0;
+      if (!space || !art) return;
+      if (reducedMotion.matches || document.hidden) {
+        cancel();
+        return;
+      }
+      const rect = space.getBoundingClientRect();
+      if (phase === 'opening' || phase === 'closing') return;
+      if (phase === 'celebrating') {
+        if (rect.top < -2 || rect.bottom > window.innerHeight + 2) cancel();
+        return;
+      }
+      // 完全盖回去后，下一次拉开可以重新播放。
+      if (rect.top >= window.innerHeight - 2) armed = true;
+      if (!armed || rect.height > window.innerHeight || rect.top < -2) return;
+      const revealed = window.innerHeight - rect.top;
+      if (revealed < rect.height * revealThreshold) return;
+
+      armed = false;
+      phase = 'opening';
+      const maxScroll = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+      const target = Math.min(
+        maxScroll,
+        window.scrollY + rect.bottom - window.innerHeight,
+      );
+      slideTo(target, 360, playFinale);
+    }
+
+    function scheduleCheck() {
+      if (!checkFrame) checkFrame = requestAnimationFrame(checkReveal);
+    }
+
+    function interrupt() {
+      cancel();
+      scheduleCheck();
+    }
+
+    window.addEventListener('scroll', scheduleCheck, { passive: true });
+    window.addEventListener(
+      'wheel',
+      (event) => {
+        // 顺着拉开的惯性继续吸附，反向滚动立即把控制权交还用户。
+        if (
+          event.deltaY > 0 &&
+          (phase === 'opening' || phase === 'celebrating')
+        ) {
+          if (phase === 'opening') event.preventDefault();
+          return;
+        }
+        interrupt();
+      },
+      { passive: false },
+    );
+    window.addEventListener('touchstart', interrupt, { passive: true });
+    window.addEventListener('pointerdown', interrupt, { passive: true });
+    window.addEventListener('keydown', (event) => {
+      const forward =
+        ['ArrowDown', 'PageDown', 'End'].includes(event.key) ||
+        (event.key === ' ' && !event.shiftKey);
+      if (forward && (phase === 'opening' || phase === 'celebrating')) {
+        if (phase === 'opening') event.preventDefault();
+        return;
+      }
+      if (
+        [
+          'ArrowUp',
+          'ArrowDown',
+          'PageUp',
+          'PageDown',
+          'Home',
+          'End',
+          ' ',
+        ].includes(event.key)
+      )
+        interrupt();
+    });
+    window.addEventListener('resize', interrupt);
+    document.addEventListener('visibilitychange', interrupt);
+    reducedMotion.addEventListener('change', interrupt);
+    window.addEventListener('load', scheduleCheck, { once: true });
+    scheduleCheck();
+  }
+</script>

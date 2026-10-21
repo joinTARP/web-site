@@ -1,0 +1,31 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+  showTitle?: boolean;
+}
+
+const { headings, showTitle = true } = Astro.props;
+---
+
+<nav aria-label="本页目录" data-docs-outline>
+  {showTitle && (
+    <p class="mb-4 text-xs font-medium text-foreground">本页目录</p>
+  )}
+  <ul class="border-l border-line">
+    {headings.map((heading) => (
+      <li>
+        <a
+          href={'#' + heading.slug}
+          class:list={[
+            'doc-outline-link -ml-px block border-l-2 border-transparent py-1.5 text-[12px] leading-5 text-subtle transition-colors hover:text-foreground aria-[current=location]:border-accent aria-[current=location]:font-medium aria-[current=location]:text-link',
+            heading.depth === 3 ? 'pl-6' : 'pl-3',
+          ]}
+        >
+          {heading.text}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

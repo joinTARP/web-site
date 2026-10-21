@@ -1,0 +1,54 @@
+{
+  "name": "@jointarp/website",
+  "homepage": "https://jointarp.party",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "check": "astro check",
+    "build": "astro check && astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "simple-git-hooks"
+  },
+  "dependencies": {
+    "@astrojs/react": "6.0.4",
+    "@base-ui/react": "1.8.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.5",
+    "astro-expressive-code": "^0.44.2",
+    "class-variance-authority": "0.7.1",
+    "cn": "0.2.6",
+    "gsap": "^3.15.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@tailwindcss/typography": "^0.5.20",
+    "@types/node": "^26",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.0",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.0",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "simple-git-hooks": "^2.14.0",
+    "typescript": "^6"
+  },
+  "engines": {
+    "node": ">=22.12.0",
+    "bun": ">=1.4.0"
+  },
+  "packageManager": "bun@1.4.0",
+  "simple-git-hooks": {
+    "pre-commit": "bunx lint-staged"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
+  }
+}

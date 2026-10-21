@@ -1,0 +1,25 @@
+---
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import PageLayout from './PageLayout.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  footer?: boolean;
+}
+const { footer = true, ...metadata } = Astro.props;
+---
+
+<PageLayout {...metadata} animate>
+  <SiteHeader />
+  <main id="main" class={footer ? 'relative z-10 bg-canvas' : undefined}>
+    <slot />
+  </main>
+  {footer && <SiteFooter />}
+</PageLayout>
+
+<script>
+  import '../scripts/motion';
+</script>
