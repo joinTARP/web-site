@@ -1,16 +1,7 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 @custom-variant dark (&:where(.dark, .dark *));
-@custom-variant light {
-  &:where(:root[data-theme='light'], :root[data-theme='light'] *) {
-    @slot;
-  }
-  @media (prefers-color-scheme: light) {
-    &:where(:root:not([data-theme]), :root:not([data-theme]) *) {
-      @slot;
-    }
-  }
-}
+@custom-variant light (&:where(:root[data-theme='light'], :root[data-theme='light'] *));
 @custom-variant interactive (&:is(:hover, :focus-visible, :active));
 @custom-variant compact {
   @media (max-width: 480px) {

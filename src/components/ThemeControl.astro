@@ -32,16 +32,14 @@
 </button>
 
 <script>
-  // system 只作为尚未手动选择时的内部默认值，不提供可见选项。
-  type Preference = 'system' | 'light' | 'dark';
+  type Preference = 'light' | 'dark';
   const root = document.documentElement;
-  const query = window.matchMedia('(prefers-color-scheme: dark)');
   const normalize = (value?: string | null): Preference =>
-    value === 'light' || value === 'dark' ? value : 'system';
+    value === 'light' ? 'light' : 'dark';
   let preference = normalize(root.dataset.themePreference);
   function apply(next: Preference) {
     preference = next;
-    const theme = next === 'system' ? (query.matches ? 'dark' : 'light') : next;
+    const theme = next;
     root.dataset.themePreference = next;
     root.dataset.theme = theme;
     root.classList.toggle('dark', theme === 'dark');
@@ -67,9 +65,6 @@
     } catch {
       /* 存储不可用时，本页仍可切换。 */
     }
-  });
-  query.addEventListener('change', () => {
-    if (preference === 'system') apply(preference);
   });
   window.addEventListener('storage', (event) => {
     if (event.key === 'tarp-theme' || event.key === null)

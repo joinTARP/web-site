@@ -55,19 +55,14 @@ const canonical = Astro.site
     <script is:inline>
       (() => {
         const root = document.documentElement;
-        let preference = 'system';
+        let preference = 'dark';
         try {
           const saved = localStorage.getItem('tarp-theme');
           if (saved === 'light' || saved === 'dark') preference = saved;
         } catch {
-          /* 没有本地存储权限时跟随系统。 */
+          /* 没有本地存储权限时默认深色。 */
         }
-        const theme =
-          preference === 'system'
-            ? matchMedia('(prefers-color-scheme: dark)').matches
-              ? 'dark'
-              : 'light'
-            : preference;
+        const theme = preference;
         root.dataset.themePreference = preference;
         root.dataset.theme = theme;
         root.classList.toggle('dark', theme === 'dark');
