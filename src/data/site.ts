@@ -1,3 +1,6 @@
+// 正式桌面版本公开后，由桌面仓库的同步工作流自动提交更新。
+export const desktopVersion = '0.1.1';
+
 const sloganLines = ['和 AI 一起体验', '角色扮演游戏'];
 const slogan = sloganLines.join('');
 
@@ -7,7 +10,7 @@ export const site = {
   title: `TARP · AI跑团`,
   description:
     'TARP 是一款文字角色扮演智能体，由 AI 扮演主持人和队友。开源、本地运行，支持自由定义规则。',
-  version: 'v0.1',
+  version: `v${desktopVersion}`,
 };
 
 export const moduleSearchHref =
@@ -21,24 +24,23 @@ export const nav = [
 
 export const sourceHref = 'https://github.com/joinTARP/jointarp';
 
-const downloadBase =
-  'https://github.com/joinTARP/TARP/releases/latest/download';
+const downloadBase = `https://github.com/joinTARP/TARP/releases/download/desktop-v${desktopVersion}`;
 
 export const downloads = [
   {
     label: 'Windows',
     architecture: 'x64',
-    href: `${downloadBase}/TARP-windows-x64-setup.zip`,
+    href: `${downloadBase}/TARP-${desktopVersion}-windows-x64-setup.zip`,
   },
   {
     label: 'macOS',
     architecture: 'Apple Silicon',
-    href: `${downloadBase}/TARP-macos-arm64.dmg`,
+    href: `${downloadBase}/TARP-${desktopVersion}-macos-arm64.dmg`,
   },
   {
     label: 'Linux',
     architecture: 'x64',
-    href: `${downloadBase}/TARP-linux-x64-setup.tar.gz`,
+    href: `${downloadBase}/TARP-${desktopVersion}-linux-x64-setup.tar.gz`,
   },
 ];
 
