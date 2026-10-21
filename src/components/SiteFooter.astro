@@ -25,7 +25,7 @@ const groups = [
 ];
 ---
 
-<footer>
+<footer class="site-footer bg-canvas text-foreground">
   <div class="footer-cover border-t border-foreground/10 pt-20 relative z-10 bg-canvas shadow-[0_24px_32px_-32px_var(--color-shadow)]">
     <div class="shell grid gap-14 md:grid-cols-[1.4fr_1fr_1fr]">
       <div>
@@ -83,10 +83,7 @@ const groups = [
   >
     <div class="footer-logo-size w-full max-w-400 aspect-[1837/527] motion-reduce:hidden mx-auto"></div>
     <div class="footer-logo-stage pt-[clamp(24px,_4vw,_64px)] pb-6 fixed z-0 top-auto bottom-0 bg-canvas motion-reduce:static px-[clamp(16px,_2vw,_40px)] inset-x-0">
-      <div
-        class="footer-logo-art text-foreground/40 light:text-foreground/75"
-        data-footer-logo-art
-      >
+      <div class="footer-logo-art text-foreground/40" data-footer-logo-art>
         <Logo animated variant="footer" class="mx-auto w-full max-w-400" />
       </div>
     </div>

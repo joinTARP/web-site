@@ -109,6 +109,15 @@
 }
 
 @layer base {
+  .site-footer {
+    color-scheme: dark;
+    --color-shadow: #0009;
+    --color-canvas: #151c24;
+    --color-foreground: #e6edf4;
+    --color-muted: #a2afbd;
+    --color-subtle: #92a1b2;
+    --color-accent: #9bb4ce;
+  }
   :root {
     color-scheme: dark;
     --hero-aurora-opacity: 1;
