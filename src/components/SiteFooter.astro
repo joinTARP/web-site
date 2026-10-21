@@ -32,7 +32,7 @@ const groups = [
         <p class="font-display text-xl leading-relaxed font-bold">TARP</p>
         <p class="mt-3 text-sm text-muted">{site.slogan}</p>
         <p class="mt-6 max-w-sm text-sm leading-7 text-subtle">
-          当前为 {`${site.version} ${site.stage}`}
+          当前为 {site.version}
           ，安装包即将提供。当前功能与使用方法见文档。
         </p>
       </div>
@@ -73,7 +73,7 @@ const groups = [
 
     <div class="shell mt-20 flex flex-wrap items-center justify-between gap-4 border-t border-foreground/10 py-6 text-xs text-subtle">
       <p>© {new Date().getFullYear()} TARP</p>
-      <p>{`${site.version} ${site.stage}`}</p>
+      <p>{site.version}</p>
     </div>
   </div>
   <div

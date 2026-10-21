@@ -47,7 +47,7 @@ bun run cli --version
 bun run cli module validate "<模组目录>" --json
 ```
 
-源码构建需要 Bun 1.4.0 或更新版本，准备步骤见[源码仓库 README](https://github.com/joinTARP/TARP#本地开发)。也可运行 `node packages/module-cli/out/index.js module validate "<模组目录>" --json`，或将开头的 `node` 换为 `bun`。这属于 CLI 获取方式，不是模组创作的默认步骤；已有可用入口时直接使用。模组路径始终相对于命令执行目录解析。
+源码构建需要 Bun 1.4.0 或更新版本，准备步骤见[源码仓库 README](https://github.com/joinTARP/jointarp#本地开发)。也可运行 `node packages/module-cli/out/index.js module validate "<模组目录>" --json`，或将开头的 `node` 换为 `bun`。这属于 CLI 获取方式，不是模组创作的默认步骤；已有可用入口时直接使用。模组路径始终相对于命令执行目录解析。
 
 ## 校验
 

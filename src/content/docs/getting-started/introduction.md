@@ -7,7 +7,7 @@ status: published
 
 TARP 是一个由 AI 主持的桌面跑团应用。你扮演自己的角色，说出想做的事；主持描述场景、查阅规则，处理检定和行动结果。一个人也能开团，需要同伴时，可以把其他角色交给 AI 队友。
 
-当前是 **v0.1 试验性版本**。开始前，先安装并打开应用，再连接模型、载入模组。
+当前是 **v0.1**。开始前，先安装并打开应用，再连接模型、载入模组。
 
 当前桌面构建支持 Apple Silicon Mac、Windows x64 和 Linux x64。Linux 需要 WebKitGTK 4.1、GTK 3、Ayatana AppIndicator 和 librsvg，Windows 使用 WebView2；暂不提供 Intel Mac 安装包。
 

@@ -8,7 +8,6 @@ export const site = {
   description:
     'TARP 是一款文字角色扮演智能体，由 AI 扮演主持人和队友。开源、本地运行，支持自由定义规则。',
   version: 'v0.1',
-  stage: '试验性版本',
 };
 
 export const moduleSearchHref =
@@ -20,12 +19,7 @@ export const nav = [
   { label: '开发日志', href: '/blog/', external: false },
 ];
 
-// 仅接受真实的公开源码地址，未配置时不生成无效链接。
-const configuredSource = import.meta.env.PUBLIC_SOURCE_URL?.trim();
-export const sourceHref =
-  configuredSource && /^https:\/\//.test(configuredSource)
-    ? configuredSource
-    : undefined;
+export const sourceHref = 'https://github.com/joinTARP/jointarp';
 
 export const startHref = '/docs/getting-started/introduction/';
 

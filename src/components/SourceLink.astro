@@ -1,22 +1,16 @@
 ---
 import { sourceHref } from '../data/site';
 
-const label = sourceHref ? '在 GitHub 查看源码' : 'GitHub 仓库地址待配置';
+const label = '在 GitHub 查看源码';
 ---
 
 <a
   href={sourceHref}
-  target={sourceHref ? '_blank' : undefined}
-  rel={sourceHref ? 'noopener noreferrer' : undefined}
-  role={sourceHref ? undefined : 'link'}
+  target="_blank"
+  rel="noopener noreferrer"
   aria-label={label}
   title={label}
-  aria-disabled={sourceHref ? undefined : 'true'}
-  tabindex={sourceHref ? undefined : -1}
-  class:list={[
-    'grid size-10 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-foreground/8 hover:text-foreground',
-    { 'cursor-default': !sourceHref },
-  ]}
+  class="grid size-10 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-foreground/8 hover:text-foreground"
 >
   <svg
     class="size-5"
