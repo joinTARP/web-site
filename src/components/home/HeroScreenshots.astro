@@ -2,36 +2,59 @@
 import { Image } from 'astro:assets';
 import darkScreenshot from '../../assets/screenshots/adventure-desktop-dark.png';
 import lightScreenshot from '../../assets/screenshots/adventure-desktop-light.png';
+
+const imageProps = {
+  format: 'webp' as const,
+  quality: 70,
+  widths: [640, 960, 1280, 1600, 1920],
+  sizes: '(min-width: 1288px) 1240px, calc(100vw - 48px)',
+  width: 1600,
+  alt: 'TARP 实机界面：左侧冒险小队，中间古墓场景与主持对话，右侧角色属性和行装。',
+  class: 'block h-auto w-full',
+  loading: 'eager' as const,
+  decoding: 'async' as const,
+  fetchpriority: 'high' as const,
+};
 ---
 
 <figure
   class="mx-auto w-full origin-top motion-safe:[html.motion_&]:invisible motion-safe:[html.motion_&]:[transform:perspective(1400px)_translateY(20px)_rotateX(10deg)_scale(0.97)] md:motion-safe:[html.motion_&]:[transform:perspective(1400px)_translateY(48px)_rotateX(18deg)_scale(0.92)]"
   data-hero-screenshot
 >
-  <Image
-    src={darkScreenshot}
-    format="webp"
-    quality={90}
-    widths={[640, 960, 1440, 1920, 2784]}
-    sizes="(min-width: 1288px) 1240px, calc(100vw - 48px)"
-    width={1600}
-    alt="TARP 实机界面：左侧冒险小队，中间古墓场景与主持对话，右侧角色属性和行装。"
-    class="block h-auto w-full light:hidden"
-    loading="eager"
-    decoding="async"
-    fetchpriority="high"
-  />
-  <Image
-    src={lightScreenshot}
-    format="webp"
-    quality={90}
-    widths={[640, 960, 1440, 1920, 2784]}
-    sizes="(min-width: 1288px) 1240px, calc(100vw - 48px)"
-    width={1600}
-    alt="TARP 实机界面：左侧冒险小队，中间古墓场景与主持对话，右侧角色属性和行装。"
-    class="hidden h-auto w-full light:block"
-    loading="eager"
-    decoding="async"
-    fetchpriority="high"
-  />
+  {[
+    { theme: 'dark', src: darkScreenshot },
+    { theme: 'light', src: lightScreenshot },
+  ].map(({ theme, src }) => (
+    <template data-screenshot-theme={theme}>
+      <Image src={src} {...imageProps} />
+    </template>
+  ))}
+  <noscript>
+    <Image src={darkScreenshot} {...imageProps} />
+  </noscript>
+  <script is:inline>
+    (() => {
+      const figure = document.currentScript.closest('[data-hero-screenshot]');
+      const root = document.documentElement;
+      let currentTheme;
+      function updateScreenshot() {
+        const theme = root.dataset.theme === 'light' ? 'light' : 'dark';
+        if (theme === currentTheme) return;
+        // 模板中的图片不会下载，只有当前主题的图片会挂载到页面。
+        const template = figure.querySelector(
+          `template[data-screenshot-theme="${theme}"]`,
+        );
+        const image = template.content.firstElementChild.cloneNode(true);
+        const current = figure.querySelector('img');
+        if (current) current.replaceWith(image);
+        else figure.append(image);
+        currentTheme = theme;
+      }
+      updateScreenshot();
+      new MutationObserver(updateScreenshot).observe(root, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+      });
+    })();
+  </script>
 </figure>
