@@ -15,9 +15,7 @@ const outline = headings.filter(
   (heading) => heading.depth === 2 || heading.depth === 3,
 );
 const tree = await getDocsTree();
-const path = Astro.url.pathname.startsWith('/releases/')
-  ? '/docs/reference/changelog/'
-  : Astro.url.pathname;
+const path = Astro.url.pathname;
 const linkClass =
   "relative block rounded-md py-1.5 pr-3 pl-8 text-[13px] leading-5 text-muted transition-colors duration-150 hover:bg-surface-active/65 hover:text-foreground aria-[current=page]:bg-accent/10 aria-[current=page]:font-medium aria-[current=page]:text-link before:absolute before:top-1/2 before:left-3.5 before:size-1 before:-translate-y-1/2 before:rounded-full before:bg-accent before:opacity-0 before:transition-opacity before:duration-150 before:content-[''] aria-[current=page]:before:opacity-100 motion-reduce:transition-none motion-reduce:before:transition-none";
 const sectionIconPaths: Record<string, string> = {

@@ -6,3 +6,6 @@ export async function getReleases() {
     b.data.version.localeCompare(a.data.version, 'en', { numeric: true }),
   );
 }
+
+export const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat('zh-CN', { dateStyle: 'long' }).format(date);

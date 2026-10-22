@@ -2,9 +2,8 @@
 import type { GetStaticPaths } from 'astro';
 import { render, type CollectionEntry } from 'astro:content';
 import DocProse from '../../components/docs/DocProse.astro';
-import DocsLayout from '../../layouts/DocsLayout.astro';
-import { formatDate } from '../../lib/blog';
-import { getReleases } from '../../lib/releases';
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import { formatDate, getReleases } from '../../lib/releases';
 
 export const getStaticPaths = (async () => {
   const releases = await getReleases();
@@ -19,18 +18,14 @@ interface Props {
 }
 
 const { release } = Astro.props;
-const { Content, headings } = await render(release);
+const { Content } = await render(release);
 const title = `TARP v${release.data.version}`;
 ---
 
-<DocsLayout
-  title={title}
-  description={`${title} 正式版本更新说明。`}
-  headings={headings}
->
-  <article>
+<ContentLayout title={title} description={`${title} 正式版本更新说明。`}>
+  <article class="mx-auto max-w-3xl">
     <a
-      href="/docs/reference/changelog/"
+      href="/releases/"
       class="text-sm text-subtle transition-colors hover:text-link"
     >
       ← 返回更新记录
@@ -44,14 +39,6 @@ const title = `TARP v${release.data.version}`;
         <time datetime={release.data.date.toISOString()}>
           {formatDate(release.data.date)}
         </time>
-        <a
-          href={release.data.source}
-          target="_blank"
-          rel="noreferrer"
-          class="text-link underline decoration-link/40 underline-offset-4 hover:decoration-current"
-        >
-          查看 GitHub Release ↗
-        </a>
       </div>
     </header>
     <div class="mt-7">
@@ -60,4 +47,4 @@ const title = `TARP v${release.data.version}`;
       </DocProse>
     </div>
   </article>
-</DocsLayout>
+</ContentLayout>

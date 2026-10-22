@@ -15,7 +15,7 @@ bun run dev
 - `bun run preview`：预览构建产物。
 - `bun run format:check`：检查格式。
 
-文档位于 `src/content/docs/`，开发日志位于 `src/content/blog/`。环境变量见 [.env.example](.env.example)。
+文档位于 `src/content/docs/`，更新记录位于 `src/content/releases/`，通过 `/releases/` 查看。更新记录列表使用独立时间轴页面，版本详情位于 `/releases/<版本号>/`，均使用官网布局。环境变量见 [.env.example](.env.example)。
 
 ## 素材
 

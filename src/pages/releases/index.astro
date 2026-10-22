@@ -1,0 +1,78 @@
+---
+import { render } from 'astro:content';
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import DocProse from '../../components/docs/DocProse.astro';
+import { desktopVersion } from '../../data/site';
+import { formatDate, getReleases } from '../../lib/releases';
+
+const releases = await Promise.all(
+  (await getReleases()).map(async (release) => ({
+    ...release,
+    ...(await render(release)),
+  })),
+);
+---
+
+<ContentLayout title="更新记录" description="TARP 各版本的功能更新与修复记录。">
+  <header class="border-b border-line pb-6">
+    <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">更新记录</h1>
+  </header>
+
+  {releases.length === 0 ? (
+    <p class="border-b border-line py-16 text-sm text-muted">暂无更新记录。</p>
+  ) : (
+    <ol class="mt-8 sm:mt-10" aria-label="版本时间轴">
+      {releases.map(({ data, Content }) => (
+        <li
+          id={`v${data.version}`}
+          class="group relative grid scroll-mt-28 gap-5 border-l border-line pb-14 pl-7 last:pb-0 sm:ml-44 sm:gap-0 sm:pl-10"
+        >
+          <span
+            aria-hidden="true"
+            class:list={[
+              'absolute top-2 -left-[5px] size-[9px] rounded-full border-2 border-canvas',
+              data.version === desktopVersion
+                ? 'bg-accent ring-4 ring-accent/15'
+                : 'bg-subtle',
+            ]}
+          />
+          <div class="sm:absolute sm:top-0 sm:right-[calc(100%+2rem)] sm:w-36 sm:text-right">
+            <a
+              href={`/releases/${data.version}/`}
+              class="font-mono text-xl font-medium tracking-tight transition-colors hover:text-link"
+            >
+              v{data.version}
+            </a>
+            <time
+              datetime={data.date.toISOString()}
+              class="mt-2 block text-xs leading-6 text-subtle"
+            >
+              {formatDate(data.date)}
+            </time>
+            {data.version === desktopVersion && (
+              <span class="mt-3 inline-block rounded border border-accent/25 bg-accent/10 px-2 py-0.5 text-[11px] text-accent">
+                当前版本
+              </span>
+            )}
+          </div>
+          <article
+            class="min-w-0 rounded-xl border border-line bg-surface p-5 sm:p-8"
+            aria-label={`TARP v${data.version} 更新说明`}
+          >
+            <DocProse>
+              <Content />
+            </DocProse>
+            <div class="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-5 text-xs">
+              <a
+                href={`/releases/${data.version}/`}
+                class="text-link underline-offset-4 hover:underline"
+              >
+                版本详情 →
+              </a>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ol>
+  )}
+</ContentLayout>

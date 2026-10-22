@@ -18,7 +18,7 @@ export const modulesHref = '/modules/';
 export const nav = [
   { label: '文档', href: '/docs/', external: false },
   { label: '模组库', href: modulesHref, external: false },
-  { label: '开发日志', href: '/blog/', external: false },
+  { label: '更新记录', href: '/releases/', external: false },
 ];
 
 export const sourceHref = 'https://github.com/joinTARP/jointarp';
@@ -99,5 +99,5 @@ export const docsSections = [
     title: '模组创作',
     description: '文件格式、开局建卡、状态、音色与模组校验。',
   },
-  { id: 'reference', title: '参考', description: '常见问题与更新记录。' },
+  { id: 'reference', title: '参考', description: '常见问题。' },
 ];
