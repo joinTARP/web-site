@@ -1,6 +1,13 @@
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
+const { gsap, ScrollTrigger, SplitText } = window as unknown as {
+  gsap: typeof import('gsap').gsap;
+  ScrollTrigger: typeof import('gsap/ScrollTrigger').ScrollTrigger;
+  SplitText: typeof import('gsap/SplitText').SplitText;
+};
+
+if (!gsap || !ScrollTrigger || !SplitText) {
+  document.documentElement.classList.remove('motion');
+  throw new Error('动画库加载失败，已直接显示页面内容。');
+}
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 

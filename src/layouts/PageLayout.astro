@@ -1,5 +1,4 @@
 ---
-import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { site } from '../data/site';
@@ -39,7 +38,6 @@ const canonical = Astro.site
     <meta name="description" content={description} />
     <meta name="theme-color" content="#171717" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
@@ -71,6 +69,25 @@ const canonical = Astro.site
           ?.setAttribute('content', theme === 'dark' ? '#171717' : '#ffffff');
       })();
     </script>
+    {animate && (
+      <>
+        <script
+          is:inline
+          defer
+          src="https://cdn.bootcdn.net/ajax/libs/gsap/3.15.0/gsap.min.js"
+        ></script>
+        <script
+          is:inline
+          defer
+          src="https://cdn.bootcdn.net/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"
+        ></script>
+        <script
+          is:inline
+          defer
+          src="https://cdn.bootcdn.net/ajax/libs/gsap/3.15.0/SplitText.min.js"
+        ></script>
+      </>
+    )}
     {animate && <script is:inline>
       (() => {
         const root = document.documentElement;
