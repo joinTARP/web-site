@@ -152,8 +152,6 @@
       --hero-aurora-opacity: 0;
       --hero-spotlight-color: #737373;
       --hero-spotlight-opacity: 0;
-      --logo-shine-color: #737373;
-      --logo-shine-opacity: 0.25;
       --shadow-panel:
         0 2px 4px -2px var(--color-shadow),
         0 12px 28px -20px var(--color-shadow);
