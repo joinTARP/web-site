@@ -39,9 +39,7 @@ for (const source of sources) {
       'ls-remote',
       '--exit-code',
       `https://github.com/${source.repository}.git`,
-      `refs/heads/${source.ref}`,
-      `refs/tags/${source.ref}`,
-      `refs/tags/${source.ref}^{}`,
+      'HEAD',
     ],
     { timeout: 30_000 },
   );
@@ -54,10 +52,7 @@ for (const source of sources) {
         return [ref, sha];
       }),
   );
-  const resolved =
-    refs.get(`refs/heads/${source.ref}`) ??
-    refs.get(`refs/tags/${source.ref}^{}`) ??
-    refs.get(`refs/tags/${source.ref}`);
+  const resolved = refs.get('HEAD');
   const revision = catalogSchema.element.shape.revision.parse(resolved);
   const content = await (
     await fetchSource(moduleFileUrl(source.repository, revision, source.file))

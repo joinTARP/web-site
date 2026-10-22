@@ -1,7 +1,6 @@
 [
   {
     "repository": "joinTARP/cairn-houshan-tomb",
-    "ref": "main",
     "file": "module.toml",
     "revision": "4416797dcfe041322228d70ec167f808f16d7f90",
     "metadata": {

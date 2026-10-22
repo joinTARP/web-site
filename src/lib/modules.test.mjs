@@ -4,6 +4,7 @@ import {
   moduleFileUrl,
   moduleCoverUrl,
   catalogSchema,
+  moduleImportUrl,
 } from './modules';
 
 const repository = 'joinTARP/example';
@@ -54,7 +55,6 @@ describe('模组收录', () => {
       catalogSchema.parse([
         {
           repository,
-          ref: 'main',
           file: 'module.json',
           revision: 'main',
           metadata: { name: '古墓', description: '冒险' },
@@ -62,4 +62,15 @@ describe('模组收录', () => {
       ]),
     ).toThrow();
   });
+});
+
+test('一键导入链接携带仓库与官网快照，不指定下载分支', () => {
+  const link = new URL(moduleImportUrl(repository, revision));
+  expect(link.protocol).toBe('tarp:');
+  expect(link.hostname).toBe('import');
+  expect(link.searchParams.get('repository')).toBe(repository);
+  expect(link.searchParams.get('revision')).toBe(revision);
+  expect(link.searchParams.has('ref')).toBe(false);
+  expect(() => moduleImportUrl('../unsafe', revision)).toThrow();
+  expect(() => moduleImportUrl(repository, 'main')).toThrow();
 });

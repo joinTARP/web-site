@@ -25,10 +25,10 @@ bun run dev
 
 ## 模组收录
 
-模组库位于 `/modules/`。在 `src/data/modules/sources.json` 添加 GitHub 仓库的 `repository`（`作者/仓库`）、`ref`（分支或标签）和 `file`（`module.json` 或 `module.toml`）；模组固定放在仓库的 `module/` 中。可选的 `testedWith` 记录实际测试过的 TARP 版本，不填写未经验证的版本。
+模组库位于 `/modules/`。在 `src/data/modules/sources.json` 添加 GitHub 仓库的 `repository`（`作者/仓库`）、`file`（`module.json` 或 `module.toml`）；模组固定放在仓库的 `module/` 中。可选的 `testedWith` 记录实际测试过的 TARP 版本，不填写未经验证的版本。
 
-安装系统 Git 后运行 `bun run modules:sync`，从公开仓库解析分支或标签的提交，读取配置并生成 `src/data/modules/catalog.json`。同步只保存公开展示字段，不运行模组代码；所有来源成功后才替换快照。检查来源、素材授权和快照差异后，将来源与快照一起提交。移除来源后重新同步即可下架。
+安装系统 Git 后运行 `bun run modules:sync`，从公开仓库解析默认分支的最新提交，读取配置并生成 `src/data/modules/catalog.json`。同步只保存公开展示字段，不运行模组代码；所有来源成功后才替换快照。检查来源、素材授权和快照差异后，将来源与快照一起提交。移除来源后重新同步即可下架。
 
-日常开发与构建读取已提交快照，不依赖外部仓库或相邻本地项目。封面直接使用源地址；模组内相对图片固定到快照记录的提交，加载失败时回退到文字封面。Git 导入填写来源分支或标签，分支的后续更新可能与收录快照不同。
+日常开发与构建读取已提交快照，不依赖外部仓库或相邻本地项目。封面直接使用源地址；模组内相对图片固定到快照记录的提交，加载失败时回退到文字封面。一键导入和手动 Git 导入均取默认分支最新内容；与收录快照不同时，桌面端在导入完成后提醒。
 
 运行 `bun test src/lib/modules.test.mjs` 检查展示字段提取与封面路径解析。
