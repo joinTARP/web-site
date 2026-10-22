@@ -6,6 +6,16 @@ import HostAvatar from '../demo/HostAvatar';
 import CompanionDemo from '../demo/CompanionDemo';
 
 const companionDialogue = '小心！那边好像有陷阱！';
+const portraitProps = {
+  src: sutang,
+  format: 'webp' as const,
+  quality: 80,
+  widths: [320, 460, 640, 920],
+  sizes: '(max-width: 768px) 80vw, 440px',
+  width: 920,
+  loading: 'lazy' as const,
+  decoding: 'async' as const,
+};
 ---
 
 <section
@@ -68,28 +78,14 @@ const companionDialogue = '小心！那边好像有陷阱！';
           >
             <Image
               class="aspect-2/3 w-full scale-115 object-contain opacity-60 blur-[56px] brightness-115 saturate-160 light:opacity-40 light:brightness-105 light:saturate-140"
-              src={sutang}
-              format="webp"
-              quality={50}
-              widths={[160, 240]}
-              sizes="240px"
+              {...portraitProps}
               alt=""
-              width={240}
-              loading="lazy"
-              decoding="async"
             />
           </div>
           <Image
             class="companion-character-portrait relative block aspect-2/3 w-full object-contain [filter:drop-shadow(0_20px_32px_rgba(0,0,0,0.28))] light:[filter:drop-shadow(0_16px_26px_rgba(32,40,48,0.12))]"
-            src={sutang}
-            format="webp"
-            quality={80}
-            widths={[320, 460, 640, 920]}
-            sizes="(max-width: 768px) 80vw, 440px"
+            {...portraitProps}
             alt="宝藏猎人苏棠的完整角色肖像"
-            width={920}
-            loading="lazy"
-            decoding="async"
           />
         </div>
 
