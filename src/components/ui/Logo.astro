@@ -60,9 +60,12 @@ const shineDistance = width + shineWidth + (finale ? height * 0.4 : 0);
     aria-hidden="true"
   >
     <defs>
+      {paths.map((path, index) => (
+        <path id={`${id}-glyph-${index}`} d={path.d} pathLength="1" />
+      ))}
       <clipPath id={`${id}-clip`}>
-        {paths.map((path) => (
-          <path d={path.d} transform={path.transform} />
+        {paths.map((path, index) => (
+          <use href={`#${id}-glyph-${index}`} transform={path.transform} />
         ))}
       </clipPath>
       <linearGradient
@@ -95,11 +98,10 @@ const shineDistance = width + shineWidth + (finale ? height * 0.4 : 0);
         ))}
     </defs>
     {paths.map((path, index) => (
-      <path
+      <use
         class="logo-glyph"
-        d={path.d}
+        href={`#${id}-glyph-${index}`}
         transform={path.transform}
-        pathLength="1"
         fill={gradient ? `url(#${id}-fill-${index})` : 'currentColor'}
         stroke="currentColor"
         stroke-width="5"
@@ -110,11 +112,10 @@ const shineDistance = width + shineWidth + (finale ? height * 0.4 : 0);
     {finale && (
       <>
         {paths.map((path, index) => (
-          <path
+          <use
             class="logo-contour"
-            d={path.d}
+            href={`#${id}-glyph-${index}`}
             transform={path.transform}
-            pathLength="1"
             style={`--glyph-delay: ${index * 0.055}s`}
           />
         ))}
@@ -123,8 +124,8 @@ const shineDistance = width + shineWidth + (finale ? height * 0.4 : 0);
             class="logo-echo"
             style={`--echo-delay: ${0.18 + index * 0.09}s; --echo-scale: ${1.065 + index * 0.04}`}
           >
-            {paths.map((path) => (
-              <path d={path.d} transform={path.transform} />
+            {paths.map((path, index) => (
+              <use href={`#${id}-glyph-${index}`} transform={path.transform} />
             ))}
           </g>
         ))}
