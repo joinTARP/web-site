@@ -15,6 +15,8 @@ TARP 是一个由 AI 主持的桌面跑团应用。你扮演自己的角色，�
 
 从[官网首页](/)选择 Windows x64、macOS Apple Silicon 或 Linux x64 安装包，并按安装包说明完成安装。下载入口始终指向最新发布版本。
 
+macOS 首次打开时若被系统拦截，请按[手动放行说明](/docs/reference/faq/#macos-首次打开时被阻止怎么办)操作。
+
 打开 TARP，看到首页后，按[第一次冒险](/docs/getting-started/first-adventure/)连接模型和载入模组。如果提示配置文件损坏，按[启动故障处理](/docs/reference/faq/#应用提示配置文件损坏无法启动怎么办)处理。
 
 可以从应用菜单打开「设置」，也可以使用 macOS 的 `⌘,` 或 Windows、Linux 的 `Ctrl+,`。

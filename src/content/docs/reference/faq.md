@@ -21,6 +21,16 @@ status: published
 
 提供 Windows x64、macOS Apple Silicon 和 Linux x64 安装包。系统依赖见[安装并打开应用](/docs/getting-started/introduction/#安装并打开应用)。
 
+## macOS 首次打开时被阻止怎么办？
+
+如果首次打开 TARP 时提示无法验证开发者，或 Apple 无法检查应用是不是包含恶意软件，确认安装包来自[官网](/)且未被篡改后，可以手动放行：
+
+1. 先尝试打开 TARP，让系统显示拦截提示。
+2. 打开「系统设置 → 隐私与安全性」，向下滚动，在 TARP 的拦截提示旁点击「仍要打开」。
+3. 在再次出现的提示中点击「打开」，按系统提示完成确认。
+
+放行后通常无需重复操作。完整步骤见[苹果操作说明](https://support.apple.com/zh-cn/102445)。
+
 ## 源码采用什么许可证，可以商用吗？
 
 TARP 桌面应用、共享模组核心与模组 CLI 的原创代码及文档采用 **GNU GPL v3（仅此版本，`GPL-3.0-only`）**。允许商业使用；分发应用或修改版时，应遵守保留版权与许可声明、提供完整对应源码等要求，具体以 [GPL v3 完整条款](https://www.gnu.org/licenses/gpl-3.0.html)为准。
