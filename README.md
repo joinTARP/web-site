@@ -17,14 +17,8 @@ bun run dev
 
 文档位于 `src/content/docs/`，开发日志位于 `src/content/blog/`。环境变量见 [.env.example](.env.example)。
 
-首页明暗主题真机图位于 `src/assets/screenshots/adventure-desktop-light.png` 和 `src/assets/screenshots/adventure-desktop-dark.png`，来源为项目作者提供的 2026-10-21 桌面端截图，以质量 70、最大宽度 1920 像素生成响应式 WebP；首屏只加载当前主题的截图，切换主题后再加载对应图片。
+## 素材
 
-全站代码、文件名和数字等使用 JetBrains Mono 等宽字体，通过 [JSDMirror](https://github.com/jsdmirror/JSDMirror) 加载固定版本 5.3.0 的 Latin 可变 WOFF2（约 40 KB）。使用 `font-display: swap`，字体未就绪时显示系统等宽字体；中文正文继续使用系统字体。
-
-首页动效通过 [JSDMirror](https://github.com/jsdmirror/JSDMirror) 加载固定版本 3.15.0 的 GSAP、ScrollTrigger 和 SplitText，按顺序延迟执行，不随站点 JS 打包；npm 包仅用于开发时的类型检查。脚本加载失败或未在 3 秒内就绪时直接展示页面内容。
-
-内容图片统一放在 `src/assets/`，通过 `astro:assets` 在构建时生成 WebP 与响应式尺寸；SVG 和网站图标保留在 `public/`。
-
-桌面发布版本统一维护在 `src/data/site.ts` 的 `desktopVersion`，下载链接和页面版本展示均由它派生；Markdown 正文、标题与行内代码通过 `{{desktopVersion}}` 引用，构建时替换。历史发布记录、CLI 与模组示例保留各自的明确版本号，不跟随桌面版本变化。正式桌面 Release 公开后，由桌面仓库工作流自动提交该变量的更新。
-
-每个正式桌面版本单独保存为 `src/content/releases/<版本号>.md`，正文来自 GitHub Release，元数据包含 `version`、`date` 和 `source`。正式版本发布或编辑后，同步工作流只读取和创建或更新该版本文件，不遍历或自动补齐历史版本，已有版本可在桌面仓库 Actions 中按标签手动同步；仅在发布版本更高时连同 `desktopVersion` 一起提交，编辑旧版说明不会降级下载版本。更新记录入口 `/docs/reference/changelog/` 按版本从新到旧展示列表，详情位于 `/releases/<版本号>/`。发布正文不替换当前版本占位符，历史说明保持各自版本；无正文时显示未填写说明。
+- 图片放在 `src/assets/`，SVG 和网站图标放在 `public/`。
+- 首页截图由项目作者提供，位于 `src/assets/screenshots/`。
+- JetBrains Mono 字体和 GSAP 动效库通过 [JSDMirror](https://github.com/jsdmirror/JSDMirror) 加载。
