@@ -13,7 +13,9 @@ status: published
 
 ## 寻找模组
 
-可以前往 [GitHub 仓库搜索](https://github.com/search?q=topic%3Atarp-module&type=repositories)，查找添加了 `tarp-module` Topic 的仓库。搜索入口预填了 `topic:tarp-module`，可以保留它并追加关键词，例如 `topic:tarp-module 古墓`。未添加这个 Topic 的仓库不会出现在结果中；作者分享文件和添加标记的方法见[发布模组](/docs/modules/publishing/)。
+先浏览官网的[模组库](/modules/)，查看规则与作者，点击封面或标题打开仓库，阅读说明并获取 Git 导入地址与分支／标签。收录不等于试玩推荐，使用前请阅读模组说明。
+
+也可以前往 [GitHub 仓库搜索](https://github.com/search?q=topic%3Atarp-module&type=repositories)，查找添加了 `tarp-module` Topic 的仓库。搜索入口预填了 `topic:tarp-module`，可以保留它并追加关键词，例如 `topic:tarp-module 古墓`。未添加这个 Topic 的仓库不会出现在结果中；作者分享文件和添加标记的方法见[发布模组](/docs/modules/publishing/)。
 
 Topic 由仓库作者自行添加，不代表 TARP 审核或推荐。找到仓库后，先阅读它的 README，确认提供的是 TARP 模组，并查看使用条件、分支，以及仓库是否在固定的 `module/` 中提供完整模组。普通 D&D 或其他跑团资料不能直接当作 TARP 模组导入，文件结构见[模组结构](/docs/modules/structure/)。
 

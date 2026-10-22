@@ -11,7 +11,8 @@
     "preview": "astro preview --host 127.0.0.1",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "modules:sync": "bun scripts/sync-modules.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.2",

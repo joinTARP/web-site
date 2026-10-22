@@ -1,11 +1,11 @@
 ---
 title: 发布模组
-description: 整理模组仓库、编写导入说明，通过 GitHub Topic 和 ZIP 分享给玩家。
+description: 整理模组仓库、申请官网收录，通过 GitHub Topic 和 ZIP 分享给玩家。
 order: 11
 status: published
 ---
 
-完成模组后，可以把完整文件上传到公开 GitHub 仓库，添加 `tarp-module` Topic，让玩家通过官网的「寻找模组」入口发现它。玩家可以从 Git 仓库导入，也可以下载你提供的 ZIP。官网入口跳转到 GitHub 搜索，Topic 由作者自行添加，不代表 TARP 审核或推荐。
+完成模组后，可以把完整文件上传到公开 GitHub 仓库，申请加入官网[模组库](/modules/)。玩家可以从 Git 仓库导入，也可以下载你提供的 ZIP。还可以添加 `tarp-module` Topic 供玩家搜索；添加 Topic 不会自动获得官网收录。
 
 ## 整理发布目录
 
@@ -120,6 +120,16 @@ git push origin main
 ```
 
 分享的是仓库克隆地址，不要把 GitHub 的 `/tree/main/module` 页面地址当成仓库地址。应用保留完整仓库并固定读取 `module/`，无需填写子目录；仓库根目录不要再放另一份模组清单。
+
+## 申请官网收录
+
+通过官网仓库的 [GitHub Issue](https://github.com/joinTARP/web-site/issues/new) 申请收录，提交公开仓库地址、分支或标签、配置文件名、测试过的 TARP 版本、开局测试情况，以及内容与素材授权说明。
+
+官网直接读取 `module/module.json` 或 `module/module.toml` 中的 `name`、`description`、`cover`、`system`、`author`、`version`、`tags`，不需要另写一份简介。`version` 是模组自身版本，测试过的 TARP 版本单独记录；不要将主持提示或剧情秘密写进公开简介。
+
+封面可以填写 HTTP(S) 图片地址，或模组内相对路径。相对路径会转换为同一 Git 提交中的原始文件地址，中文和空格自动编码；外部图片服务需要允许外链。没有封面或加载失败时显示文字占位。
+
+维护者检查后添加收录来源、同步展示信息，随官网发布。目录展示的是上次同步的配置；分支导入可能获取作者后续更新，正式发布建议使用版本标签。收录不等于试玩推荐，测试版本只记录实际验收结果。更新收录信息时可提交 Issue 或 PR。
 
 ## 添加发现标记
 

@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import catalog from '../../data/modules/catalog.json';
+import { catalogSchema, moduleCoverUrl } from '../../lib/modules';
+
+const modules = catalogSchema.parse(catalog).map((entry) => ({
+  ...entry,
+  owner: entry.repository.split('/')[0],
+  repositoryUrl: `https://github.com/${entry.repository}`,
+  coverUrl: moduleCoverUrl(
+    entry.repository,
+    entry.revision,
+    entry.metadata.cover,
+  ),
+}));
+---
+
+<BaseLayout title="模组库" description="浏览 TARP 模组，寻找你的下一场冒险。">
+  <div class="shell pt-32 pb-20 sm:pt-36 sm:pb-28">
+    <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">模组库</h1>
+
+    <ul class="mt-8 grid grid-cols-1 items-start gap-x-6 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+      {modules.map(({ repositoryUrl, revision, metadata, coverUrl, owner }) => (
+        <li>
+          <article class="group min-w-0">
+            <div class="relative">
+              <a
+                href={`${repositoryUrl}/tree/${revision}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`查看《${metadata.name}》的模组仓库（新标签页）`}
+                class="relative isolate grid aspect-video place-items-center overflow-hidden rounded-xl bg-surface-raised ring-1 ring-foreground/10"
+              >
+                <span
+                  class="px-7 text-center text-3xl font-medium text-muted"
+                  aria-hidden="true"
+                >
+                  {metadata.name}
+                </span>
+                {coverUrl && (
+                  <img
+                    src={coverUrl}
+                    alt={`${metadata.name}封面`}
+                    width="640"
+                    height="360"
+                    loading="lazy"
+                    decoding="async"
+                    referrerpolicy="no-referrer"
+                    data-module-cover
+                    class="absolute inset-0 size-full object-cover transition-transform duration-700 ease-expo group-hover:scale-[1.025] group-focus-within:scale-[1.025] motion-reduce:transition-none"
+                  />
+                )}
+                {metadata.system && (
+                  <span class="absolute top-2.5 left-2.5 z-10 max-w-[calc(100%-4.5rem)] rounded bg-black/45 px-2 py-1 text-[11px] leading-4 text-white/90 backdrop-blur-sm">
+                    {metadata.system}
+                  </span>
+                )}
+              </a>
+              <details
+                class="pointer-events-none absolute top-2 right-2 z-20 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100 open:pointer-events-auto open:opacity-100 motion-reduce:transition-none [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:opacity-100"
+                data-module-menu
+              >
+                <summary
+                  aria-label={`《${metadata.name}》的更多操作`}
+                  class="flex size-8 cursor-pointer list-none items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&::-webkit-details-marker]:hidden"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="5" r="1.75" />
+                    <circle cx="12" cy="12" r="1.75" />
+                    <circle cx="12" cy="19" r="1.75" />
+                  </svg>
+                </summary>
+                <div class="absolute top-10 right-0 w-36 rounded-xl border border-line bg-surface-raised p-1 shadow-lg">
+                  <button
+                    type="button"
+                    disabled
+                    title="一键导入暂未接入"
+                    class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-muted disabled:cursor-not-allowed"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 3v12m-4-4 4 4 4-4M5 16v4h14v-4" />
+                    </svg>
+                    一键导入
+                  </button>
+                </div>
+              </details>
+            </div>
+            <div class="mt-3 flex items-center gap-2.5">
+              <a
+                href={`https://github.com/${owner}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`查看 ${owner} 的 GitHub 主页（新标签页）`}
+                class="size-8 shrink-0 overflow-hidden rounded-full bg-surface-raised"
+              >
+                <img
+                  src={`https://github.com/${owner}.png?size=80`}
+                  alt=""
+                  width="32"
+                  height="32"
+                  loading="lazy"
+                  decoding="async"
+                  referrerpolicy="no-referrer"
+                  data-module-avatar
+                  class="size-full object-cover"
+                />
+              </a>
+              <div class="min-w-0">
+                <h2 class="text-sm leading-5 font-medium">
+                  <a
+                    href={`${repositoryUrl}/tree/${revision}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="transition-colors hover:text-link"
+                  >
+                    {metadata.name}
+                  </a>
+                </h2>
+                {metadata.author && (
+                  <p class="mt-0.5 text-xs leading-4 text-subtle">
+                    {metadata.author}
+                  </p>
+                )}
+              </div>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
+
+<script>
+  document
+    .querySelectorAll<HTMLImageElement>(
+      '[data-module-cover], [data-module-avatar]',
+    )
+    .forEach((image) => {
+      const fallback = () => {
+        image.hidden = true;
+      };
+      image.addEventListener('error', fallback);
+      if (image.complete && image.naturalWidth === 0) fallback();
+    });
+  const menus =
+    document.querySelectorAll<HTMLDetailsElement>('[data-module-menu]');
+  menus.forEach((menu) => {
+    menu.addEventListener('toggle', () => {
+      if (menu.open)
+        menus.forEach((other) => {
+          if (other !== menu) other.open = false;
+        });
+    });
+  });
+  document.addEventListener('click', (event) => {
+    menus.forEach((menu) => {
+      if (event.target instanceof Node && !menu.contains(event.target))
+        menu.open = false;
+    });
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    menus.forEach((menu) => {
+      if (!menu.open) return;
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    });
+  });
+</script>

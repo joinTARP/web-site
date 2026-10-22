@@ -120,6 +120,8 @@ hp = 6
 | `hostPrompt`                          | 追加给主持的模组说明，如叙事口吻、查阅顺序和裁定要求                |
 | `pages`                               | 给玩家阅读的 Markdown 文件路径列表，如 `["概览.md", "玩家手册.md"]` |
 
+模组封面统一按横向 **16:9** 展示，建议提供 1600×900 或 1920×1080 的图片。其他比例会居中裁切，请把主体和重要文字留在画面中央。
+
 `name` 和 `description` 是模组信息的必填项。`pages` 中的文件按阅读页加载，不进入文档类型，也不参与开局。普通的 `概览.md` 或 `README.md` 若放在模组内，记得在 `pages` 中列出；否则扫描器会按游戏文档检查它的文件名。
 
 类型定义、布局和图片各有自己的位置。扫描器跳过隐藏目录、`node_modules` 和 `AGENTS.md`；图片可放在 `图片/`，不会被当作游戏文档解析。各类图片支持 `avif`、`gif`、`jpeg`、`jpg`、`png`、`svg` 和 `webp`。
@@ -134,4 +136,4 @@ hp = 6
 
 ## 分享到 GitHub
 
-完成并测试模组后，可以上传到公开 GitHub 仓库，添加 `tarp-module` Topic，让玩家通过官网的「寻找模组」入口发现它。仓库目录、上传步骤、README 示例、Topic 设置和 ZIP 发布见[发布模组](/docs/modules/publishing/)。
+完成并测试模组后，可以上传到公开 GitHub 仓库，申请加入官网[模组库](/modules/)，也可以添加 `tarp-module` Topic 供玩家搜索。仓库目录、上传步骤、README 示例、Topic 设置和 ZIP 发布见[发布模组](/docs/modules/publishing/)。

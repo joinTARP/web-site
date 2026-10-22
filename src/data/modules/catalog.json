@@ -1,0 +1,17 @@
+[
+  {
+    "repository": "joinTARP/cairn-houshan-tomb",
+    "ref": "main",
+    "file": "module.toml",
+    "revision": "4416797dcfe041322228d70ec167f808f16d7f90",
+    "metadata": {
+      "name": "后山古墓",
+      "description": "后山滑坡露出古墓，石门深处传来女子的求救声。",
+      "cover": "assets/cover/任务图.webp",
+      "system": "Cairn v1 简化",
+      "author": "TARP",
+      "version": "1.0.0",
+      "tags": ["地穴", "起始冒险"]
+    }
+  }
+]

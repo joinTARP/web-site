@@ -13,12 +13,11 @@ export const site = {
   version: `v${desktopVersion}`,
 };
 
-export const moduleSearchHref =
-  'https://github.com/search?q=topic%3Atarp-module&type=repositories';
+export const modulesHref = '/modules/';
 
 export const nav = [
   { label: '文档', href: '/docs/', external: false },
-  { label: '模组', href: moduleSearchHref, external: true },
+  { label: '模组库', href: modulesHref, external: false },
   { label: '开发日志', href: '/blog/', external: false },
 ];
 
