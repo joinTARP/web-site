@@ -17,13 +17,3 @@ interface Props {
     </main>
   </div>
 </PageLayout>
-
-<style>
-  /* 阅读导航直接切换，避免根视图的淡出和位移动画。 */
-  @view-transition {
-    navigation: none;
-  }
-  :global(html[data-layout='reading']) {
-    scrollbar-gutter: stable;
-  }
-</style>

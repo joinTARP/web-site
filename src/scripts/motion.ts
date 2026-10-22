@@ -1,4 +1,10 @@
-import { gsap, reducedMotion, ScrollTrigger, SplitText } from './animation';
+import {
+  gsap,
+  reducedMotion,
+  ScrollTrigger,
+  SplitText,
+  onPageAnimation,
+} from './animation';
 
 function initReveals() {
   ScrollTrigger.batch('[data-reveal]:not([data-faq-reveal])', {
@@ -61,10 +67,15 @@ function initSplitHeadings() {
   });
 }
 
-document.documentElement.dataset.motionReady = '';
-
-if (!reducedMotion) {
-  initReveals();
-  initFaqReveals();
-  document.fonts.ready.then(initSplitHeadings);
-}
+onPageAnimation((context) => {
+  const body = document.body;
+  document.documentElement.dataset.motionReady = '';
+  if (!reducedMotion) {
+    document.documentElement.classList.add('motion');
+    initReveals();
+    initFaqReveals();
+    document.fonts.ready.then(() => {
+      if (body.isConnected) context.add(initSplitHeadings);
+    });
+  }
+});

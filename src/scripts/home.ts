@@ -1,4 +1,9 @@
-import { gsap, reducedMotion, ScrollTrigger } from './animation';
+import {
+  gsap,
+  reducedMotion,
+  ScrollTrigger,
+  onPageAnimation,
+} from './animation';
 
 function initHero() {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
@@ -13,7 +18,7 @@ function initHero() {
   });
 }
 
-async function initHeroScreenshot() {
+async function initHeroScreenshot(context: gsap.Context) {
   const screenshot = document.querySelector<HTMLElement>(
     '[data-hero-screenshot]',
   );
@@ -28,31 +33,34 @@ async function initHeroScreenshot() {
       .map((image) => image.decode().catch(() => undefined)),
   ]);
 
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const flip = gsap.to(screenshot, {
-      rotationX: 0,
-      scale: 1,
-      y: 0,
-      duration: 1.4,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: container,
-        // 大屏上截图已在首屏内，也要向下滚动后才触发。
-        start: () =>
-          Math.max(
-            96,
-            container.getBoundingClientRect().top +
-              window.scrollY -
-              window.innerHeight * 0.8,
-          ),
-        once: true,
-      },
+  if (!screenshot.isConnected) return;
+  context.add(() => {
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      const flip = gsap.to(screenshot, {
+        rotationX: 0,
+        scale: 1,
+        y: 0,
+        duration: 1.4,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: container,
+          // 大屏上截图已在首屏内，也要向下滚动后才触发。
+          start: () =>
+            Math.max(
+              96,
+              container.getBoundingClientRect().top +
+                window.scrollY -
+                window.innerHeight * 0.8,
+            ),
+          once: true,
+        },
+      });
+      // 已恢复到触发点之后时，直接呈现终态，再显示图片。
+      if (flip.scrollTrigger && window.scrollY >= flip.scrollTrigger.start) {
+        flip.progress(1);
+      }
+      gsap.set(screenshot, { visibility: 'visible' });
     });
-    // 已恢复到触发点之后时，直接呈现终态，再显示图片。
-    if (flip.scrollTrigger && window.scrollY >= flip.scrollTrigger.start) {
-      flip.progress(1);
-    }
-    gsap.set(screenshot, { visibility: 'visible' });
   });
 }
 
@@ -355,17 +363,25 @@ function initFaq() {
       refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 420);
     });
   });
+  return () => window.clearTimeout(refreshTimer);
 }
 
-initHeroScreenshot();
-initHeroSpotlight();
-initCompanionAssembly();
-initCompanionDetails();
-
-if (!reducedMotion) {
-  document.fonts.ready.then(() => {
-    initHero();
-    initFaq();
-    ScrollTrigger.refresh();
-  });
-}
+onPageAnimation((context) => {
+  if (!document.querySelector('[data-hero]')) return;
+  const body = document.body;
+  initHeroScreenshot(context);
+  initHeroSpotlight();
+  initCompanionAssembly();
+  initCompanionDetails();
+  if (!reducedMotion) {
+    document.fonts.ready.then(() => {
+      if (!body.isConnected) return;
+      context.add(() => {
+        initHero();
+        const disposeFaq = initFaq();
+        ScrollTrigger.refresh();
+        return disposeFaq;
+      });
+    });
+  }
+});

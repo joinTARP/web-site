@@ -199,57 +199,59 @@ const features = [
 </style>
 
 <script>
-  const primary = document.querySelector<HTMLAnchorElement>(
-    '[data-download-primary]',
-  );
-  const accelerated = document.querySelector<HTMLInputElement>(
-    '[data-download-accelerated]',
-  );
-  const platformLinks = document.querySelectorAll<HTMLAnchorElement>(
-    '[data-download-platform]',
-  );
-  const userAgent = navigator.userAgent;
-  const platform = /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent)
-    ? undefined
-    : /Windows NT/i.test(userAgent)
-      ? 'Windows'
-      : /Macintosh/i.test(userAgent)
-        ? 'macOS'
-        : /Linux/i.test(userAgent)
-          ? 'Linux'
-          : undefined;
-  const download = platform
-    ? document.querySelector<HTMLAnchorElement>(
-        `[data-download-platform="${platform}"]`,
-      )
-    : null;
+  document.addEventListener('astro:page-load', () => {
+    const primary = document.querySelector<HTMLAnchorElement>(
+      '[data-download-primary]',
+    );
+    const accelerated = document.querySelector<HTMLInputElement>(
+      '[data-download-accelerated]',
+    );
+    const platformLinks = document.querySelectorAll<HTMLAnchorElement>(
+      '[data-download-platform]',
+    );
+    const userAgent = navigator.userAgent;
+    const platform = /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent)
+      ? undefined
+      : /Windows NT/i.test(userAgent)
+        ? 'Windows'
+        : /Macintosh/i.test(userAgent)
+          ? 'macOS'
+          : /Linux/i.test(userAgent)
+            ? 'Linux'
+            : undefined;
+    const download = platform
+      ? document.querySelector<HTMLAnchorElement>(
+          `[data-download-platform="${platform}"]`,
+        )
+      : null;
 
-  function updateDownloadRoute() {
-    platformLinks.forEach((link) => {
-      const direct = link.dataset.downloadDirect;
-      if (direct)
-        link.href = accelerated?.checked
-          ? `https://gh-proxy.com/${direct}`
-          : direct;
-    });
-    if (primary && download) primary.href = download.href;
-  }
-
-  accelerated?.addEventListener('change', updateDownloadRoute);
-  updateDownloadRoute();
-
-  if (primary && download) {
-    primary.href = download.href;
-    const current = download.closest('[data-download-option]');
-    if (current) {
-      current.setAttribute('data-current', '');
-      current.parentElement?.prepend(current);
+    function updateDownloadRoute() {
+      platformLinks.forEach((link) => {
+        const direct = link.dataset.downloadDirect;
+        if (direct)
+          link.href = accelerated?.checked
+            ? `https://gh-proxy.com/${direct}`
+            : direct;
+      });
+      if (primary && download) primary.href = download.href;
     }
-    primary.setAttribute('aria-label', `立即下载 TARP · ${platform}`);
-  } else {
-    primary?.addEventListener('click', (event) => {
-      event.preventDefault();
-      primary.focus();
-    });
-  }
+
+    accelerated?.addEventListener('change', updateDownloadRoute);
+    updateDownloadRoute();
+
+    if (primary && download) {
+      primary.href = download.href;
+      const current = download.closest('[data-download-option]');
+      if (current) {
+        current.setAttribute('data-current', '');
+        current.parentElement?.prepend(current);
+      }
+      primary.setAttribute('aria-label', `立即下载 TARP · ${platform}`);
+    } else {
+      primary?.addEventListener('click', (event) => {
+        event.preventDefault();
+        primary.focus();
+      });
+    }
+  });
 </script>

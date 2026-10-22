@@ -91,28 +91,6 @@
   margin-inline: auto;
 }
 
-@view-transition {
-  navigation: auto;
-}
-::view-transition-old(root) {
-  animation: 320ms var(--ease-expo) both vt-out;
-}
-::view-transition-new(root) {
-  animation: 520ms var(--ease-expo) both vt-in;
-}
-@keyframes vt-out {
-  to {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-}
-@keyframes vt-in {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-}
-
 @layer base {
   .site-footer {
     color-scheme: dark;
@@ -125,6 +103,7 @@
   }
   :root {
     color-scheme: dark;
+    scrollbar-gutter: stable;
     --site-header-space: 100px;
     scroll-padding-top: var(--site-header-space);
     --hero-aurora-opacity: 1;

@@ -301,235 +301,242 @@ const features = [
   }
 </style>
 <script>
-  import { gsap } from '../../scripts/animation';
-  gsap.matchMedia().add(
-    {
-      motion: '(prefers-reduced-motion: no-preference)',
-      desktop: '(min-width: 1024px)',
-    },
-    (context) => {
-      if (!context.conditions?.motion) return;
-      const desktop = Boolean(context.conditions.desktop);
-      const art = document.querySelector<HTMLElement>('[data-host-workbench]');
-      if (!art) return;
-      const section = art.closest<HTMLElement>('#round')!;
-      const stage = section.querySelector<HTMLElement>('[data-host-stage]')!;
-      const scrollSpace = section.querySelector<HTMLElement>(
-        '[data-host-scroll-space]',
-      )!;
-      const copy = section.querySelector<HTMLElement>('[data-host-copy]')!;
-      const instruction = section.querySelector<HTMLElement>(
-        '[data-host-instruction]',
-      )!;
-      const speech =
-        instruction.querySelector<HTMLElement>('[data-host-speech]')!;
-      const speaker = instruction.querySelectorAll<HTMLElement>(
-        '[data-host-speaker]',
-      );
-      const agent = art.querySelector<HTMLElement>('.network-agent')!;
-      const surroundingNodes = [
-        '.network-document',
-        '.network-weapon',
-        '.network-dice',
-        '.network-monster',
-      ].map((selector) => art.querySelector<HTMLElement>(selector)!);
-
-      // 只读取布局坐标，滚动中途刷新和窗口缩放不会把动画位移算进起点。
-      const positionInStage = (element: HTMLElement) => {
-        let x = 0;
-        let y = 0;
-        let current: HTMLElement | null = element;
-        while (current && current !== stage) {
-          x += current.offsetLeft;
-          y += current.offsetTop;
-          current = current.offsetParent as HTMLElement | null;
-        }
-        return { x, y };
-      };
-      const centeredX = () => {
-        const point = positionInStage(agent);
-        return stage.clientWidth / 2 - point.x - agent.offsetWidth / 2;
-      };
-      const instructionX = () => {
-        const point = positionInStage(speech);
-        // 整组对话使用 CSS translate 居中，目标只移动台词气泡。
-        return (
-          stage.clientWidth / 2 -
-          point.x -
-          speech.offsetWidth / 2 +
-          instruction.offsetWidth / 2
+  import { gsap, onPageAnimation } from '../../scripts/animation';
+  onPageAnimation(() => {
+    gsap.matchMedia().add(
+      {
+        motion: '(prefers-reduced-motion: no-preference)',
+        desktop: '(min-width: 1024px)',
+      },
+      (context) => {
+        if (!context.conditions?.motion) return;
+        const desktop = Boolean(context.conditions.desktop);
+        const art = document.querySelector<HTMLElement>(
+          '[data-host-workbench]',
         );
-      };
-      const instructionY = () => {
-        const target = positionInStage(agent);
-        const origin = positionInStage(speech);
-        return (
-          target.y + agent.offsetWidth / 2 - origin.y - speech.offsetHeight / 2
+        if (!art) return;
+        const section = art.closest<HTMLElement>('#round')!;
+        const stage = section.querySelector<HTMLElement>('[data-host-stage]')!;
+        const scrollSpace = section.querySelector<HTMLElement>(
+          '[data-host-scroll-space]',
+        )!;
+        const copy = section.querySelector<HTMLElement>('[data-host-copy]')!;
+        const instruction = section.querySelector<HTMLElement>(
+          '[data-host-instruction]',
+        )!;
+        const speech =
+          instruction.querySelector<HTMLElement>('[data-host-speech]')!;
+        const speaker = instruction.querySelectorAll<HTMLElement>(
+          '[data-host-speaker]',
         );
-      };
-      const collapsedX = (node: HTMLElement) =>
-        agent.offsetLeft +
-        agent.offsetWidth / 2 -
-        node.offsetLeft -
-        node.offsetWidth / 2;
-      const collapsedY = (node: HTMLElement) =>
-        agent.offsetTop +
-        agent.offsetWidth / 2 -
-        node.offsetTop -
-        node.offsetHeight / 2;
+        const agent = art.querySelector<HTMLElement>('.network-agent')!;
+        const surroundingNodes = [
+          '.network-document',
+          '.network-weapon',
+          '.network-dice',
+          '.network-monster',
+        ].map((selector) => art.querySelector<HTMLElement>(selector)!);
 
-      const flow = gsap.fromTo(
-        art.querySelector('.network-signal'),
-        { strokeDashoffset: 0 },
-        {
-          strokeDashoffset: -232,
-          duration: 2.8,
-          ease: 'none',
-          repeat: -1,
-          paused: true,
-        },
-      );
-      const visibility = new IntersectionObserver(([entry]) => {
-        if (entry?.isIntersecting && !document.hidden) flow.play();
-        else flow.pause();
-      });
-      visibility.observe(art);
-      const onVisibility = () => {
-        const rect = art.getBoundingClientRect();
-        if (
-          !document.hidden &&
-          rect.bottom > 0 &&
-          rect.top < window.innerHeight
-        )
-          flow.play();
-        else flow.pause();
-      };
-      document.addEventListener('visibilitychange', onVisibility);
-      const timeline = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          // 桌面先让整组图例进入视野，再固定舞台完成展开与左移。
-          // 手机不固定上下堆叠的整块内容，改用 pi 所在图例作为触发点。
-          trigger: desktop ? stage : art,
-          start: desktop
-            ? () =>
-                `top ${Math.max(24, (window.innerHeight - stage.offsetHeight) / 2)}px`
-            : 'center 62%',
-          end: () =>
-            `+=${desktop ? parseFloat(getComputedStyle(scrollSpace).paddingBottom) : Math.round(window.innerHeight * 0.8)}`,
-          pin: desktop ? stage : false,
-          pinSpacing: false,
-          anticipatePin: 1,
-          scrub: 0.85,
-          invalidateOnRefresh: true,
-        },
-      });
-      gsap.set(speech, { opacity: 1, x: 0, y: 0, scale: 1 });
-      // 各段交叠接续：卡片还在展开时整组开始左移，避免每段都停下来。
-      timeline
-        .to(
-          speech,
+        // 只读取布局坐标，滚动中途刷新和窗口缩放不会把动画位移算进起点。
+        const positionInStage = (element: HTMLElement) => {
+          let x = 0;
+          let y = 0;
+          let current: HTMLElement | null = element;
+          while (current && current !== stage) {
+            x += current.offsetLeft;
+            y += current.offsetTop;
+            current = current.offsetParent as HTMLElement | null;
+          }
+          return { x, y };
+        };
+        const centeredX = () => {
+          const point = positionInStage(agent);
+          return stage.clientWidth / 2 - point.x - agent.offsetWidth / 2;
+        };
+        const instructionX = () => {
+          const point = positionInStage(speech);
+          // 整组对话使用 CSS translate 居中，目标只移动台词气泡。
+          return (
+            stage.clientWidth / 2 -
+            point.x -
+            speech.offsetWidth / 2 +
+            instruction.offsetWidth / 2
+          );
+        };
+        const instructionY = () => {
+          const target = positionInStage(agent);
+          const origin = positionInStage(speech);
+          return (
+            target.y +
+            agent.offsetWidth / 2 -
+            origin.y -
+            speech.offsetHeight / 2
+          );
+        };
+        const collapsedX = (node: HTMLElement) =>
+          agent.offsetLeft +
+          agent.offsetWidth / 2 -
+          node.offsetLeft -
+          node.offsetWidth / 2;
+        const collapsedY = (node: HTMLElement) =>
+          agent.offsetTop +
+          agent.offsetWidth / 2 -
+          node.offsetTop -
+          node.offsetHeight / 2;
+
+        const flow = gsap.fromTo(
+          art.querySelector('.network-signal'),
+          { strokeDashoffset: 0 },
           {
-            x: instructionX,
-            y: instructionY,
-            scale: 0.65,
-            duration: 0.72,
-            ease: 'power1.in',
+            strokeDashoffset: -232,
+            duration: 2.8,
+            ease: 'none',
+            repeat: -1,
+            paused: true,
           },
-          0,
-        )
-        .to(speaker, { opacity: 0, y: -6, duration: 0.45 }, 0.2)
-        .to(speech, { opacity: 0, duration: 0.32 }, 0.4)
-        .fromTo(
-          agent,
-          { scale: 1.12 },
-          { scale: 1, duration: 1.2, ease: 'sine.out' },
-          0.35,
-        )
-        .fromTo(
-          art.querySelector('.agent-burst'),
-          { opacity: 0, scale: 0.85 },
-          { opacity: 0.6, scale: 1.3, duration: 0.12 },
-          0.36,
-        )
-        .to(
-          art.querySelector('.agent-burst'),
-          { opacity: 0, scale: 4.4, duration: 0.7, ease: 'sine.out' },
-          0.48,
-        )
-        .fromTo(
-          art.querySelector('.agent-halo'),
-          { opacity: 0.2, scale: 0.7 },
-          { opacity: 1, scale: 1.5, duration: 0.9, ease: 'sine.out' },
-          0.3,
-        )
-        .fromTo(
-          art.querySelector('.network-grid'),
-          { opacity: 0 },
-          { opacity: 0.13, duration: 0.9 },
-          0.4,
-        )
-        .fromTo(
-          art.querySelector('.network-paths'),
-          { opacity: 0, scale: 0.65, transformOrigin: '50% 50%' },
-          { opacity: 1, scale: 1, duration: 0.9, ease: 'sine.out' },
-          0.45,
         );
-
-      surroundingNodes.forEach((node, index) => {
-        timeline.fromTo(
-          node,
-          {
-            opacity: 0,
-            scale: 0.28,
-            x: () => collapsedX(node),
-            y: () => collapsedY(node),
+        const visibility = new IntersectionObserver(([entry]) => {
+          if (entry?.isIntersecting && !document.hidden) flow.play();
+          else flow.pause();
+        });
+        visibility.observe(art);
+        const onVisibility = () => {
+          const rect = art.getBoundingClientRect();
+          if (
+            !document.hidden &&
+            rect.bottom > 0 &&
+            rect.top < window.innerHeight
+          )
+            flow.play();
+          else flow.pause();
+        };
+        document.addEventListener('visibilitychange', onVisibility);
+        const timeline = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            // 桌面先让整组图例进入视野，再固定舞台完成展开与左移。
+            // 手机不固定上下堆叠的整块内容，改用 pi 所在图例作为触发点。
+            trigger: desktop ? stage : art,
+            start: desktop
+              ? () =>
+                  `top ${Math.max(24, (window.innerHeight - stage.offsetHeight) / 2)}px`
+              : 'center 62%',
+            end: () =>
+              `+=${desktop ? parseFloat(getComputedStyle(scrollSpace).paddingBottom) : Math.round(window.innerHeight * 0.8)}`,
+            pin: desktop ? stage : false,
+            pinSpacing: false,
+            anticipatePin: 1,
+            scrub: 0.85,
+            invalidateOnRefresh: true,
           },
-          {
-            opacity: 1,
-            scale: 1,
-            x: 0,
-            y: 0,
-            duration: 1.05,
-            ease: 'power2.out',
-          },
-          0.35 + index * 0.035,
-        );
-      });
+        });
+        gsap.set(speech, { opacity: 1, x: 0, y: 0, scale: 1 });
+        // 各段交叠接续：卡片还在展开时整组开始左移，避免每段都停下来。
+        timeline
+          .to(
+            speech,
+            {
+              x: instructionX,
+              y: instructionY,
+              scale: 0.65,
+              duration: 0.72,
+              ease: 'power1.in',
+            },
+            0,
+          )
+          .to(speaker, { opacity: 0, y: -6, duration: 0.45 }, 0.2)
+          .to(speech, { opacity: 0, duration: 0.32 }, 0.4)
+          .fromTo(
+            agent,
+            { scale: 1.12 },
+            { scale: 1, duration: 1.2, ease: 'sine.out' },
+            0.35,
+          )
+          .fromTo(
+            art.querySelector('.agent-burst'),
+            { opacity: 0, scale: 0.85 },
+            { opacity: 0.6, scale: 1.3, duration: 0.12 },
+            0.36,
+          )
+          .to(
+            art.querySelector('.agent-burst'),
+            { opacity: 0, scale: 4.4, duration: 0.7, ease: 'sine.out' },
+            0.48,
+          )
+          .fromTo(
+            art.querySelector('.agent-halo'),
+            { opacity: 0.2, scale: 0.7 },
+            { opacity: 1, scale: 1.5, duration: 0.9, ease: 'sine.out' },
+            0.3,
+          )
+          .fromTo(
+            art.querySelector('.network-grid'),
+            { opacity: 0 },
+            { opacity: 0.13, duration: 0.9 },
+            0.4,
+          )
+          .fromTo(
+            art.querySelector('.network-paths'),
+            { opacity: 0, scale: 0.65, transformOrigin: '50% 50%' },
+            { opacity: 1, scale: 1, duration: 0.9, ease: 'sine.out' },
+            0.45,
+          );
 
-      timeline
-        .fromTo(
-          art.querySelectorAll('.hp-new, .record-saved'),
-          { opacity: 0 },
-          { opacity: 1, duration: 0.55 },
-          1.05,
-        )
-        .to(
-          art.querySelector('.agent-halo'),
-          { scale: 1, opacity: 0.7, duration: 0.9, ease: 'sine.inOut' },
-          1.2,
-        )
-        .fromTo(
-          art,
-          { x: centeredX },
-          { x: 0, duration: 1.5, ease: 'sine.inOut' },
-          1,
-        )
-        .fromTo(
-          copy,
-          { opacity: 0, x: 16, y: 8 },
-          { opacity: 1, x: 0, y: 0, duration: 0.7, ease: 'sine.out' },
-          2,
-        );
-      // 恢复滚动位置时直接呈现对应画面，避免先显示未初始化的文案与图例。
-      timeline.scrollTrigger?.refresh();
-      timeline.totalProgress(timeline.scrollTrigger?.progress ?? 0);
-      gsap.set(stage, { visibility: 'visible' });
+        surroundingNodes.forEach((node, index) => {
+          timeline.fromTo(
+            node,
+            {
+              opacity: 0,
+              scale: 0.28,
+              x: () => collapsedX(node),
+              y: () => collapsedY(node),
+            },
+            {
+              opacity: 1,
+              scale: 1,
+              x: 0,
+              y: 0,
+              duration: 1.05,
+              ease: 'power2.out',
+            },
+            0.35 + index * 0.035,
+          );
+        });
 
-      return () => {
-        visibility.disconnect();
-        document.removeEventListener('visibilitychange', onVisibility);
-      };
-    },
-  );
+        timeline
+          .fromTo(
+            art.querySelectorAll('.hp-new, .record-saved'),
+            { opacity: 0 },
+            { opacity: 1, duration: 0.55 },
+            1.05,
+          )
+          .to(
+            art.querySelector('.agent-halo'),
+            { scale: 1, opacity: 0.7, duration: 0.9, ease: 'sine.inOut' },
+            1.2,
+          )
+          .fromTo(
+            art,
+            { x: centeredX },
+            { x: 0, duration: 1.5, ease: 'sine.inOut' },
+            1,
+          )
+          .fromTo(
+            copy,
+            { opacity: 0, x: 16, y: 8 },
+            { opacity: 1, x: 0, y: 0, duration: 0.7, ease: 'sine.out' },
+            2,
+          );
+        // 恢复滚动位置时直接呈现对应画面，避免先显示未初始化的文案与图例。
+        timeline.scrollTrigger?.refresh();
+        timeline.totalProgress(timeline.scrollTrigger?.progress ?? 0);
+        gsap.set(stage, { visibility: 'visible' });
+
+        return () => {
+          visibility.disconnect();
+          document.removeEventListener('visibilitychange', onVisibility);
+        };
+      },
+    );
+  });
 </script>

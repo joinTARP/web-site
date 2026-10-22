@@ -29,11 +29,12 @@ const canonical = Astro.site
   lang="zh-CN"
   class:list={[reading && '[--site-header-space:88px]']}
   data-layout={reading ? 'reading' : undefined}
-  transition:animate={reading ? 'none' : undefined}
+  transition:animate="none"
+  data-animate={animate || undefined}
 >
   <head>
     <meta charset="UTF-8" />
-    {reading && <ClientRouter fallback="swap" />}
+    <ClientRouter fallback="swap" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#171717" />
@@ -69,25 +70,6 @@ const canonical = Astro.site
           ?.setAttribute('content', theme === 'dark' ? '#171717' : '#ffffff');
       })();
     </script>
-    {animate && (
-      <>
-        <script
-          is:inline
-          defer
-          src="https://cdn.jsdmirror.com/npm/gsap@3.15.0/dist/gsap.min.js"
-        ></script>
-        <script
-          is:inline
-          defer
-          src="https://cdn.jsdmirror.com/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"
-        ></script>
-        <script
-          is:inline
-          defer
-          src="https://cdn.jsdmirror.com/npm/gsap@3.15.0/dist/SplitText.min.js"
-        ></script>
-      </>
-    )}
     {animate && <script is:inline>
       (() => {
         const root = document.documentElement;

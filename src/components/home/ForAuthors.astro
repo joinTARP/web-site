@@ -563,173 +563,182 @@ name: 火把
 </section>
 
 <script>
-  import { gsap, ScrollTrigger } from '../../scripts/animation';
-  const section = document.querySelector<HTMLElement>('#authors');
-  if (section) {
-    const itemDialog = section.querySelector<HTMLDialogElement>(
-      '#author-item-detail',
-    )!;
-    const itemOpen =
-      section.querySelector<HTMLButtonElement>('[data-item-open]')!;
-    itemOpen.disabled = false;
-    itemOpen.addEventListener('click', () => itemDialog.showModal());
+  import {
+    gsap,
+    ScrollTrigger,
+    onPageAnimation,
+  } from '../../scripts/animation';
+  onPageAnimation(() => {
+    const section = document.querySelector<HTMLElement>('#authors');
+    if (section) {
+      const itemDialog = section.querySelector<HTMLDialogElement>(
+        '#author-item-detail',
+      )!;
+      const itemOpen =
+        section.querySelector<HTMLButtonElement>('[data-item-open]')!;
+      itemOpen.disabled = false;
+      itemOpen.addEventListener('click', () => itemDialog.showModal());
 
-    const encounterButton = section.querySelector<HTMLButtonElement>(
-      '[data-encounter-button]',
-    )!;
-    const creature = section.querySelector<HTMLElement>('[data-encountered]')!;
-    const trait = section.querySelector<HTMLElement>('[data-encounter-trait]')!;
-    const attackCard = section.querySelector<HTMLElement>('[data-dark]')!;
-    const darkToggle =
-      section.querySelector<HTMLButtonElement>('[data-dark-toggle]')!;
-    const lightLabel =
-      section.querySelector<HTMLElement>('[data-light-label]')!;
-    const damageBonus = section.querySelector<HTMLElement>(
-      '[data-damage-bonus]',
-    )!;
-    darkToggle.disabled = false;
-    darkToggle.addEventListener('click', () => {
-      const dark = attackCard.dataset.dark !== 'true';
-      attackCard.dataset.dark = String(dark);
-      darkToggle.setAttribute('aria-pressed', String(dark));
-      lightLabel.textContent = dark ? '黑暗' : '明亮';
-      damageBonus.hidden = !dark;
-    });
-
-    encounterButton.disabled = false;
-    encounterButton.addEventListener(
-      'click',
-      () => {
-        if (creature.dataset.encountered === 'true') return;
-        creature.dataset.encountered = 'true';
-        encounterButton.disabled = true;
-        encounterButton.dataset.complete = '';
-        encounterButton.textContent = '✓ 已遭遇';
-        const reveal = () => {
-          trait.textContent = '畏惧火焰';
-          trait.className =
-            'revealed-trait mt-3.5 block text-[21px] font-medium tracking-[0.15em] text-accent max-md:text-[17px]';
-        };
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          reveal();
-        } else {
-          window.setTimeout(reveal, 450);
-        }
-      },
-      { once: true },
-    );
-
-    const scenes = Array.from(
-      section.querySelectorAll<HTMLElement>('[data-author-scene]'),
-    );
-
-    const indexNav = section.querySelector<HTMLElement>('.authors-index')!;
-    const indexLinks = Array.from(
-      section.querySelectorAll<HTMLAnchorElement>('[data-author-index]'),
-    );
-    let activeIndex = -1;
-    const syncIndex = () => {
-      let next = 0;
-      scenes.forEach((scene, index) => {
-        if (scene.getBoundingClientRect().top <= window.innerHeight * 0.48)
-          next = index;
+      const encounterButton = section.querySelector<HTMLButtonElement>(
+        '[data-encounter-button]',
+      )!;
+      const creature =
+        section.querySelector<HTMLElement>('[data-encountered]')!;
+      const trait = section.querySelector<HTMLElement>(
+        '[data-encounter-trait]',
+      )!;
+      const attackCard = section.querySelector<HTMLElement>('[data-dark]')!;
+      const darkToggle =
+        section.querySelector<HTMLButtonElement>('[data-dark-toggle]')!;
+      const lightLabel =
+        section.querySelector<HTMLElement>('[data-light-label]')!;
+      const damageBonus = section.querySelector<HTMLElement>(
+        '[data-damage-bonus]',
+      )!;
+      darkToggle.disabled = false;
+      darkToggle.addEventListener('click', () => {
+        const dark = attackCard.dataset.dark !== 'true';
+        attackCard.dataset.dark = String(dark);
+        darkToggle.setAttribute('aria-pressed', String(dark));
+        lightLabel.textContent = dark ? '黑暗' : '明亮';
+        damageBonus.hidden = !dark;
       });
-      if (next === activeIndex) return;
-      activeIndex = next;
-      indexNav.style.setProperty('--active-step', String(next));
-      indexLinks.forEach((link, index) => {
-        if (index === next) link.setAttribute('aria-current', 'step');
-        else link.removeAttribute('aria-current');
-      });
-    };
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top bottom',
-      end: 'bottom top',
-      onUpdate: syncIndex,
-      onRefresh: syncIndex,
-    });
-    syncIndex();
-    indexLinks.forEach((link, index) => {
-      link.addEventListener('click', (event) => {
-        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
-          return;
-        event.preventDefault();
-        scenes[index]?.scrollIntoView({
-          behavior: window.matchMedia('(prefers-reduced-motion: reduce)')
-            .matches
-            ? 'instant'
-            : 'smooth',
-          block: 'start',
-        });
-      });
-    });
 
-    gsap.matchMedia().add(
-      {
-        desktop: '(min-width: 1024px)',
-        motion: '(prefers-reduced-motion: no-preference)',
-      },
-      (context) => {
-        if (!context.conditions?.motion) return;
-        const desktop = context.conditions.desktop;
-        scenes.forEach((scene) => {
-          const agentTiles =
-            scene.querySelectorAll<HTMLElement>('[data-agent-tile]');
-          if (agentTiles.length) {
-            gsap.fromTo(
-              agentTiles,
-              { y: 24, opacity: 0.2 },
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.04,
-                ease: 'power2.out',
-                scrollTrigger: {
-                  trigger: scene,
-                  start: 'top 85%',
-                  once: true,
-                },
-              },
-            );
-            return;
+      encounterButton.disabled = false;
+      encounterButton.addEventListener(
+        'click',
+        () => {
+          if (creature.dataset.encountered === 'true') return;
+          creature.dataset.encountered = 'true';
+          encounterButton.disabled = true;
+          encounterButton.dataset.complete = '';
+          encounterButton.textContent = '✓ 已遭遇';
+          const reveal = () => {
+            trait.textContent = '畏惧火焰';
+            trait.className =
+              'revealed-trait mt-3.5 block text-[21px] font-medium tracking-[0.15em] text-accent max-md:text-[17px]';
+          };
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            reveal();
+          } else {
+            window.setTimeout(reveal, 450);
           }
-          const definition =
-            scene.querySelector<HTMLElement>('[data-definition]')!;
-          const entity = scene.querySelector<HTMLElement>('[data-entity]')!;
-          const connector =
-            scene.querySelector<HTMLElement>('[data-connector]')!;
-          const timeline = gsap.timeline({
-            scrollTrigger: {
-              trigger: scene,
-              start: 'top 85%',
-              once: true,
-            },
-          });
-          timeline
-            .fromTo(
-              definition,
-              { x: desktop ? -70 : -20, y: 25, rotation: -6, opacity: 0.3 },
-              { x: 0, y: 0, rotation: -3, opacity: 1, duration: 0.4 },
-              0,
-            )
-            .fromTo(
-              connector,
-              { scaleX: 0, opacity: 0 },
-              { scaleX: 1, opacity: 1, duration: 0.25 },
-              0.2,
-            )
-            .fromTo(
-              entity,
-              { x: desktop ? -100 : -35, y: 35, rotation: -5, opacity: 0 },
-              { x: 0, y: 0, rotation: 2, opacity: 1, duration: 0.45 },
-              0.25,
-            );
+        },
+        { once: true },
+      );
+
+      const scenes = Array.from(
+        section.querySelectorAll<HTMLElement>('[data-author-scene]'),
+      );
+
+      const indexNav = section.querySelector<HTMLElement>('.authors-index')!;
+      const indexLinks = Array.from(
+        section.querySelectorAll<HTMLAnchorElement>('[data-author-index]'),
+      );
+      let activeIndex = -1;
+      const syncIndex = () => {
+        let next = 0;
+        scenes.forEach((scene, index) => {
+          if (scene.getBoundingClientRect().top <= window.innerHeight * 0.48)
+            next = index;
         });
-      },
-    );
-  }
+        if (next === activeIndex) return;
+        activeIndex = next;
+        indexNav.style.setProperty('--active-step', String(next));
+        indexLinks.forEach((link, index) => {
+          if (index === next) link.setAttribute('aria-current', 'step');
+          else link.removeAttribute('aria-current');
+        });
+      };
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: syncIndex,
+        onRefresh: syncIndex,
+      });
+      syncIndex();
+      indexLinks.forEach((link, index) => {
+        link.addEventListener('click', (event) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+            return;
+          event.preventDefault();
+          scenes[index]?.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)')
+              .matches
+              ? 'instant'
+              : 'smooth',
+            block: 'start',
+          });
+        });
+      });
+
+      gsap.matchMedia().add(
+        {
+          desktop: '(min-width: 1024px)',
+          motion: '(prefers-reduced-motion: no-preference)',
+        },
+        (context) => {
+          if (!context.conditions?.motion) return;
+          const desktop = context.conditions.desktop;
+          scenes.forEach((scene) => {
+            const agentTiles =
+              scene.querySelectorAll<HTMLElement>('[data-agent-tile]');
+            if (agentTiles.length) {
+              gsap.fromTo(
+                agentTiles,
+                { y: 24, opacity: 0.2 },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  stagger: 0.04,
+                  ease: 'power2.out',
+                  scrollTrigger: {
+                    trigger: scene,
+                    start: 'top 85%',
+                    once: true,
+                  },
+                },
+              );
+              return;
+            }
+            const definition =
+              scene.querySelector<HTMLElement>('[data-definition]')!;
+            const entity = scene.querySelector<HTMLElement>('[data-entity]')!;
+            const connector =
+              scene.querySelector<HTMLElement>('[data-connector]')!;
+            const timeline = gsap.timeline({
+              scrollTrigger: {
+                trigger: scene,
+                start: 'top 85%',
+                once: true,
+              },
+            });
+            timeline
+              .fromTo(
+                definition,
+                { x: desktop ? -70 : -20, y: 25, rotation: -6, opacity: 0.3 },
+                { x: 0, y: 0, rotation: -3, opacity: 1, duration: 0.4 },
+                0,
+              )
+              .fromTo(
+                connector,
+                { scaleX: 0, opacity: 0 },
+                { scaleX: 1, opacity: 1, duration: 0.25 },
+                0.2,
+              )
+              .fromTo(
+                entity,
+                { x: desktop ? -100 : -35, y: 35, rotation: -5, opacity: 0 },
+                { x: 0, y: 0, rotation: 2, opacity: 1, duration: 0.45 },
+                0.25,
+              );
+          });
+        },
+      );
+    }
+  });
 </script>
 
 <style>

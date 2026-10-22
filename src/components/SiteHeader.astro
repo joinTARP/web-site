@@ -9,7 +9,9 @@ const isActive = (href: string) => path.startsWith(href);
 ---
 
 <header
-  class="group/header transition-none motion-safe:[html.motion_&]:not-data-ready:invisible short-screen:data-ready:transition-transform short-screen:duration-220 short-screen:ease-[ease] short-screen:data-hidden:[transform:translateY(calc(-100%_-_16px))] motion-reduce:transition-none pointer-events-none fixed inset-x-0 top-0 z-50 [view-transition-name:site-header]"
+  transition:persist="site-header"
+  transition:animate="none"
+  class="group/header transition-none short-screen:data-ready:transition-transform short-screen:duration-220 short-screen:ease-[ease] short-screen:data-hidden:[transform:translateY(calc(-100%_-_16px))] motion-reduce:transition-none pointer-events-none fixed inset-x-0 top-0 z-50"
   data-header
 >
   <div
@@ -84,111 +86,5 @@ const isActive = (href: string) => path.startsWith(href);
 </div>
 
 <script>
-  const header = document.querySelector<HTMLElement>('[data-header]');
-  const toggle =
-    document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-  const menu = document.querySelector<HTMLElement>('[data-menu]');
-  const shortScreen = window.matchMedia('(max-height: 800px)');
-  let ticking = false;
-  let menuOpen = false;
-  let previousY = window.scrollY;
-  let direction = 0;
-  let travel = 0;
-
-  function showHeader(hidden: boolean) {
-    header?.toggleAttribute('data-hidden', hidden);
-    document.documentElement.toggleAttribute('data-header-hidden', hidden);
-  }
-
-  function update() {
-    const y = Math.max(
-      0,
-      Math.min(
-        window.scrollY,
-        document.documentElement.scrollHeight - innerHeight,
-      ),
-    );
-    header?.toggleAttribute('data-scrolled', y > 24);
-    const focused = header?.querySelector(':focus-visible');
-    if (!shortScreen.matches || y < 96 || menuOpen || focused) {
-      showHeader(false);
-      travel = 0;
-      direction = 0;
-    } else {
-      const delta = y - previousY;
-      const nextDirection = Math.sign(delta);
-      if (nextDirection && nextDirection !== direction) {
-        direction = nextDirection;
-        travel = 0;
-      }
-      travel += delta;
-      // 留出方向阈值，避免触控板小幅抖动反复开合。
-      if (travel >= 24) showHeader(true);
-      if (travel <= -12) showHeader(false);
-    }
-    previousY = y;
-    ticking = false;
-  }
-
-  window.addEventListener(
-    'scroll',
-    () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    },
-    { passive: true },
-  );
-  shortScreen.addEventListener('change', update);
-  window.addEventListener('resize', update);
-  header?.addEventListener('focusin', () => {
-    showHeader(false);
-    travel = 0;
-    previousY = window.scrollY;
-  });
-  update();
-  // pageshow 后一帧再读取浏览器恢复的滚动位置，首次状态同步不播放过渡。
-  function syncInitialState() {
-    requestAnimationFrame(() => {
-      previousY = window.scrollY;
-      direction = 0;
-      travel = 0;
-      update();
-      header?.getBoundingClientRect();
-      header?.setAttribute('data-ready', '');
-    });
-  }
-  if (document.readyState === 'complete') syncInitialState();
-  else window.addEventListener('pageshow', syncInitialState, { once: true });
-
-  function setMenu(open: boolean) {
-    if (!toggle || !menu) return;
-    menuOpen = open;
-    if (open) showHeader(false);
-    document.documentElement.toggleAttribute('data-menu-open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
-    if (open) {
-      menu.hidden = false;
-      requestAnimationFrame(() => menu.toggleAttribute('data-open', true));
-    } else {
-      menu.removeAttribute('data-open');
-      setTimeout(() => {
-        if (!menuOpen) menu.hidden = true;
-      }, 700);
-    }
-  }
-
-  const wide = window.matchMedia('(min-width: 1024px)');
-  wide.addEventListener('change', (event) => {
-    if (event.matches && menuOpen) setMenu(false);
-  });
-
-  toggle?.addEventListener('click', () => setMenu(!menuOpen));
-  menu?.querySelectorAll('[data-menu-link]').forEach((link) => {
-    link.addEventListener('click', () => setMenu(false));
-  });
-  window.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && menuOpen) setMenu(false);
-  });
+  import '../scripts/header';
 </script>
