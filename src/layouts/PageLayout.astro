@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import { site } from '../data/site';
+import { desktopVersion, downloads, site } from '../data/site';
 
 interface Props {
   title?: string;
@@ -9,6 +9,7 @@ interface Props {
   type?: 'website' | 'article';
   animate?: boolean;
   reading?: boolean;
+  noindex?: boolean;
 }
 
 const {
@@ -17,11 +18,81 @@ const {
   type = 'website',
   animate = false,
   reading = false,
+  noindex = false,
 } = Astro.props;
 const fullTitle = title ? `${title} · TARP` : site.title;
 const canonical = Astro.site
   ? new URL(Astro.url.pathname, Astro.site)
   : undefined;
+const image = Astro.site ? new URL('/og.png', Astro.site) : undefined;
+const absolute = (pathname: string) =>
+  Astro.site ? new URL(pathname, Astro.site).href : undefined;
+const pathname = Astro.url.pathname;
+const section = pathname.startsWith('/docs')
+  ? { name: '文档', path: '/docs/' }
+  : pathname.startsWith('/releases')
+    ? { name: '更新记录', path: '/releases/' }
+    : undefined;
+const sectionUrl = section ? absolute(section.path) : undefined;
+const homeUrl = absolute('/');
+const onSectionIndex =
+  section !== undefined &&
+  (pathname === section.path || pathname === section.path.slice(0, -1));
+
+const graph: Record<string, unknown>[] = [];
+if (pathname === '/' && canonical && image) {
+  graph.push(
+    {
+      '@type': 'WebSite',
+      name: 'TARP',
+      url: canonical.href,
+      description: site.description,
+      inLanguage: 'zh-CN',
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'TARP',
+      applicationCategory: 'GameApplication',
+      operatingSystem: 'Windows x64, macOS Apple Silicon, Linux x64',
+      softwareVersion: desktopVersion,
+      description: site.description,
+      url: canonical.href,
+      image: image.href,
+      downloadUrl: downloads.map((item) => item.href),
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' },
+      isAccessibleForFree: true,
+      inLanguage: 'zh-CN',
+    },
+  );
+}
+if (section && sectionUrl && homeUrl && canonical) {
+  const items = [
+    { name: '首页', item: homeUrl },
+    {
+      name: section.name,
+      item: onSectionIndex ? canonical.href : sectionUrl,
+    },
+  ];
+  if (!onSectionIndex && title) {
+    items.push({ name: title, item: canonical.href });
+  }
+  graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.item,
+    })),
+  });
+}
+const jsonLd =
+  graph.length > 0
+    ? JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': graph,
+      }).replaceAll('<', '\\u003c')
+    : undefined;
 ---
 
 <!doctype html>
@@ -43,14 +114,26 @@ const canonical = Astro.site
     <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     {canonical && <link rel="canonical" href={canonical} />}
+    {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:type" content={type} />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content="TARP" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     {canonical && <meta property="og:url" content={canonical} />}
-    <meta name="twitter:card" content="summary" />
+    {image && <meta property="og:image" content={image.href} />}
+    {image && <meta property="og:image:width" content="1200" />}
+    {image && <meta property="og:image:height" content="630" />}
+    {image && <meta property="og:image:alt" content="TARP，AI 跑团" />}
+    <meta
+      name="twitter:card"
+      content={image ? 'summary_large_image' : 'summary'}
+    />
+    {image && <meta name="twitter:image" content={image.href} />}
     <title>{fullTitle}</title>
+    {jsonLd && (
+      <script type="application/ld+json" is:inline set:html={jsonLd} />
+    )}
     <script is:inline>
       (() => {
         const root = document.documentElement;

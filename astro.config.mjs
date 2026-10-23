@@ -1,4 +1,5 @@
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import { satteri } from '@astrojs/markdown-satteri';
 import tailwindcss from '@tailwindcss/vite';
 import astroExpressiveCode from 'astro-expressive-code';
@@ -15,6 +16,12 @@ export default defineConfig({
       mdastPlugins: [desktopVersionPlugin({ version: desktopVersion })],
     }),
   },
-  integrations: [astroExpressiveCode(), react()],
+  integrations: [
+    astroExpressiveCode(),
+    react(),
+    sitemap({
+      filter: (page) => !page.includes('/404'),
+    }),
+  ],
   vite: { plugins: [tailwindcss()] },
 });

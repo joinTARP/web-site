@@ -1,0 +1,5 @@
+# 正式域名。部署到其他域名时，和 SITE_URL 一起改。
+User-agent: *
+Allow: /
+
+Sitemap: https://jointarp.party/sitemap-index.xml

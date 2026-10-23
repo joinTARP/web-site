@@ -19,7 +19,7 @@ bun run dev
 
 ## 素材
 
-- 图片放在 `src/assets/`，SVG 和网站图标放在 `public/`。
+- 图片放在 `src/assets/`，SVG 和网站图标放在 `public/`。社交分享图是 `public/og.png`（1200×630）；标语变更时一并更换。
 - 首页截图由项目作者提供，位于 `src/assets/screenshots/`。
 - JetBrains Mono 字体和 GSAP 动效库通过 [JSDMirror](https://github.com/jsdmirror/JSDMirror) 加载。
 
