@@ -1,0 +1,21 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import DocProse from '../components/docs/DocProse.astro';
+
+interface Props {
+  frontmatter: { title: string; description: string };
+}
+const { title, description } = Astro.props.frontmatter;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="shell max-w-3xl pt-32 pb-20 sm:pt-36 sm:pb-28">
+    <header class="mb-8 border-b border-line pb-6">
+      <p class="mb-3 text-sm text-muted">TARP · 隐私与数据</p>
+      <h1 class="text-3xl font-semibold tracking-tight">{title}</h1>
+    </header>
+    <DocProse>
+      <slot />
+    </DocProse>
+  </article>
+</BaseLayout>
